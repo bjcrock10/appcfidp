@@ -19,6 +19,9 @@ export function tabulatorFunc(){
       const initTabulator = (columnData, dataService, tableRef) => {
         tabulator.value = new Tabulator(tableRef.value, {
             data: [],
+            progressiveRender:true, //enable progressive rendering
+            progressiveRenderSize:500, //sets the number of rows to render per block (default = 20)
+            progressiveRenderMargin:350,
             paginationMode: "local",
             filterMode: "local",
             sortMode: "local",
