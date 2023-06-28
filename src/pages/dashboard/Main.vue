@@ -8,7 +8,6 @@ import { FormInput, FormSelect } from "../../base-components/Form";
 import TinySlider, { TinySliderElement } from "../../base-components/TinySlider";
 import Lucide from "../../base-components/Lucide";
 import Tippy from "../../base-components/Tippy";
-import Litepicker from "../../base-components/Litepicker";
 import ReportDonutChart from "../../components/ReportDonutChart";
 import ReportLineChart from "../../components/ReportLineChart";
 import ReportPieChart from "../../components/ReportPieChart";
@@ -178,23 +177,7 @@ const nextImportantNotes = () => {
                 icon="Calendar"
                 class="absolute inset-y-0 left-0 z-10 w-4 h-4 my-auto ml-3"
               />
-              <Litepicker
-                v-model="salesReportFilter"
-                :options="{
-                  autoApply: false,
-                  singleMode: false,
-                  numberOfColumns: 2,
-                  numberOfMonths: 2,
-                  showWeekNumbers: true,
-                  dropdowns: {
-                    minYear: 1990,
-                    maxYear: null,
-                    months: true,
-                    years: true,
-                  },
-                }"
-                class="pl-10 sm:w-56 !box"
-              />
+             
             </div>
           </div>
           <div class="p-5 mt-12 intro-y box sm:mt-5">
