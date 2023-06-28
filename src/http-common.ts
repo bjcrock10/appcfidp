@@ -7,7 +7,7 @@ const apiClient: AxiosInstance = axios.create({
     },
     // baseURL:'http://localhost:8000/',https://cfidp.pythonanywhere.com/
     baseURL:'https://cfidp.pythonanywhere.com/',
-    timeout: 10000,
+    timeout: 100000,
     headers: {
         "Content-type": "application/json",
     },
