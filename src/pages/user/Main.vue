@@ -19,7 +19,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const {formUsers, errorMessage, isError, columnData, addModal, rounded} = useUser();
 const successNotification = ref();
-provide("bind[successNotification]", (el) => {
+provide("bind[successNotification]", (el: any) => {
   // Binding
   successNotification.value = el;
   });

@@ -6,7 +6,9 @@ import {
   LitepickerEmit,
 } from "./Litepicker.vue";
 
-interface Picker extends Litepicker {
+
+
+interface Picker{
   on?: (
     event: string,
     cb: (

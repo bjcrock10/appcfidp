@@ -20,14 +20,14 @@ const router = useRouter();
 
 const confirmPassword = ref<String>();
 const password = ref();
-const isDisable = ref<Boolean>(false);
+const isDisable = ref(false);
 
 const message = ref<String>("Save!");
 const messageDetail = ref<String>("Successfully Save.");
 
-const isPass1 = ref<Boolean>(false);
-const isPass2 = ref<Boolean>(false);
-const isPass3 = ref<Boolean>(false);
+const isPass1 = ref(false);
+const isPass2 = ref(false);
+const isPass3 = ref(false);
 const onSubmit = async () =>{
   isDisable.value = true
   formUsers.username = formUsers.email
@@ -85,7 +85,7 @@ watch(confirmPassword, (confirmPassword, adas) => {
     }
   })
 // end watch section
-provide("bind[successNotification]", (el) => {
+provide("bind[successNotification]", (el: any) => {
   // Binding
   successNotification.value = el;
   });

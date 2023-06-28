@@ -15,7 +15,7 @@ import { useUser } from '../../types/user.d';
 
 const {formUsers, errorMessage, isError} = useUser();
 const successNotification = ref();
-provide("bind[successNotification]", (el) => {
+provide("bind[successNotification]", (el: any) => {
   // Binding
   successNotification.value = el;
 });

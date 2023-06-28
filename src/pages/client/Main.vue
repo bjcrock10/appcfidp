@@ -20,7 +20,7 @@ import LoadingIcon from "../../base-components/LoadingIcon";
 const router = useRouter();
 const {formClient, errorMessage, isError, columnData, addModal, rounded} = useClient();
 const successNotification = ref();
-provide("bind[successNotification]", (el) => {
+provide("bind[successNotification]", (el: any) => {
   // Binding
   successNotification.value = el;
   });
