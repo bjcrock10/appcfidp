@@ -19,9 +19,9 @@ export function tabulatorFunc(){
       const initTabulator = (columnData, dataService, tableRef) => {
         tabulator.value = new Tabulator(tableRef.value, {
             data: [],
-            progressiveRender:true, //enable progressive rendering
-            progressiveRenderSize:500, //sets the number of rows to render per block (default = 20)
-            progressiveRenderMargin:350,
+            progressiveRender: true, //enable progressive rendering
+            progressiveRenderSize:10, //sets the number of rows to render per block (default = 20)
+            progressiveRenderMargin:50,
             paginationMode: "local",
             filterMode: "local",
             sortMode: "local",
@@ -36,7 +36,7 @@ export function tabulatorFunc(){
             columns: columnData
         });
         if (tableRef.value) {
-          dataService.getAll()
+          dataService.getLimit(10)
           .then((response: ResponseData) => {
             tabulator.value.setData(response.data)
           })
@@ -44,7 +44,15 @@ export function tabulatorFunc(){
               console.log(e)
           })
           .finally(()=> {
+            dataService.getAll().then((response: ResponseData) => {
+              tabulator.value.setData(response.data)
+            })
+            .catch((e: Error)=>{
+                console.log(e)
+            })
+            .finally(()=> {
             loadingIcon.value = false
+            })
           })
         }
         tabulator.value?.on("renderComplete", () => {

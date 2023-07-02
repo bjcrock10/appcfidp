@@ -4,6 +4,9 @@ class ClientDataService {
     getAll(): Promise<any> {
       return http.get("/client/");
     }
+    getLimit(limit: any): Promise<any> {
+      return http.get(`/client/?limit=${limit}`);
+    }
   
     get(id: any): Promise<any> {
       return http.get(`/client/${id}/`);
@@ -29,8 +32,15 @@ class ClientDataService {
       return http.delete(`/client/`);
     }
   
-    findByTitle(title: string): Promise<any> {
+    findByTitle(title: String): Promise<any> {
       return http.get(`/client/?title=${title}`);
+    }
+
+    getBarangayVal(brgy: String): Promise<any> {
+      return http.get(`/barangay/?jtb=1&val=${brgy}`);
+    }
+    getBarangay(): Promise<any> {
+      return http.get(`/barangay/`);
     }
   }
   

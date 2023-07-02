@@ -32,6 +32,7 @@ const setAddModal = (value: boolean) => {
   addModal.value = value;
 };
 const select = ref("1");
+const brgy = ref([]);
 const sendButtonRef = ref(null);
 const {initTabulator, reInitOnResizeWindow, 
 filter, onFilter, 
@@ -71,10 +72,21 @@ watch(addModal,(addModal, oldAdm)=> {
   }
 });
 const frmModal = ref([]);
+const brgySelect = ref([]);
+
+// ClientDataService.getBarangay().then((response: ResponseData)=>{
+//     brgy.value = response.data
+//   }).catch((e: Error)=>{
+//     console.log(brgy.value)
+//   })
+
+watch(brgySelect,(brgySelect, oldAdm)=> {
+  // alert(brgySelect.value)
+});
 
 onMounted(async () => {
   initTabulator(columnData.value, ClientDataService, tableClient);
-  reInitOnResizeWindow();
+  reInitOnResizeWindow();s
   tabulator.value?.on("rowClick",(e, cell)=>{
     addModal.value = true
             formClient.id = cell.getData().id
@@ -125,6 +137,12 @@ onMounted(async () => {
     messageDetail.value = "You don't have access to this page. Redirecting you the landing page."
     router.push({path: "/dashboard"});
   }
+
+  ClientDataService.getBarangay().then((response: ResponseData)=>{
+    brgy.value = response.data
+  }).catch((e: Error)=>{
+    console.log(brgy.value)
+  })
 });
 </script>
 
@@ -229,14 +247,19 @@ onMounted(async () => {
                   <!-- <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
                     <legend class="text-xs">Addresses</legend> -->
                     <div class="col-span-12 sm:col-span-12">
-                      <FormLabel  htmlFor="modal-form-1"> Current Address </FormLabel>
+                      <FormLabel  htmlFor="modal-form-1"> Street Name</FormLabel>
                       <FormInput form-input-size="sm" v-model="formClient.address" type="text"
-                      placeholder="Home Number, Street Name, Barangay, City/Municipality, Province" required/>
+                      placeholder="Home Number, Street Name" required/>
                     </div>
                     <div class="col-span-12 sm:col-span-12">
-                      <FormLabel  htmlFor="modal-form-1"> Home Address </FormLabel>
-                      <FormInput form-input-size="sm" v-model="formClient.address" type="text"
-                      placeholder="Home Number, Street Name, Barangay, City/Municipality, Province" required/>
+                      <FormLabel  htmlFor="modal-form-1"> Address  </FormLabel>
+                      <TomSelect v-model="brgySelect" :options="{
+                                placeholder: 'Select Baranagay',
+                              }" class="w-full">
+                        <option 
+                        v-for="item in brgy" :value="item.barangayName"  :key="item.id">{{item.barangayName +', '+  item.cityName 
+                          + ', '+  item.provinceName +', '+  item.regionName}}</option>
+                      </TomSelect>
                     </div>
                   <!-- </fieldset> -->
                 </fieldset>
