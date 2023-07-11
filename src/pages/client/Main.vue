@@ -2,11 +2,14 @@
 import Lucide from "../../base-components/Lucide";
 import { Menu, Dialog } from "../../base-components/Headless";
 import Button from "../../base-components/Button";
-import { onMounted, ref, reactive, watch, provide } from "vue";
+import { TransitionRoot } from "@headlessui/vue";
+import fakerData from "../../utils/faker";
+import { onMounted, ref, reactive, watch, provide, toRefs} from "vue";
 import { FormInput, FormSelect, InputGroup, FormLabel, FormTextarea, FormSwitch} from "../../base-components/Form";
 import Tippy from "../../base-components/Tippy";
 import TomSelect from "../../base-components/TomSelect";
 import ClientDataService from '../../services/ClientDataService';
+import LocationDataService from "../../services/LocationDataService";
 import ResponseData from "../../types/response.d";
 import { useClient } from "../../types/client.d";
 import { tabulatorFunc } from "../../types/tabulator.d";
@@ -16,6 +19,7 @@ import Toastify from "toastify-js";
 import { createIcons, icons } from "lucide";
 import { useRouter } from "vue-router";
 import LoadingIcon from "../../base-components/LoadingIcon";
+import { blue } from 'tailwindcss/colors';
 
 const router = useRouter();
 const {formClient, errorMessage, isError, columnData, addModal, rounded} = useClient();
@@ -24,16 +28,40 @@ provide("bind[successNotification]", (el: any) => {
   // Binding
   successNotification.value = el;
   });
+const searchDropdown = ref(false);
+const lnameDropdown = ref(false);
+const showSearchDropdown = () => {
+  searchDropdown.value = true;
+};
+const hideSearchDropdown = () => {
+  searchDropdown.value = false;
+};
+const showSearchLname = () => {
+  lnameDropdown.value = true;
+};
+const hideSearchLname = () => {
+  lnameDropdown.value = false;
+};
 const message = ref("Successfully Save!");
 const messageDetail = ref ();
-const buttonTitle = ref("Submit")
-const buttonIcon = ref("Save")
+const buttonTitle = ref("Submit");
+const buttonIcon = ref("Save");
 const setAddModal = (value: boolean) => {
   addModal.value = value;
 };
 const select = ref("1");
-const brgy = ref([]);
+const brgy = ref();
 const sendButtonRef = ref(null);
+const ncfrs = ref();
+const tenurial = ref();
+const accreditation = ref();
+const organization = ref();
+const disNcfrs = ref(true);
+const disTenurial = ref(true);
+const disAccreditation = ref(true);
+const disOrganization = ref(true);
+
+
 const {initTabulator, reInitOnResizeWindow, 
 filter, onFilter, 
 onExportCsv, onExportHtml, 
@@ -41,28 +69,33 @@ onExportJson, onExportXlsx,
 onPrint, onResetFilter, tabulator, loadingIcon} = tabulatorFunc();
 
 const tableClient = ref<HTMLDivElement>();
-const onSubmit = async () => {
-  if(formClient.id==="0"){
-    ClientDataService.create(formClient).then((response: ResponseData)=>{
+const onSubmit = () => {
+  LocationDataService.getBrgy(addressSelect.addressName).then((response: ResponseData)=>{
+        formClient.lgu = response.data[0].cityName
+        formClient.barangay = response.data[0].barangay
+        formClient.province = response.data[0].province
+        console.log(response.data)
+        }).catch((e: Error)=>{
+          console.log(citySelect.value)
+  })
+  ClientDataService.create(formClient).then((response: ResponseData)=>{
       successNotification.value.showToast();
       addModal.value = false
-      messageDetail.value = "You successfully created an account for "+response.data.email
-      // initTabulator(columnData.value, ClientDataService);
+      messageDetail.value = "You successfully created client profile redirecting you to the profile page..."
+      router.push({path:`/client/${response.data.id}`})
     }).catch((e : Error)=>{
-      console.log(e);
+      message.value = "Error occurred!!!"
+      messageDetail.value = e.message.toString()
     })
-  }
-  else{
-    ClientDataService.update(formClient.id,formClient).then((response: ResponseData)=>{
-      successNotification.value.showToast();
-      addModal.value = false
-      messageDetail.value = "You successfully updated the information for "+response.data.email
-      // initTabulator(columnData.value, ClientDataService);
-    }).catch((e: Error)=>{
-      console.log(e);
-    })
-  }
 };
+
+const checkBa = (item: any) => {
+  formClient.lgu = item.cityName
+  formClient.barangay = item.barangayName
+  formClient.province = item.provinceName
+  formClient.city = item.city
+  addressSelect.addressName = item.address
+}
 watch(addModal,(addModal, oldAdm)=> {
   if(addModal === false){
     formClient.id = "0";
@@ -72,61 +105,85 @@ watch(addModal,(addModal, oldAdm)=> {
   }
 });
 const frmModal = ref([]);
-const brgySelect = ref([]);
+const brgySelect = ref();
+const citySelect = ref();
+const clientList = ref()
+const addressSelect = reactive({
+  'addressName':''
+})
 
-// ClientDataService.getBarangay().then((response: ResponseData)=>{
-//     brgy.value = response.data
-//   }).catch((e: Error)=>{
-//     console.log(brgy.value)
-//   })
+watch(
+  () => (addressSelect.addressName), async(address, prevToe) => {
+    if(address.length>4){
+        LocationDataService.getBarangayVal(address).then((response: ResponseData)=>{
+        brgySelect.value = response.data
+        }).catch((e: Error)=>{
+          console.log(citySelect.value)
+        })
+      }
+    }
+)
 
-watch(brgySelect,(brgySelect, oldAdm)=> {
-  // alert(brgySelect.value)
-});
+watch(
+  () => (formClient.lname), async(lname, prevToe) => {
+    if(lname.length>4){
+        ClientDataService.findByLname(lname).then((response: ResponseData)=>{
+          clientList.value = response.data
+        }).catch((e: Error)=>{
+          console.log(clientList.value)
+        })
+      }
+    }
+)
+
+const filteredBgry = ref();
+const aNcfrs = () =>{
+  if(ncfrs.value !== 'Yes'){
+    disNcfrs.value = true
+    formClient.farmerId = ncfrs.value
+  }
+  else{
+    disNcfrs.value = false
+    formClient.farmerId = ""
+  }
+};
+const dTenurial = () =>{
+  if(tenurial.value !== 'Others'){
+    disTenurial.value = true
+    formClient.tenurialStatus = tenurial.value
+  }
+  else{
+    disTenurial.value = false
+    formClient.tenurialStatus = ""
+  }
+};
+const dOrganization = () =>{
+  if(organization.value !== 'Yes'){
+    disOrganization.value = true
+    formClient.ipGroup = organization.value
+  }
+  else{
+    disOrganization.value = false
+    formClient.ipGroup = ""
+  }
+};
+const dAccreditation = () =>{
+  if(accreditation.value === 'No'){
+    disAccreditation.value = true
+    formClient.accreditation = accreditation.value
+  }
+  else{
+    disAccreditation.value = false
+    formClient.accreditation= ""
+  }
+};
 
 onMounted(async () => {
   initTabulator(columnData.value, ClientDataService, tableClient);
-  reInitOnResizeWindow();s
+  reInitOnResizeWindow();
   tabulator.value?.on("rowClick",(e, cell)=>{
-    addModal.value = true
-            formClient.id = cell.getData().id
-            formClient.farmerId = cell.getData().farmerId
-            formClient.lname = cell.getData().lname
-            formClient.fname = cell.getData().fname
-            formClient.mname = cell.getData().mname
-            formClient.suffix = cell.getData().suffix
-            formClient.province = cell.getData().province
-            formClient.lgu = cell.getData().lgu
-            formClient.barangay = cell.getData().barangay
-            formClient.address = cell.getData().address
-            formClient.gender = cell.getData().gender
-            formClient.age = cell.getData().age
-            formClient.civilStatus = cell.getData().civilStatus
-            formClient.education = cell.getData().education
-            formClient.religion = cell.getData().religion
-            formClient.motherMaidenName = cell.getData().motherMaidenName
-            formClient.personNotify = cell.getData().personNotify
-            formClient.socialClassification = cell.getData().socialClassification
-            formClient.disability = cell.getData().disability
-            formClient.pwdSpecify = cell.getData().pwdSpecify
-            formClient.ip = cell.getData().ip
-            formClient.ipGroup = cell.getData().ipGroup
-            formClient.ipSpecify = cell.getData().ipSpecify
-            formClient.tenurialStatus = cell.getData().tenurialStatus
-            formClient.farmSize = cell.getData().farmSize
-            formClient.mobileNo = cell.getData().mobileNo
-            formClient.email = cell.getData().email
-            formClient.yearStarted = cell.getData().yearStarted
-            formClient.businessId = cell.getData().businessId
-            formClient.clientCode = cell.getData().clientCode
-            formClient.prefix = cell.getData().prefix
-            formClient.zipcode = cell.getData().zipcode
-            formClient.designation = cell.getData().designation
-            formClient.encodedBy = cell.getData().encodedBy
-            formClient.encodedByName = cell.getData().encodedByName
-            formClient.encodedDate = cell.getData().encodedDate
-            formClient.recStat = cell.getData().recStat
-        })
+    router.push({path:`/client/${cell.getData().id}`})
+  })
   if(sessionStorage.getItem('userId') === null){
       router.push({ path:'/login'})
       sessionStorage.clear()
@@ -137,13 +194,8 @@ onMounted(async () => {
     messageDetail.value = "You don't have access to this page. Redirecting you the landing page."
     router.push({path: "/dashboard"});
   }
-
-  ClientDataService.getBarangay().then((response: ResponseData)=>{
-    brgy.value = response.data
-  }).catch((e: Error)=>{
-    console.log(brgy.value)
-  })
 });
+
 </script>
 
 <template>
@@ -172,143 +224,286 @@ onMounted(async () => {
         </Notification>
     <!-- END: Notification Content -->
       <!-- BEGIN: Modal Content -->
-      <Dialog size="xl" :open="addModal" @close="
+      <Dialog size="2xl" :open="addModal" @close="
                       () => {
                         setAddModal(false);
                       }
-                    " :initialFocus="sendButtonRef">
-        <Dialog.Panel>
+                    " :initialFocus="sendButtonRef"
+                    :draggable="true">
+        <Dialog.Panel class="z-40 top-0 left-0 w-full h-full outline-none overflow-x-hidden overflow-y-auto">
             <Dialog.Title>
                 <h2 class="mr-auto text-base font-medium">
                     Client Profile
                 </h2>
-                <!-- <Button variant="outline-secondary" class="hidden sm:flex">
-                    <Lucide icon="Cross" class="w-4 h-4 mr-2" />
-                </Button> -->
+                <button type="button" variant="outline-secondary" @click="
+                          () => {
+                            setAddModal(false);
+                          }
+                        " class="w-auto mr-1">
+                        <Lucide icon="XSquare" class="w-4 h-4 mr-2" />
+                </button>
             </Dialog.Title>
-            <form ref="{frmModal}" class="validate-form" @submit.prevent="onSubmit">
-            <Dialog.Description class="text-xs overflow-scroll sm:max-h-96 xl:max-h-full lg:max-h-screen max-h-96">
+            <form class="validate-form" @submit.prevent="onSubmit">
+              <Dialog.Description class="text-xs">
                 <div class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 p-2">
-                <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 
-                    border border-solid border-gray-300 p-2">
-                    <legend class="text-sm font-bold">Personal Information</legend>
-                    <div class="col-span-12 sm:col-span-2">
-                      <FormLabel htmlFor="modal-form-3"> Prefix </FormLabel>
-                      <FormInput form-input-size="sm" :rounded="rounded" v-model="formClient.prefix" type="text" placeholder="Ms./Mr./Mrs." />
-                    </div>
-                    <div class="col-span-12 sm:col-span-3">
-                        <FormLabel  htmlFor="modal-form-1"> Last Name </FormLabel>
-                        <FormInput form-input-size="sm" :rounded="rounded" 
-                          v-model="formClient.lname" type="text" placeholder="" required/>
-                    </div>
-                    <div class="col-span-12 sm:col-span-3">
-                        <FormLabel htmlFor="modal-form-2"> First Name </FormLabel>
-                        <FormInput form-input-size="sm" :rounded="rounded" 
-                          v-model="formClient.fname" type="text" placeholder="" required/>
-                    </div>
-                    <div class="col-span-12 sm:col-span-3">
-                      <FormLabel htmlFor="modal-form-3">Middle Name</FormLabel>
-                      <FormInput form-input-size="sm" :rounded="rounded" v-model="formClient.mname" 
-                        type="text" placeholder="M.I" />
-                    </div>
-                    <div class="col-span-12 sm:col-span-1">
-                      <FormLabel htmlFor="modal-form-3"> Suffix </FormLabel>
-                      <FormInput form-input-size="sm" :rounded="rounded" v-model="formClient.suffix" type="text" placeholder="Sr/Jr/III" />
-                    </div>
-                  <div class="col-span-12 sm:col-span-2">
-                      <FormLabel htmlFor="modal-form-3"> Sex </FormLabel>
-                      <FormSelect form-select-size="sm" v-model="formClient.gender" required>
-                        <option value="FEMALE">Female</option>
-                        <option value="MALE">Male</option>
-                        <option value="Other">Other</option>
-                      </FormSelect>
-                  </div>
-                  <div class="col-span-12 sm:col-span-2">
-                    <FormLabel htmlFor="modal-form-3"> Civil Status </FormLabel>
-                    <FormSelect form-select-size="sm" v-model="formClient.gender" required>
-                      <option value="Single">Single</option>
-                      <option value="Married">Married</option>
-                      <option value="Widowed">Widowed</option>
-                      <option value="Legally Separated">Legally Separated</option>
-                    </FormSelect>
+                  <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 
+                        border border-solid border-gray-300 p-2">
+                        <legend class="text-sm font-bold">Personal Information</legend>
+                        <div class="col-span-12 sm:col-span-1">
+                          <FormLabel htmlFor="modal-form-3"> Prefix </FormLabel>
+                          <FormInput  :rounded="rounded" v-model="formClient.prefix" type="text" placeholder="Ms./Mr./Mrs." />
+                        </div>
+                        <div class="col-span-12 sm:col-span-3">
+                            <FormLabel  htmlFor="modal-form-1"> Last Name </FormLabel>
+                            <FormInput  :rounded="rounded" 
+                              v-model="formClient.lname" type="text" placeholder="" 
+                              @focus="showSearchLname"
+                              @blur="hideSearchLname"
+                              required/>
+                            <TransitionRoot
+                              as="template"
+                              :show="lnameDropdown"
+                              enter="transition-all ease-linear duration-150"
+                              enterFrom="mt-5 invisible opacity-0 translate-y-1"
+                              enterTo="mt-[3px] visible opacity-100 translate-y-0"
+                              entered="mt-[3px]"
+                              leave="transition-all ease-linear duration-150"
+                              leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
+                              leaveTo="mt-5 invisible opacity-0 translate-y-1"
+                              class="w-auto h-40 overflow-scroll"
+                            >
+                              <div class="absolute right-100 z-10 mt-[3px]">
+                                <div class="w-auto p-5 box">
+                                  <div class="mb-2 font-medium">Client Name List</div>
+                                  <div class="mb-5 hover:blue" v-for="item in clientList" :key="item.id" :value="item.id" @click="router.push({path:`/client/${item.id}`})">
+                                    <button href="" class="flex items-center" type="button">
+                                      <div
+                                        class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 dark:bg-success/10 text-success"
+                                      >
+                                        <Lucide icon="User" class="w-4 h-4" />
+                                      </div>
+                                      <div class="ml-3">{{item.lname + ", " + item.fname + " " + item.mname}}</div>
+                                    </button>
+                                  </div>
+                                 </div>
+                              </div>
+                            </TransitionRoot>
+                        </div>
+                        <div class="col-span-12 sm:col-span-4">
+                            <FormLabel htmlFor="modal-form-2"> First Name </FormLabel>
+                            <FormInput  :rounded="rounded" 
+                              v-model="formClient.fname" type="text" placeholder="" required/>
+                        </div>
+                        <div class="col-span-12 sm:col-span-3">
+                          <FormLabel htmlFor="modal-form-3">Middle Name</FormLabel>
+                          <FormInput  :rounded="rounded" v-model="formClient.mname" 
+                            type="text" placeholder="M.I" />
+                        </div>
+                        <div class="col-span-12 sm:col-span-1">
+                          <FormLabel htmlFor="modal-form-3"> Suffix </FormLabel>
+                          <FormInput  :rounded="rounded" v-model="formClient.suffix" type="text" placeholder="Sr/Jr/III" />
+                        </div>
+                        <div class="col-span-12 sm:col-span-2">
+                            <FormLabel htmlFor="modal-form-3"> Sex </FormLabel>
+                            <FormSelect  v-model="formClient.gender" required>
+                              <option value="FEMALE">Female</option>
+                              <option value="MALE">Male</option>
+                              <option value="Other">Other</option>
+                            </FormSelect>
+                        </div>
+                        <div class="col-span-12 sm:col-span-2">
+                          <FormLabel htmlFor="modal-form-3"> Civil Status </FormLabel>
+                          <FormSelect  v-model="formClient.civilStatus" required>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Widowed">Widowed</option>
+                            <option value="Legally Separated">Legally Separated</option>
+                          </FormSelect>
+                        </div>
+                        <div class="col-span-12 sm:col-span-2">
+                          <FormLabel htmlFor="modal-form-3"> Social Classification </FormLabel>
+                          <FormSelect  v-model="formClient.socialClassification" required>
+                            <option value="Abled">Abled</option>
+                            <option value="Indigenous Person">Indigenous Person</option>
+                            <option value="Differently-Abled (PWD)">Differently-Abled (PWD)</option>
+                            <option value="Senior Citizen">Senior Citizen</option>
+                          </FormSelect>
+                        </div>
+                        <div class="col-span-12 sm:col-span-2">
+                          <FormLabel  htmlFor="modal-form-1"> Age </FormLabel>
+                          <FormSelect  v-model="formClient.age" required>
+                            <option value="18 - 35 years old">18 - 35 years old</option>
+                            <option value="above 35 – below 60 years old">above 35 – below 60 years old</option>
+                            <option value="60 years old and  above">60 years old and  above</option>
+                          </FormSelect>
+                        </div>
+                        <div class="col-span-12 sm:col-span-4">
+                          <FormLabel  htmlFor="modal-form-1"> Job Position </FormLabel>
+                          <FormInput  :rounded="rounded" v-model="formClient.education" type="text" placeholder=""/>
+                        </div>
+                        <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
+                          <legend class="text-xs">Address</legend>
+                          <div class="col-span-12 sm:col-span-6">
+                            <FormLabel  htmlFor="modal-form-1"> House No./Street Name</FormLabel>
+                            <FormInput  v-model="formClient.address" type="text"
+                            placeholder="House/Building No. / Room & Floor No./ Building Name" required/>
+                          </div>
+                          <div class="col-span-12 sm:col-span-3">
+                            <FormLabel  htmlFor="modal-form-3"> Longitude </FormLabel>
+                            <FormInput  v-model="formClient.longitude" type="text"
+                            placeholder="If applicable"/>
+                          </div>
+                          <div class="col-span-12 sm:col-span-3">
+                            <FormLabel  htmlFor="modal-form-3"> Latitude </FormLabel>
+                            <FormInput  v-model="formClient.latitude" type="text"
+                            placeholder="If applicable"/>
+                          </div>
+                          <!-- BEGIN: Search -->
+                          <div class="col-span-12 sm:col-span-12">
+                            <div class="col-span-12 sm:col-span-3">
+                              <FormLabel  htmlFor="modal-form-1"> Barangay  </FormLabel>
+                              <FormInput
+                                type="text"
+                                placeholder="Search Barangay..."
+                                @focus="showSearchDropdown"
+                                @blur="hideSearchDropdown"
+                                v-model="addressSelect.addressName"
+                              />
+                          </div>
+                            <TransitionRoot
+                              as="template"
+                              :show="searchDropdown"
+                              enter="transition-all ease-linear duration-150"
+                              enterFrom="mt-5 invisible opacity-0 translate-y-1"
+                              enterTo="mt-[3px] visible opacity-100 translate-y-0"
+                              entered="mt-[3px]"
+                              leave="transition-all ease-linear duration-150"
+                              leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
+                              leaveTo="mt-5 invisible opacity-0 translate-y-1"
+                            >
+                              <div class="absolute right-100 z-10 mt-[3px]">
+                                <div class="w-auto p-5 box">
+                                  <div class="mb-2 font-medium">List of Barangay</div>
+                                  <div class="mb-5 hover:blue" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkBa(item)">
+                                    <button href="" class="flex items-center" type="button">
+                                      <div
+                                        class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 dark:bg-success/10 text-success"
+                                      >
+                                        <Lucide icon="Pin" class="w-4 h-4" />
+                                      </div>
+                                      <div class="ml-3">{{item.address}}</div>
+                                    </button>
+                                  </div>
+                                 </div>
+                              </div>
+                            </TransitionRoot>
+                          </div>
+                          <!-- END: Search -->
+                        </fieldset>
+                        <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
+                          <legend class="text-xs">Contact Details</legend>
+                          <div class="col-span-12 sm:col-span-3">
+                            <FormLabel  htmlFor="modal-form-3"> Landline Number </FormLabel>
+                            <FormInput  v-model="formClient.telNo" type="text"
+                            placeholder="If applicable"/>
+                          </div>
+                          <div class="col-span-12 sm:col-span-3">
+                            <FormLabel  htmlFor="modal-form-3"> Mobile Number </FormLabel>
+                            <FormInput  v-model="formClient.mobileNo" type="text"
+                            placeholder="If applicable"/>
+                          </div>
+                          <div class="col-span-12 sm:col-span-3">
+                            <FormLabel  htmlFor="modal-form-3"> Fax Number </FormLabel>
+                            <FormInput  v-model="formClient.faxNo" type="text"
+                            placeholder="If applicable"/>
+                          </div>
+                          <div class="col-span-12 sm:col-span-3">
+                            <FormLabel  htmlFor="modal-form-3"> Email Address </FormLabel>
+                            <FormInput  v-model="formClient.email" type="email"
+                            placeholder="If applicable"/>
+                          </div>
+                        </fieldset>
+                        <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 
+                      border border-solid border-gray-300 p-2">
+                      <legend class="text-sm font-bold">CFIDP</legend>
+                      <div class="col-span-12 sm:col-span-4">
+                        <FormLabel  htmlFor="modal-form-1"> Classification </FormLabel>
+                        <FormSelect v-model="formClient.classification" required>
+                          <option value="Individual Farmer">Individual Farmer</option>
+                          <option value="Association/Cooperative">Association/Cooperative</option>
+                          <option value="MSME">MSME</option>
+                        </FormSelect>
+                      </div>
+                      <div class="col-span-12 sm:col-span-4">
+                          <FormLabel  htmlFor="modal-form-1"> Are you NCFRS-Registered? </FormLabel>
+                          <InputGroup class="grid grid-cols-12">
+                            <FormSelect  v-model="ncfrs" class="col-span-12 sm:col-span-2 text-slate-50" @change="aNcfrs" required>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                              <option value="Not Sure">Not Sure</option>
+                            </FormSelect>
+                            <FormInput  :rounded="rounded" v-model="formClient.farmerId" 
+                                type="text" placeholder="Farmer's ID" class="col-span-12 sm:col-span-10" :disabled="disNcfrs" required/>
+                          </InputGroup>
+                      </div>
+                      <div class="col-span-12 sm:col-span-4">
+                        <FormLabel  htmlFor="modal-form-1"> Tenurial Status </FormLabel>
+                        <InputGroup class="grid grid-cols-12">
+                          <FormSelect  v-model="tenurial" class="col-span-12 sm:col-span-2 text-slate-50" @change="dTenurial" required>
+                            <option value="Owner">Owner</option>
+                            <option value="Owner-Tiller">Owner-Tiller</option>
+                            <option value="Grower">Grower</option>
+                            <option value="Tenant">Tenant</option>
+                            <option value="Tenant-Worker">Tenant-Worker</option>
+                            <option value="Worker-Laborer">Worker-Laborer</option>
+                            <option value="Others">Others</option>
+                          </FormSelect>
+                          <FormInput  :rounded="rounded" v-model="formClient.tenurialStatus" 
+                              type="text" placeholder="Please Specify......" class="col-span-12 sm:col-span-10" :disabled="disTenurial" required/>
+                        </InputGroup>
+                      </div>
+                      <div class="col-span-12 sm:col-span-8">
+                        <FormLabel  htmlFor="modal-form-1"> Are you a member of a farm/coconut organization? </FormLabel>
+                        <InputGroup class="grid grid-cols-12">
+                          <FormSelect  v-model="organization" class="col-span-12 sm:col-span-2 text-slate-50" @change="dOrganization" required>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </FormSelect>
+                          <FormInput  :rounded="rounded" v-model="formClient.ipGroup" 
+                              type="text" placeholder="Name of organization" class="col-span-12 sm:col-span-10" :disabled="disOrganization" required/>
+                        </InputGroup>
+                      </div>
+                      <div class="col-span-12 sm:col-span-4">
+                        <FormLabel  htmlFor="modal-form-1"> Is your organization accredited/registered? </FormLabel>
+                        <InputGroup class="grid grid-cols-12">
+                          <FormSelect  v-model="accreditation" class="col-span-12 sm:col-span-3" @change="dAccreditation" required>
+                            <option value="PCA">PCA-</option>
+                            <option value="CDA">CDA-</option>
+                            <option value="SEC">SEC-</option>
+                            <option value="No">No</option>
+                          </FormSelect>
+                          <FormInput  :rounded="rounded" v-model="formClient.accreditation" 
+                              type="text" placeholder="Accreditation/Registration Number..." class="col-span-12 sm:col-span-9" :disabled="disAccreditation" required/>
+                        </InputGroup>
+                      </div>
+                    </fieldset>
+                  </fieldset>
                 </div>
-                  <div class="col-span-12 sm:col-span-3">
-                    <FormLabel  htmlFor="modal-form-1"> Age </FormLabel>
-                    <FormSelect form-select-size="sm" v-model="formClient.age" required>
-                      <option value="18 - 35 years old">18 - 35 years old</option>
-                      <option value="above 35 – below 60 years old">above 35 – below 60 years old</option>
-                      <option value="60 years old and  above">60 years old and  above</option>
-                    </FormSelect>
-                  </div>
-                  <div class="col-span-12 sm:col-span-4">
-                    <FormLabel  htmlFor="modal-form-1"> Job Position </FormLabel>
-                    <FormInput form-input-size="sm" :rounded="rounded" v-model="formClient.education" type="text" placeholder="" required/>
-                  </div>
-                  <!-- <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
-                    <legend class="text-xs">Addresses</legend> -->
-                    <div class="col-span-12 sm:col-span-12">
-                      <FormLabel  htmlFor="modal-form-1"> Street Name</FormLabel>
-                      <FormInput form-input-size="sm" v-model="formClient.address" type="text"
-                      placeholder="Home Number, Street Name" required/>
-                    </div>
-                    <div class="col-span-12 sm:col-span-12">
-                      <FormLabel  htmlFor="modal-form-1"> Address  </FormLabel>
-                      <TomSelect v-model="brgySelect" :options="{
-                                placeholder: 'Select Baranagay',
-                              }" class="w-full">
-                        <option 
-                        v-for="item in brgy" :value="item.barangayName"  :key="item.id">{{item.barangayName +', '+  item.cityName 
-                          + ', '+  item.provinceName +', '+  item.regionName}}</option>
-                      </TomSelect>
-                    </div>
-                  <!-- </fieldset> -->
-                </fieldset>
-                </div>
-                <hr class="mt-2"/>
-                <div class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 p-2">
-                <!-- <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
-                  <legend class="text-sm font-bold">Account Information</legend> -->
-                  <div class="col-span-12 sm:col-span-4">
-                    <FormLabel  htmlFor="modal-form-3"> Email </FormLabel>
-                    <FormInput form-input-size="sm" v-model="formClient.email" type="email"
-                    placeholder="" required/>
-                  </div>
-                  <div class="col-span-12 sm:col-span-4">
-                    <FormLabel  htmlFor="modal-form-1"> Password </FormLabel>
-                    <FormInput form-input-size="sm" v-model="formClient.civilStatus" type="password"
-                    placeholder="" required/>
-                  </div>
-                  <div class="col-span-12 sm:col-span-2">
-                    <FormLabel htmlFor="modal-form-3"> Account Status </FormLabel>
-                      <FormSelect form-select-size="sm" v-model="formClient.recStat" required>
-                        <option value="0">Active</option>
-                        <option value="1">InActive</option>
-                      </FormSelect>
-                  </div>
-                  <div class="col-span-12 sm:col-span-2">
-                    <FormLabel htmlFor="modal-form-3"> Privilege </FormLabel>
-                      <FormSelect form-select-size="sm" v-model="formClient.disability" required>
-                        <option value="0">User</option>
-                        <option value="1">Administrator</option>
-                      </FormSelect>
-                  </div>
-                <!-- </fieldset> -->
-                </div>
-            </Dialog.Description>
-            <Dialog.Footer>
-                <Button type="button" variant="outline-secondary" @click="
-                            () => {
-                              setAddModal(false);
-                            }
-                          " class="w-auto mr-1">
-                          <Lucide icon="XSquare" class="w-4 h-4 mr-2" />
-                    Cancel
-                </Button>
-                <Button type="submit" variant="primary" elevated class=" w-auto">
-                  <Lucide icon="Save" class="w-4 h-4 mr-2" />{{buttonTitle}}
-                </Button>
-            </Dialog.Footer>
-          </form>
+              </Dialog.Description>
+              <Dialog.Footer>
+                  <Button type="button" variant="outline-secondary" @click="
+                              () => {
+                                setAddModal(false);
+                              }
+                            " class="w-auto mr-1">
+                            <Lucide icon="XSquare" class="w-4 h-4 mr-2" />
+                      Cancel
+                  </Button>
+                  <Button type="submit" variant="primary" elevated class="w-auto">
+                    <Lucide icon="Save" class="w-4 h-4 mr-2" />{{buttonTitle}}
+                  </Button>
+              </Dialog.Footer>
+            </form>
         </Dialog.Panel>
       </Dialog>
       <!-- END: Modal Content -->
@@ -456,3 +651,9 @@ onMounted(async () => {
   </div>
   <!-- END: HTML Table Data -->
 </template>
+
+<style scoped>
+  input{
+    text-transform: uppercase;
+  }
+</style>

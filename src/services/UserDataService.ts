@@ -4,6 +4,10 @@ class UserDataService {
     getAll(): Promise<any> {
       return http.get("/user/");
     }
+
+    getLimit(limit: any): Promise<any> {
+      return http.get("/user/");
+    }
   
     get(id: any): Promise<any> {
       return http.get(`/user/${id}/`);

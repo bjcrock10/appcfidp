@@ -225,13 +225,20 @@ export function useClient(){
         'tenurialStatus': '',
         'farmSize':'',
         'mobileNo':'',
+        'telNo':'',
+        'faxNo':'',
         'email':'0',
         'yearStarted': '',
         'zipcode':'',
+        'longitude':'',
+        'latitude':'',
         'businessId':'',
         'clientCode': '',
+        'classification': '',
+        'accreditation': '',
         'prefix': '',
         'designation': '',
+        'city':'0',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
         'encodedDate':'',
@@ -274,3 +281,42 @@ export function useClient(){
 //     password:string;
 //     recStat: number;
 //   }
+
+// addModal.value = true
+//             formClient.id = cell.getData().id
+//             formClient.farmerId = cell.getData().farmerIds
+//             formClient.lname = cell.getData().lname
+//             formClient.fname = cell.getData().fname
+//             formClient.mname = cell.getData().mname
+//             formClient.suffix = cell.getData().suffix
+//             formClient.province = cell.getData().province
+//             formClient.lgu = cell.getData().lgu
+//             formClient.barangay = cell.getData().barangay
+//             formClient.address = cell.getData().address
+//             formClient.gender = cell.getData().gender
+//             formClient.age = cell.getData().age
+//             formClient.civilStatus = cell.getData().civilStatus
+//             formClient.education = cell.getData().education
+//             formClient.religion = cell.getData().religion
+//             formClient.motherMaidenName = cell.getData().motherMaidenName
+//             formClient.personNotify = cell.getData().personNotify
+//             formClient.socialClassification = cell.getData().socialClassification
+//             formClient.disability = cell.getData().disability
+//             formClient.pwdSpecify = cell.getData().pwdSpecify
+//             formClient.ip = cell.getData().ip
+//             formClient.ipGroup = cell.getData().ipGroup
+//             formClient.ipSpecify = cell.getData().ipSpecify
+//             formClient.tenurialStatus = cell.getData().tenurialStatus
+//             formClient.farmSize = cell.getData().farmSize
+//             formClient.mobileNo = cell.getData().mobileNo
+//             formClient.email = cell.getData().email
+//             formClient.yearStarted = cell.getData().yearStarted
+//             formClient.businessId = cell.getData().businessId
+//             formClient.clientCode = cell.getData().clientCode
+//             formClient.prefix = cell.getData().prefix
+//             formClient.zipcode = cell.getData().zipcode
+//             formClient.designation = cell.getData().designation
+//             formClient.encodedBy = cell.getData().encodedBy
+//             formClient.encodedByName = cell.getData().encodedByName
+//             formClient.encodedDate = cell.getData().encodedDate
+//             formClient.recStat = cell.getData().recStat

@@ -36,7 +36,7 @@ export function tabulatorFunc(){
             columns: columnData
         });
         if (tableRef.value) {
-          dataService.getLimit(10)
+          dataService.getLimit(500)
           .then((response: ResponseData) => {
             tabulator.value.setData(response.data)
           })
@@ -48,7 +48,7 @@ export function tabulatorFunc(){
               tabulator.value.setData(response.data)
             })
             .catch((e: Error)=>{
-                console.log(e)
+               alert("Failed to load data due to slow internet connection.")
             })
             .finally(()=> {
             loadingIcon.value = false

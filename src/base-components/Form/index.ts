@@ -7,6 +7,7 @@ import FormLabel from "./FormLabel.vue";
 import FormSelect from "./FormSelect.vue";
 import FormSwitch from "./FormSwitch";
 import InputGroup from "./InputGroup";
+import Autocomplete from "./Autocomplete.vue";
 
 export {
   FormCheck,
@@ -18,4 +19,5 @@ export {
   FormSelect,
   FormSwitch,
   InputGroup,
+  Autocomplete,
 };

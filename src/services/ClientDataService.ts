@@ -32,15 +32,8 @@ class ClientDataService {
       return http.delete(`/client/`);
     }
   
-    findByTitle(title: String): Promise<any> {
-      return http.get(`/client/?title=${title}`);
-    }
-
-    getBarangayVal(brgy: String): Promise<any> {
-      return http.get(`/barangay/?jtb=1&val=${brgy}`);
-    }
-    getBarangay(): Promise<any> {
-      return http.get(`/barangay/`);
+    findByLname(lname: String): Promise<any> {
+      return http.get(`/client/?lname=${lname}`);
     }
   }
   
