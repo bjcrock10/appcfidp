@@ -20,6 +20,7 @@ import {
 import { watch, reactive, computed, onMounted, provide } from "vue";
 
 const route: Route = useRoute();
+
 let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
 const setFormattedMenu = (
   computedFormattedMenu: Array<FormattedMenu | "divider">
@@ -85,7 +86,7 @@ onMounted(() => {
             <template v-for="(menu, menuKey) in formattedMenu">
               <Divider
                 v-if="menu == 'divider'"
-                type="li"
+                type="dotted"
                 :class="[
                   'my-6',
 

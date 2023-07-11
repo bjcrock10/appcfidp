@@ -28,13 +28,13 @@ provide("bind[successNotification]", (el: any) => {
   // Binding
   successNotification.value = el;
   });
-const searchDropdown = ref(false);
+const brgyDropdown = ref(false);
 const lnameDropdown = ref(false);
-const showSearchDropdown = () => {
-  searchDropdown.value = true;
+const showSearchBrgy = () => {
+  brgyDropdown.value = true;
 };
-const hideSearchDropdown = () => {
-  searchDropdown.value = false;
+const hideSearchBrgy = () => {
+  brgyDropdown.value = false;
 };
 const showSearchLname = () => {
   lnameDropdown.value = true;
@@ -224,7 +224,7 @@ onMounted(async () => {
         </Notification>
     <!-- END: Notification Content -->
       <!-- BEGIN: Modal Content -->
-      <Dialog size="2xl" :open="addModal" @close="
+      <Dialog :open="addModal" @close="
                       () => {
                         setAddModal(false);
                       }
@@ -365,14 +365,14 @@ onMounted(async () => {
                               <FormInput
                                 type="text"
                                 placeholder="Search Barangay..."
-                                @focus="showSearchDropdown"
-                                @blur="hideSearchDropdown"
+                                @focus="showSearchBrgy"
+                                @blur="hideSearchBrgy"
                                 v-model="addressSelect.addressName"
                               />
                           </div>
                             <TransitionRoot
                               as="template"
-                              :show="searchDropdown"
+                              :show="brgyDropdown"
                               enter="transition-all ease-linear duration-150"
                               enterFrom="mt-5 invisible opacity-0 translate-y-1"
                               enterTo="mt-[3px] visible opacity-100 translate-y-0"

@@ -85,7 +85,7 @@ onMounted(() => {
             <template v-for="(menu, menuKey) in formattedMenu">
               <Divider
                 v-if="menu == 'divider'"
-                type="li"
+                type="dotted"
                 :class="[
                   'my-6',
 
