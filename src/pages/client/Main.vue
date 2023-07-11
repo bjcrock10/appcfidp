@@ -224,7 +224,7 @@ onMounted(async () => {
         </Notification>
     <!-- END: Notification Content -->
       <!-- BEGIN: Modal Content -->
-      <Dialog :open="addModal" @close="
+      <Dialog size="2xl" :open="addModal" @close="
                       () => {
                         setAddModal(false);
                       }
