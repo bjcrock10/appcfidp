@@ -248,13 +248,105 @@ export function useClient(){
     const rounded = ref(false);
     const errorMessage = ref();
     const isError = ref(false);
+    //------------------------------------------------------------------
+    const brgyDropdown = ref(false);
+    const lnameDropdown = ref(false);
+    const showSearchBrgy = () => {
+      brgyDropdown.value = true;
+    };
+    const hideSearchBrgy = () => {
+      brgyDropdown.value = false;
+    };
+    const showSearchLname = () => {
+      lnameDropdown.value = true;
+    };
+    const hideSearchLname = () => {
+      lnameDropdown.value = false;
+    };
+    const message = ref("Successfully Save!");
+    const messageDetail = ref ();
+    const buttonTitle = ref("Submit");
+    const buttonIcon = ref("Save");
+    const setAddModal = (value: boolean) => {
+      addModal.value = value;
+    };
+    const select = ref("1");
+    const brgy = ref();
+    const sendButtonRef = ref(null);
+    const ncfrs = ref();
+    const tenurial = ref();
+    const accreditation = ref();
+    const organization = ref();
+    const disNcfrs = ref(true);
+    const disTenurial = ref(true);
+    const disAccreditation = ref(true);
+    const disOrganization = ref(true);
+
+    const brgySelect = ref();
+    const citySelect = ref();
+    const clientList = ref()
+    const addressSelect = reactive({
+      'addressName':''
+    })
+    const checkBa = (item: any) => {
+      formClient.lgu = item.cityName
+      formClient.barangay = item.barangayName
+      formClient.province = item.provinceName
+      formClient.city = item.city
+      addressSelect.addressName = item.address
+    }
+    const aNcfrs = () =>{
+      if(ncfrs.value !== 'Yes'){
+        disNcfrs.value = true
+        formClient.farmerId = ncfrs.value
+      }
+      else{
+        disNcfrs.value = false
+        formClient.farmerId = ""
+      }
+    };
+    const dTenurial = () =>{
+      if(tenurial.value !== 'Others'){
+        disTenurial.value = true
+        formClient.tenurialStatus = tenurial.value
+      }
+      else{
+        disTenurial.value = false
+        formClient.tenurialStatus = ""
+      }
+    };
+    const dOrganization = () =>{
+      if(organization.value !== 'Yes'){
+        disOrganization.value = true
+        formClient.ipGroup = organization.value
+      }
+      else{
+        disOrganization.value = false
+        formClient.ipGroup = ""
+      }
+    };
+    const dAccreditation = () =>{
+      if(accreditation.value === 'No'){
+        disAccreditation.value = true
+        formClient.accreditation = accreditation.value
+      }
+      else{
+        disAccreditation.value = false
+        formClient.accreditation= ""
+      }
+    };
     return {
         columnData,
         formClient,
         addModal,
         errorMessage,
         isError,
-        rounded
+        rounded,
+        brgyDropdown,
+        lnameDropdown, showSearchBrgy, hideSearchBrgy, showSearchLname, hideSearchLname, 
+        message, messageDetail, buttonTitle, buttonIcon, setAddModal, select, brgy, sendButtonRef, ncfrs, tenurial,
+        accreditation, organization, disNcfrs, disTenurial, disAccreditation, disOrganization, brgySelect, citySelect,
+        clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation
     }
 }
 

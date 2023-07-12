@@ -19,56 +19,25 @@ import Toastify from "toastify-js";
 import { createIcons, icons } from "lucide";
 import { useRouter } from "vue-router";
 import LoadingIcon from "../../base-components/LoadingIcon";
-import { blue } from 'tailwindcss/colors';
 
 const router = useRouter();
-const {formClient, errorMessage, isError, columnData, addModal, rounded} = useClient();
-const successNotification = ref();
-provide("bind[successNotification]", (el: any) => {
-  // Binding
-  successNotification.value = el;
-  });
-const brgyDropdown = ref(false);
-const lnameDropdown = ref(false);
-const showSearchBrgy = () => {
-  brgyDropdown.value = true;
-};
-const hideSearchBrgy = () => {
-  brgyDropdown.value = false;
-};
-const showSearchLname = () => {
-  lnameDropdown.value = true;
-};
-const hideSearchLname = () => {
-  lnameDropdown.value = false;
-};
-const message = ref("Successfully Save!");
-const messageDetail = ref ();
-const buttonTitle = ref("Submit");
-const buttonIcon = ref("Save");
-const setAddModal = (value: boolean) => {
-  addModal.value = value;
-};
-const select = ref("1");
-const brgy = ref();
-const sendButtonRef = ref(null);
-const ncfrs = ref();
-const tenurial = ref();
-const accreditation = ref();
-const organization = ref();
-const disNcfrs = ref(true);
-const disTenurial = ref(true);
-const disAccreditation = ref(true);
-const disOrganization = ref(true);
-
-
-const {initTabulator, reInitOnResizeWindow, 
+const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDropdown,
+        lnameDropdown, showSearchBrgy, hideSearchBrgy, showSearchLname, hideSearchLname, 
+        message, messageDetail, buttonTitle, buttonIcon, setAddModal, select, brgy, sendButtonRef, ncfrs, tenurial,
+        accreditation, organization, disNcfrs, disTenurial, disAccreditation, disOrganization, brgySelect, citySelect,
+        clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation} = useClient();
+        const {initTabulator, reInitOnResizeWindow, 
 filter, onFilter, 
 onExportCsv, onExportHtml, 
 onExportJson, onExportXlsx, 
 onPrint, onResetFilter, tabulator, loadingIcon} = tabulatorFunc();
 
 const tableClient = ref<HTMLDivElement>();
+const successNotification = ref();
+provide("bind[successNotification]", (el: any) => {
+  // Binding
+  successNotification.value = el;
+  });
 const onSubmit = () => {
   LocationDataService.getBrgy(addressSelect.addressName).then((response: ResponseData)=>{
         formClient.lgu = response.data[0].cityName
@@ -78,6 +47,11 @@ const onSubmit = () => {
         }).catch((e: Error)=>{
           console.log(citySelect.value)
   })
+  formClient.lname.toUpperCase();
+  formClient.fname.toUpperCase();
+  formClient.mname.toUpperCase();
+  formClient.address.toUpperCase();
+  formClient.barangay.toUpperCase();
   ClientDataService.create(formClient).then((response: ResponseData)=>{
       successNotification.value.showToast();
       addModal.value = false
@@ -88,14 +62,6 @@ const onSubmit = () => {
       messageDetail.value = e.message.toString()
     })
 };
-
-const checkBa = (item: any) => {
-  formClient.lgu = item.cityName
-  formClient.barangay = item.barangayName
-  formClient.province = item.provinceName
-  formClient.city = item.city
-  addressSelect.addressName = item.address
-}
 watch(addModal,(addModal, oldAdm)=> {
   if(addModal === false){
     formClient.id = "0";
@@ -104,14 +70,6 @@ watch(addModal,(addModal, oldAdm)=> {
     buttonIcon.value = "Edit"
   }
 });
-const frmModal = ref([]);
-const brgySelect = ref();
-const citySelect = ref();
-const clientList = ref()
-const addressSelect = reactive({
-  'addressName':''
-})
-
 watch(
   () => (addressSelect.addressName), async(address, prevToe) => {
     if(address.length>4){
@@ -123,7 +81,6 @@ watch(
       }
     }
 )
-
 watch(
   () => (formClient.lname), async(lname, prevToe) => {
     if(lname.length>4){
@@ -135,49 +92,6 @@ watch(
       }
     }
 )
-
-const filteredBgry = ref();
-const aNcfrs = () =>{
-  if(ncfrs.value !== 'Yes'){
-    disNcfrs.value = true
-    formClient.farmerId = ncfrs.value
-  }
-  else{
-    disNcfrs.value = false
-    formClient.farmerId = ""
-  }
-};
-const dTenurial = () =>{
-  if(tenurial.value !== 'Others'){
-    disTenurial.value = true
-    formClient.tenurialStatus = tenurial.value
-  }
-  else{
-    disTenurial.value = false
-    formClient.tenurialStatus = ""
-  }
-};
-const dOrganization = () =>{
-  if(organization.value !== 'Yes'){
-    disOrganization.value = true
-    formClient.ipGroup = organization.value
-  }
-  else{
-    disOrganization.value = false
-    formClient.ipGroup = ""
-  }
-};
-const dAccreditation = () =>{
-  if(accreditation.value === 'No'){
-    disAccreditation.value = true
-    formClient.accreditation = accreditation.value
-  }
-  else{
-    disAccreditation.value = false
-    formClient.accreditation= ""
-  }
-};
-
 onMounted(async () => {
   initTabulator(columnData.value, ClientDataService, tableClient);
   reInitOnResizeWindow();
@@ -195,9 +109,7 @@ onMounted(async () => {
     router.push({path: "/dashboard"});
   }
 });
-
 </script>
-
 <template>
   <div class="flex flex-col items-center mt-8 intro-y sm:flex-row">
     <h2 class="mr-auto text-lg font-medium">Client Profile</h2>
@@ -381,15 +293,15 @@ onMounted(async () => {
                               leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
                               leaveTo="mt-5 invisible opacity-0 translate-y-1"
                             >
-                              <div class="absolute right-100 z-10 mt-[3px]">
+                              <div class="absolute right-100 z-50 mt-[3px]">
                                 <div class="w-auto p-5 box">
                                   <div class="mb-2 font-medium">List of Barangay</div>
-                                  <div class="mb-5 hover:blue" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkBa(item)">
+                                  <div class="mb-5 hover:bg-slate-400" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkBa(item)">
                                     <button href="" class="flex items-center" type="button">
                                       <div
                                         class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 dark:bg-success/10 text-success"
                                       >
-                                        <Lucide icon="Pin" class="w-4 h-4" />
+                                        <Lucide icon="MapPin" class="w-4 h-4" />
                                       </div>
                                       <div class="ml-3">{{item.address}}</div>
                                     </button>
