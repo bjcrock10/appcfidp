@@ -9,7 +9,7 @@ class ClientDataService {
     }
   
     get(id: any): Promise<any> {
-      return http.get(`/client/${id}/`);
+      return http.get(`/client/?id=${id}`);
     }
   
     create(data: any): Promise<any> {

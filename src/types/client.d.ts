@@ -1,5 +1,7 @@
 import { ref, reactive} from "vue"
 import { stringToHTML } from "../utils/helper";
+import ClientDataService from '../services/ClientDataService';
+import ResponseData from "./response";
 export function useClient(){
     interface Response {
       name?: string;
@@ -232,7 +234,7 @@ export function useClient(){
         'zipcode':'',
         'longitude':'',
         'latitude':'',
-        'businessId':'',
+        'businessId':'0',
         'clientCode': '',
         'classification': '',
         'accreditation': '',
@@ -335,6 +337,64 @@ export function useClient(){
         formClient.accreditation= ""
       }
     };
+    const clientSubmit = ref(false)
+    const updateClientInfo = async (id:any) =>{
+      ClientDataService.update(id,formClient).then((response: ResponseData)=>{
+        clientSubmit.value = true
+      }).catch((e: Error)=>{
+        clientSubmit.value = false
+          console.log(e.message)
+      })
+    }
+    const patchClientInfo =async (id:any, data: any) => {
+      ClientDataService.patch(id,data).then((response: ResponseData)=>{
+        clientSubmit.value = true
+      }).catch((e: Error)=>{
+        clientSubmit.value = false
+          console.log(e.message)
+      })
+    }
+    const getClientInfo = async (id) =>{
+      ClientDataService.get(id).then((response: ResponseData)=>{
+        formClient.id = response.data[0].id
+        formClient.farmerId = response.data[0].farmerIds
+        formClient.lname = response.data[0].lname.toUpperCase()
+        formClient.fname = response.data[0].fname.toUpperCase()
+        formClient.mname = response.data[0].mname.toUpperCase()
+        formClient.suffix = response.data[0].suffix.toUpperCase()
+        formClient.province = response.data[0].province.toUpperCase()
+        formClient.lgu = response.data[0].lgu.toUpperCase()
+        formClient.barangay = response.data[0].barangay.toUpperCase()
+        addressSelect.addressName = response.data[0].barangay.toUpperCase() + ", " +response.data[0].lgu.toUpperCase()+ ",  " + response.data[0].province.toUpperCase()
+        formClient.address = response.data[0].address.toUpperCase()
+        formClient.gender = response.data[0].gender
+        formClient.age = response.data[0].age
+        formClient.civilStatus = response.data[0].civilStatus
+        formClient.tenurialStatus = response.data[0].tenurialStatus.toUpperCase()
+        formClient.classification = response.data[0].classification
+        formClient.telNo = response.data[0].telNo.toUpperCase()
+        formClient.personNotify = response.data[0].personNotify.toUpperCase()
+        formClient.socialClassification = response.data[0].socialClassification
+        formClient.faxNo = response.data[0].faxNo.toUpperCase()
+        formClient.pwdSpecify = response.data[0].pwdSpecify.toUpperCase()
+        formClient.farmerId = response.data[0].farmerId.toUpperCase()
+        formClient.ipGroup = response.data[0].ipGroup.toUpperCase()
+        formClient.designation = response.data[0].designation.toUpperCase()
+        formClient.tenurialStatus = response.data[0].tenurialStatus.toUpperCase()
+        formClient.accreditation = response.data[0].accreditation.toUpperCase()
+        formClient.mobileNo = response.data[0].mobileNo
+        formClient.email = response.data[0].email
+        formClient.yearStarted = response.data[0].yearStarted
+        formClient.businessId = response.data[0].businessId
+        formClient.clientCode = response.data[0].clientCode
+        formClient.prefix = response.data[0].prefix.toUpperCase()
+        formClient.zipcode = response.data[0].zipcode
+        formClient.designation = response.data[0].designation.toUpperCase()
+        formClient.recStat = response.data[0].recStat
+      }).catch((e: Error)=>{
+          console.log(e.message)
+      })
+    }
     return {
         columnData,
         formClient,
@@ -346,7 +406,8 @@ export function useClient(){
         lnameDropdown, showSearchBrgy, hideSearchBrgy, showSearchLname, hideSearchLname, 
         message, messageDetail, buttonTitle, buttonIcon, setAddModal, select, brgy, sendButtonRef, ncfrs, tenurial,
         accreditation, organization, disNcfrs, disTenurial, disAccreditation, disOrganization, brgySelect, citySelect,
-        clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation
+        clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation, getClientInfo, 
+        updateClientInfo, clientSubmit, patchClientInfo
     }
 }
 

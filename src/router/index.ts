@@ -1,3 +1,4 @@
+import vue from '@vitejs/plugin-vue';
 import { createRouter, createWebHistory } from "vue-router";
 import SideMenu from "../layouts/SideMenu/SideMenu.vue";
 import SimpleMenu from "../layouts/SimpleMenu/SimpleMenu.vue";
@@ -7,11 +8,13 @@ import Users from "../pages/user/Main.vue";
 import LogIn from "../pages/account/Login.vue";
 import Register from "../pages/account/Register.vue";
 import ErrorPage from "../pages/ErrorPage.vue";
-import Clients from "../pages/client/Main.vue"
+import Clients from "../pages/client/Main.vue";
+import ClientProfile from "../pages/client/Profile.vue";
+
 const routes = [
   {
     path: "/home",
-    component: SideMenu,
+    component: SimpleMenu,
     children: [
       {
         path: "/dashboard",
@@ -27,6 +30,11 @@ const routes = [
         path: "/clients",
         name: "side-menu-clients",
         component: Clients,
+      },
+      {
+        path: "/client/:id",
+        name: "",
+        component: ClientProfile
       },
     ],
   },
@@ -55,26 +63,6 @@ const routes = [
         component: Users,
       },
     ],
-  },
-  {
-    path: "/top-menu",
-    component: TopMenu,
-    children: [
-      {
-        path: "page-1",
-        name: "top-menu-page-1",
-        component: Dashboard,
-      },
-      {
-        path: "page-2",
-        name: "top-menu-page-2",
-        component: Users,
-      },
-    ],
-  },
-  {
-    path: "/:pathMatch(.*)*",
-    component: ErrorPage,
   },
 ];
 

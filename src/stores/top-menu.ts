@@ -16,15 +16,27 @@ export interface TopMenuState {
 export const useTopMenuStore = defineStore("topMenu", {
   state: (): TopMenuState => ({
     menu: [
-      {
-        icon: "Activity",
-        pageName: "top-menu-page-1",
-        title: "Page 1",
+      { 
+        icon: "Home",
+        pageName: "side-menu-page-1",
+        title: "Dashboard",
+      },
+      { 
+        icon: "User",
+        pageName: "side-menu-clients",
+        title: "Client",
       },
       {
-        icon: "Activity",
-        pageName: "top-menu-page-2",
-        title: "Page 2",
+        icon: "Github",
+        pageName: "side-menu-page-2",
+        title: "Administrator",
+        subMenu:[
+          {
+            icon: "User",
+            pageName: "side-menu-users",
+            title: "Users",
+          },
+        ]
       },
     ],
   }),

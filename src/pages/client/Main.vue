@@ -2,8 +2,6 @@
 import Lucide from "../../base-components/Lucide";
 import { Menu, Dialog } from "../../base-components/Headless";
 import Button from "../../base-components/Button";
-import { TransitionRoot } from "@headlessui/vue";
-import fakerData from "../../utils/faker";
 import { onMounted, ref, reactive, watch, provide, toRefs} from "vue";
 import { FormInput, FormSelect, InputGroup, FormLabel, FormTextarea, FormSwitch} from "../../base-components/Form";
 import Tippy from "../../base-components/Tippy";
@@ -11,6 +9,7 @@ import TomSelect from "../../base-components/TomSelect";
 import ClientDataService from '../../services/ClientDataService';
 import LocationDataService from "../../services/LocationDataService";
 import ResponseData from "../../types/response.d";
+import { TransitionRoot } from "@headlessui/vue";
 import { useClient } from "../../types/client.d";
 import { tabulatorFunc } from "../../types/tabulator.d";
 import Notification from "../../base-components/Notification";
@@ -26,7 +25,7 @@ const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDr
         message, messageDetail, buttonTitle, buttonIcon, setAddModal, select, brgy, sendButtonRef, ncfrs, tenurial,
         accreditation, organization, disNcfrs, disTenurial, disAccreditation, disOrganization, brgySelect, citySelect,
         clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation} = useClient();
-        const {initTabulator, reInitOnResizeWindow, 
+const {initTabulator, reInitOnResizeWindow, 
 filter, onFilter, 
 onExportCsv, onExportHtml, 
 onExportJson, onExportXlsx, 
@@ -96,7 +95,8 @@ onMounted(async () => {
   initTabulator(columnData.value, ClientDataService, tableClient);
   reInitOnResizeWindow();
   tabulator.value?.on("rowClick",(e, cell)=>{
-    router.push({path:`/client/${cell.getData().id}`})
+    const id = cell.getData().id
+    router.push({path:`/client/${id}`, params:{id}})
   })
   if(sessionStorage.getItem('userId') === null){
       router.push({ path:'/login'})
@@ -182,12 +182,12 @@ onMounted(async () => {
                               leave="transition-all ease-linear duration-150"
                               leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
                               leaveTo="mt-5 invisible opacity-0 translate-y-1"
-                              class="w-auto h-40 overflow-scroll"
+                              class="w-full h-40 overflow-scroll"
                             >
                               <div class="absolute right-100 z-10 mt-[3px]">
                                 <div class="w-auto p-5 box">
                                   <div class="mb-2 font-medium">Client Name List</div>
-                                  <div class="mb-5 hover:blue" v-for="item in clientList" :key="item.id" :value="item.id" @click="router.push({path:`/client/${item.id}`})">
+                                  <div class="mb-5 hover:blue" v-for="item in clientList" :key="item.id" :value="item.id" @click="router.push({path:`/client/${item.id}`,params:item.id})">
                                     <button href="" class="flex items-center" type="button">
                                       <div
                                         class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 dark:bg-success/10 text-success"
@@ -251,7 +251,7 @@ onMounted(async () => {
                         </div>
                         <div class="col-span-12 sm:col-span-4">
                           <FormLabel  htmlFor="modal-form-1"> Job Position </FormLabel>
-                          <FormInput  :rounded="rounded" v-model="formClient.education" type="text" placeholder=""/>
+                          <FormInput  :rounded="rounded" v-model="formClient.designation" type="text" placeholder=""/>
                         </div>
                         <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
                           <legend class="text-xs">Address</legend>

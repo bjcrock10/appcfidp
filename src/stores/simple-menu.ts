@@ -16,15 +16,27 @@ export interface SimpleMenuState {
 export const useSimpleMenuStore = defineStore("simpleMenu", {
   state: (): SimpleMenuState => ({
     menu: [
-      {
-        icon: "Activity",
-        pageName: "simple-menu-page-1",
-        title: "Page 1",
+      { 
+        icon: "Home",
+        pageName: "side-menu-page-1",
+        title: "Dashboard",
+      },
+      { 
+        icon: "User",
+        pageName: "side-menu-clients",
+        title: "Client",
       },
       {
-        icon: "Activity",
-        pageName: "simple-menu-page-2",
-        title: "Page 2",
+        icon: "Github",
+        pageName: "side-menu-page-2",
+        title: "Administrator",
+        subMenu:[
+          {
+            icon: "User",
+            pageName: "side-menu-users",
+            title: "Users",
+          },
+        ]
       },
     ],
   }),
