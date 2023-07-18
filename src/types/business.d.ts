@@ -55,14 +55,14 @@ export function useBusiness(){
     const formSocialMedia = reactive({
         'id' : '0',
         'business' : '0',
-        'platform' : '0',
+        'platForm' : '0',
         'url' : '0',
         'recStat' : '0',
     });
     const formEcommerce = reactive({
         'id' : '0',
         'business' : '0',
-        'platform' : '0',
+        'platForm' : '0',
         'url' : '0',
         'recStat' : '0',
     });
@@ -182,6 +182,54 @@ export function useBusiness(){
     const selectBusinessOwner = ref([formBusiness.businessOwnership]);
     const selectLineOfBusiness = ref([formBusiness.lineOfBusiness]);
     const selectStandardCertification = ref([formBusiness.standardCertification]);
+    const selectSocialMed = ref(["1"]);
+
+    const columnDataSocial = ref([
+        {
+            title: "",
+            formatter: "responsiveCollapse",
+            width: 40,
+            minWidth: 30,
+            hozAlign: "center",
+            resizable: false,
+            headerSort: false,
+            },
+      
+            // For HTML table
+            {
+              title: "Platform",
+              minWidth: 100,
+              maxWidth: 100,
+              field: "platForm",
+              hozAlign: "center",
+              headerHozAlign: "center",
+              vertAlign: "middle",
+              print: false,
+              download: false
+            },
+            {
+              title: "URL",
+              minWidth: 100,
+              maxWidth: 150,
+              field: "url",
+              hozAlign: "center",
+              headerHozAlign: "center",
+              vertAlign: "middle",
+              print: false,
+              download: false,
+            },
+            {
+            title: "",
+            minWidth: 200,
+            responsive: 0,
+            field: "action",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            print: false,
+            download: false,
+            },
+    ]);
     return {
         formBusiness,
         formSocialMedia,
@@ -203,6 +251,8 @@ export function useBusiness(){
         updateBusinessInfo,
         selectBusinessOwner,
         selectLineOfBusiness,
-        selectStandardCertification
+        selectStandardCertification,
+        selectSocialMed,
+        columnDataSocial
     }
 }

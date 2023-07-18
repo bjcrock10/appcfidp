@@ -16,7 +16,7 @@ export function tabulatorFunc(){
       });
       const resp = ref([])
       const loadingIcon = ref(true)
-      const initTabulator = (columnData, dataService, tableRef) => {
+      const initTabulator = (columnData:Any, dataService:Any, tableRef:HTMLDivElement, byId:Any="0") => {
         tabulator.value = new Tabulator(tableRef.value, {
             data: [],
             progressiveRender: true, //enable progressive rendering
@@ -35,25 +35,42 @@ export function tabulatorFunc(){
             placeholder: "No matching records found",
             columns: columnData
         });
-        if (tableRef.value) {
-          dataService.getLimit(500)
-          .then((response: ResponseData) => {
-            tabulator.value.setData(response.data)
-          })
-          .catch((e: Error)=>{
-              console.log(e)
-          })
-          .finally(()=> {
-            dataService.getAll().then((response: ResponseData) => {
+        if(byId==="0"){
+          alert(tableRef.value + "1")
+          if (tableRef.value) {
+            dataService.getLimit(500)
+            .then((response: ResponseData) => {
+             
               tabulator.value.setData(response.data)
             })
             .catch((e: Error)=>{
-               alert("Failed to load data due to slow internet connection.")
+                console.log(e)
             })
             .finally(()=> {
-            loadingIcon.value = false
+              dataService.getAll().then((response: ResponseData) => {
+                tabulator.value.setData(response.data)
+              })
+              .catch((e: Error)=>{
+                 alert("Failed to load data due to slow internet connection.")
+              })
+              .finally(()=> {
+              loadingIcon.value = false
+              })
             })
-          })
+          }
+        }
+        else{
+           alert(tableRef.value)
+          if (tableRef.value) {
+            dataService.getByBusiness(byId)
+            .then((response: ResponseData) => {
+             
+              tabulator.value.setData(response.data)
+            })
+            .catch((e: Error)=>{
+                console.log(e)
+            })
+          }
         }
         tabulator.value?.on("renderComplete", () => {
           createIcons({

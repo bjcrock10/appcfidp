@@ -27,6 +27,8 @@ import { NotificationElement } from "../../base-components/Notification";
 import Toastify from "toastify-js";
 import { createIcons, icons } from "lucide";
 import logoUrl from "../../assets/images/logo.png";
+import Item from '../../base-components/Headless/Menu/Item.vue';
+import { Disclosure } from "../../base-components/Headless";
 
 const router = useRouter();
 const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDropdown,
@@ -38,7 +40,7 @@ const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDr
 const {formBusiness, formBusinessOwner, formEcommerce, formSocialMedia, hideSearchBrgyBusiness, hideSearchBrgyPlant, 
         showSearchBrgyBusiness, showSearchBrgyPlant, brgyDropdownBusiness, brgyDropdownPlant, addressSelectBus,
       checkBusinessBrgy, checkPlantBrgy, businessID, businessSubmit, getBusinessInfo, 
-      selectBusinessOwner, selectLineOfBusiness, selectStandardCertification} = useBusiness();
+      selectBusinessOwner, selectLineOfBusiness, selectStandardCertification, selectSocialMed} = useBusiness();
 const {initTabulator, reInitOnResizeWindow, 
 filter, onFilter, 
 onExportCsv, onExportHtml, 
@@ -110,8 +112,24 @@ watch(
       }
     }
 )
+const socialMedList = ref([])
+const ecommerceList = ref([])
+const businessOwnerList = ref([])
+const loadSocial = async (id:any) =>{
+  BusinessDataService.getSocialByBusiness(id).then((response: ResponseData)=>{
+    socialMedList.value = response.data
+  })
+}
+const removeSocial = async (id: any) =>{
+  BusinessDataService.deleteSocial(id).then((response: ResponseData)=>{
+    loadSocial(formClient.businessId)
+  }).catch((e:Error)=>{
+    console.log(e.message)
+  })
+}
 const loadBusiness = () => {
   getBusinessInfo(formClient.businessId)
+  loadSocial(formClient.businessId)
 }
 const onSubmit = () =>{
  updateClientInfo(clientID.value).then();
@@ -147,7 +165,13 @@ const onAddBusiness = async () => {
   }
 }
 const onAddBSocial = async () => {
-  
+  formSocialMedia.business = formClient.businessId
+  formSocialMedia.platForm = selectSocialMed.value.toString()
+  BusinessDataService.createSocial(formSocialMedia).then((response: ResponseData)=>{
+    loadSocial(formClient.businessId)
+  }).catch((e:Error)=>{
+    console.log(e.message)
+  })
 }
 onMounted(async () => {
   getClientInfo(clientID.value);
@@ -283,11 +307,11 @@ onMounted(async () => {
                             <legend class="text-sm font-bold">Personal Information</legend>
                             <div class="col-span-12 md:col-span-1">
                             <FormLabel htmlFor="modal-form-3"> Prefix </FormLabel>
-                            <FormInput  :rounded="rounded" v-model="formClient.prefix" type="text" placeholder="Ms./Mr./Mrs." />
+                            <FormInput form-input-size="sm"  :rounded="rounded" v-model="formClient.prefix" type="text" placeholder="Ms./Mr./Mrs." />
                             </div>
                             <div class="col-span-12 md:col-span-3">
                                 <FormLabel  htmlFor="modal-form-1"> Last Name </FormLabel>
-                                <FormInput  :rounded="rounded" 
+                                <FormInput form-input-size="sm"  :rounded="rounded" 
                                 v-model="formClient.lname" type="text" placeholder="" 
                                 @focus="showSearchLname"
                                 @blur="hideSearchLname"
@@ -323,21 +347,21 @@ onMounted(async () => {
                             </div>
                             <div class="col-span-12 md:col-span-4">
                                 <FormLabel htmlFor="modal-form-2"> First Name </FormLabel>
-                                <FormInput  :rounded="rounded" 
+                                <FormInput form-input-size="sm"  :rounded="rounded" 
                                 v-model="formClient.fname" type="text" placeholder="" required/>
                             </div>
                             <div class="col-span-12 md:col-span-3">
                             <FormLabel htmlFor="modal-form-3">Middle Name</FormLabel>
-                            <FormInput  :rounded="rounded" v-model="formClient.mname" 
+                            <FormInput form-input-size="sm"  :rounded="rounded" v-model="formClient.mname" 
                                 type="text" placeholder="M.I" />
                             </div>
                             <div class="col-span-12 md:col-span-1">
                             <FormLabel htmlFor="modal-form-3"> Suffix </FormLabel>
-                            <FormInput  :rounded="rounded" v-model="formClient.suffix" type="text" placeholder="Sr/Jr/III" />
+                            <FormInput form-input-size="sm"  :rounded="rounded" v-model="formClient.suffix" type="text" placeholder="Sr/Jr/III" />
                             </div>
                             <div class="col-span-12 md:col-span-2">
                                 <FormLabel htmlFor="modal-form-3"> Sex </FormLabel>
-                                <FormSelect  v-model="formClient.gender" required>
+                                <FormSelect form-select-size="sm"  v-model="formClient.gender" required>
                                 <option value="FEMALE">Female</option>
                                 <option value="MALE">Male</option>
                                 <option value="Other">Other</option>
@@ -345,7 +369,7 @@ onMounted(async () => {
                             </div>
                             <div class="col-span-12 md:col-span-2">
                             <FormLabel htmlFor="modal-form-3"> Civil Status </FormLabel>
-                            <FormSelect  v-model="formClient.civilStatus" required>
+                            <FormSelect form-select-size="sm"  v-model="formClient.civilStatus" required>
                                 <option value="Single">Single</option>
                                 <option value="Married">Married</option>
                                 <option value="Widowed">Widowed</option>
@@ -354,7 +378,7 @@ onMounted(async () => {
                             </div>
                             <div class="col-span-12 md:col-span-2">
                             <FormLabel htmlFor="modal-form-3"> Social Classification </FormLabel>
-                            <FormSelect  v-model="formClient.socialClassification" required>
+                            <FormSelect form-select-size="sm"  v-model="formClient.socialClassification" required>
                                 <option value="Abled">Abled</option>
                                 <option value="Indigenous Person">Indigenous Person</option>
                                 <option value="Differently-Abled (PWD)">Differently-Abled (PWD)</option>
@@ -363,7 +387,7 @@ onMounted(async () => {
                             </div>
                             <div class="col-span-12 md:col-span-2">
                             <FormLabel  htmlFor="modal-form-1"> Age </FormLabel>
-                            <FormSelect  v-model="formClient.age" required>
+                            <FormSelect form-select-size="sm"  v-model="formClient.age" required>
                                 <option value="18 - 35 years old">18 - 35 years old</option>
                                 <option value="above 35 – below 60 years old">above 35 – below 60 years old</option>
                                 <option value="60 years old and  above">60 years old and  above</option>
@@ -371,30 +395,30 @@ onMounted(async () => {
                             </div>
                             <div class="col-span-12 md:col-span-4">
                             <FormLabel  htmlFor="modal-form-1"> Job Position </FormLabel>
-                            <FormInput  :rounded="rounded" v-model="formClient.designation" type="text" placeholder=""/>
+                            <FormInput form-input-size="sm"  :rounded="rounded" v-model="formClient.designation" type="text" placeholder=""/>
                             </div>
                             <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
                             <legend class="text-xs">Address</legend>
                             <div class="col-span-12 md:col-span-6">
                                 <FormLabel  htmlFor="modal-form-1"> House No./Street Name</FormLabel>
-                                <FormInput  v-model="formClient.address" type="text"
+                                <FormInput form-input-size="sm"  v-model="formClient.address" type="text"
                                 placeholder="House/Building No. / Room & Floor No./ Building Name" required/>
                             </div>
                             <div class="col-span-12 md:col-span-3">
                                 <FormLabel  htmlFor="modal-form-3"> Longitude </FormLabel>
-                                <FormInput  v-model="formClient.longitude" type="text"
+                                <FormInput form-input-size="sm"  v-model="formClient.longitude" type="text"
                                 placeholder="If applicable"/>
                             </div>
                             <div class="col-span-12 md:col-span-3">
                                 <FormLabel  htmlFor="modal-form-3"> Latitude </FormLabel>
-                                <FormInput  v-model="formClient.latitude" type="text"
+                                <FormInput form-input-size="sm"  v-model="formClient.latitude" type="text"
                                 placeholder="If applicable"/>
                             </div>
                             <!-- BEGIN: Search -->
                             <div class="col-span-12 md:col-span-12">
                                 <div class="col-span-12 md:col-span-3">
                                 <FormLabel  htmlFor="modal-form-1"> Barangay  </FormLabel>
-                                <FormInput
+                                <FormInput form-input-size="sm"
                                     type="text"
                                     placeholder="Search Barangay..."
                                     @focus="showSearchBrgy"
@@ -436,22 +460,22 @@ onMounted(async () => {
                             <legend class="text-xs">Contact Details</legend>
                             <div class="col-span-12 md:col-span-3">
                                 <FormLabel  htmlFor="modal-form-3"> Landline Number </FormLabel>
-                                <FormInput  v-model="formClient.telNo" type="text"
+                                <FormInput form-input-size="sm"  v-model="formClient.telNo" type="text"
                                 placeholder="If applicable"/>
                             </div>
                             <div class="col-span-12 md:col-span-3">
                                 <FormLabel  htmlFor="modal-form-3"> Mobile Number </FormLabel>
-                                <FormInput  v-model="formClient.mobileNo" type="text"
+                                <FormInput form-input-size="sm"  v-model="formClient.mobileNo" type="text"
                                 placeholder="If applicable"/>
                             </div>
                             <div class="col-span-12 md:col-span-3">
                                 <FormLabel  htmlFor="modal-form-3"> Fax Number </FormLabel>
-                                <FormInput  v-model="formClient.faxNo" type="text"
+                                <FormInput form-input-size="sm"  v-model="formClient.faxNo" type="text"
                                 placeholder="If applicable"/>
                             </div>
                             <div class="col-span-12 md:col-span-3">
                                 <FormLabel  htmlFor="modal-form-3"> Email Address </FormLabel>
-                                <FormInput  v-model="formClient.email" type="email"
+                                <FormInput form-input-size="sm"  v-model="formClient.email" type="email"
                                 placeholder="If applicable"/>
                             </div>
                             </fieldset>
@@ -460,7 +484,7 @@ onMounted(async () => {
                         <legend class="text-sm font-bold">CFIDP</legend>
                         <div class="col-span-12 md:col-span-4">
                             <FormLabel  htmlFor="modal-form-1"> Classification </FormLabel>
-                            <FormSelect v-model="formClient.classification" required>
+                            <FormSelect form-select-size="sm" v-model="formClient.classification" required>
                             <option value="Individual Farmer">Individual Farmer</option>
                             <option value="Association/Cooperative">Association/Cooperative</option>
                             <option value="MSME">MSME</option>
@@ -469,19 +493,19 @@ onMounted(async () => {
                         <div class="col-span-12 md:col-span-4">
                             <FormLabel  htmlFor="modal-form-1"> Are you NCFRS-Registered? </FormLabel>
                             <InputGroup class="grid grid-cols-12">
-                                <FormSelect  v-model="ncfrs" class="col-span-12 md:col-span-2 text-slate-50" @change="aNcfrs">
+                                <FormSelect form-select-size="sm"  v-model="ncfrs" class="col-span-12 md:col-span-2 text-slate-50" @change="aNcfrs">
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                                 <option value="Not Sure">Not Sure</option>
                                 </FormSelect>
-                                <FormInput  :rounded="rounded" v-model="formClient.farmerId" 
+                                <FormInput form-input-size="sm"  :rounded="rounded" v-model="formClient.farmerId" 
                                     type="text" placeholder="Farmer's ID" class="col-span-12 md:col-span-10" :disabled="disNcfrs" required/>
                             </InputGroup>
                         </div>
                         <div class="col-span-12 md:col-span-4">
                             <FormLabel  htmlFor="modal-form-1"> Tenurial Status </FormLabel>
                             <InputGroup class="grid grid-cols-12">
-                            <FormSelect  v-model="tenurial" class="col-span-12 md:col-span-2 text-slate-50" @change="dTenurial">
+                            <FormSelect form-select-size="sm"  v-model="tenurial" class="col-span-12 md:col-span-2 text-slate-50" @change="dTenurial">
                                 <option value="Owner">Owner</option>
                                 <option value="Owner-Tiller">Owner-Tiller</option>
                                 <option value="Grower">Grower</option>
@@ -490,31 +514,31 @@ onMounted(async () => {
                                 <option value="Worker-Laborer">Worker-Laborer</option>
                                 <option value="Others">Others</option>
                             </FormSelect>
-                            <FormInput  :rounded="rounded" v-model="formClient.tenurialStatus" 
+                            <FormInput form-input-size="sm"  :rounded="rounded" v-model="formClient.tenurialStatus" 
                                 type="text" placeholder="Please Specify......" class="col-span-12 md:col-span-10" :disabled="disTenurial" required/>
                             </InputGroup>
                         </div>
                         <div class="col-span-12 md:col-span-8">
                             <FormLabel  htmlFor="modal-form-1"> Are you a member of a farm/coconut organization? </FormLabel>
                             <InputGroup class="grid grid-cols-12">
-                            <FormSelect  v-model="organization" class="col-span-12 md:col-span-2 text-slate-50" @change="dOrganization">
+                            <FormSelect form-select-size="sm"  v-model="organization" class="col-span-12 md:col-span-2 text-slate-50" @change="dOrganization">
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </FormSelect>
-                            <FormInput  :rounded="rounded" v-model="formClient.ipGroup" 
+                            <FormInput form-input-size="sm"  :rounded="rounded" v-model="formClient.ipGroup" 
                                 type="text" placeholder="Name of organization" class="col-span-12 md:col-span-10" :disabled="disOrganization" required/>
                             </InputGroup>
                         </div>
                         <div class="col-span-12 md:col-span-4">
                             <FormLabel  htmlFor="modal-form-1"> Is your organization accredited/registered? </FormLabel>
                             <InputGroup class="grid grid-cols-12">
-                            <FormSelect  v-model="accreditation" class="col-span-12 md:col-span-3" @change="dAccreditation">
+                            <FormSelect form-select-size="sm"  v-model="accreditation" class="col-span-12 md:col-span-3" @change="dAccreditation">
                                 <option value="PCA">PCA-</option>
                                 <option value="CDA">CDA-</option>
                                 <option value="SEC">SEC-</option>
                                 <option value="No">No</option>
                             </FormSelect>
-                            <FormInput  :rounded="rounded" v-model="formClient.accreditation" 
+                            <FormInput form-input-size="sm"  :rounded="rounded" v-model="formClient.accreditation" 
                                 type="text" placeholder="Accreditation/Registration Number..." class="col-span-12 md:col-span-9" :disabled="disAccreditation" required/>
                             </InputGroup>
                         </div>
@@ -544,18 +568,18 @@ onMounted(async () => {
       <!-- BEGIN: Business Information -->
       <Tab.Panel>
         <div class="grid grid-cols-12 gap-6">
-          <div class="col-span-12 intro-y box lg:col-span-7 sm:col-span-12">
+          <div class="col-span-12 intro-y box lg:col-span-7 sm:col-span-12 md:col-span-full">
             <div class="p-5">
               <form class="validate-form" @submit.prevent="onAddBusiness">
-                <div class="grid grid-cols-12 col-span-8 gap-4 gap-y-3">
+                <div class="grid grid-cols-12 col-span-12 gap-4 gap-y-3">
                   <div class="col-span-12 md:col-span-8">
                       <FormLabel htmlFor="modal-form-2">Registered Business Name</FormLabel>
-                      <FormInput  :rounded="rounded" 
+                      <FormInput form-input-size="sm"  :rounded="rounded" 
                       v-model="formBusiness.businessName" type="text" placeholder="" required/>
                   </div>
                   <div class="col-span-12 md:col-span-4">
                     <FormLabel htmlFor="modal-form-3">Year Established</FormLabel>
-                    <FormInput  :rounded="rounded" v-model="formBusiness.yearEstablished" 
+                    <FormInput form-input-size="sm"  :rounded="rounded" v-model="formBusiness.yearEstablished" 
                         type="number" placeholder="" />
                   </div>
                   <div class="col-span-12 md:col-span-8">
@@ -564,9 +588,8 @@ onMounted(async () => {
                       v-model="selectBusinessOwner"
                       :options="{
                         placeholder: 'Select item below. If not exist please key it in.',
-                        maxItems:1,
                       }"
-                      class="w-full"
+                      class="w-full" multiple
                     >
                       <option value="Sole Proprietorship">Sole Proprietorship</option>
                       <option value="Partnership/Corporation">Partnership/Corporation</option>
@@ -581,9 +604,8 @@ onMounted(async () => {
                       v-model="selectLineOfBusiness"
                       :options="{
                         placeholder: 'Select item below. If not exist please key it in.',
-                        maxItems:1,
                       }"
-                      class="w-full"
+                      class="w-full" multiple
                     >
                       <option value="Farming">Farming</option>
                       <option value="Manufacturing/Processing">Manufacturing/Processing</option>
@@ -597,9 +619,8 @@ onMounted(async () => {
                       v-model="selectStandardCertification"
                       :options="{
                         placeholder: 'Select item below. If not exist please key it in.',
-                        maxItems:1,
                       }"
-                      class="w-full"
+                      class="w-full" multiple
                     >
                       <option value="FDA-LTO">FDA-LTO</option>
                       <option value="GMP">GMP</option>
@@ -616,61 +637,71 @@ onMounted(async () => {
                         <option value="Association (100M above)">Association (100M above)</option>
                       </FormSelect>
                   </div>
-                  <div class="col-span-12 md:col-span-2">
+                  <div class="col-span-12 md:col-span-3">
                     <FormLabel htmlFor="modal-form-3"> No. of Outlet </FormLabel>
-                    <FormInput  v-model="formBusiness.noOutlets" type="number"
+                    <FormInput form-input-size="sm"  v-model="formBusiness.noOutlets" type="number"
                         placeholder="" required/>
                   </div>
-                  <div class="col-span-12 md:col-span-2">
+                  <div class="col-span-12 md:col-span-3">
                     <FormLabel htmlFor="modal-form-3"> No. of Employees </FormLabel>
-                    <FormSelect  v-model="formBusiness.noEmployee" required>
+                    <FormSelect form-select-size="sm"  v-model="formBusiness.noEmployee" required>
                         <option value="1-9">1-9</option>
                         <option value="10-99">10-99</option>
                         <option value="100-199">100-199</option>
                         <option value="200 and above">200 and above</option>
                     </FormSelect>
                   </div>
-                  <div class="col-span-12 md:col-span-8">
-                    <FormLabel  htmlFor="modal-form-1"> No. of Members (for Cooperatives/Associations)
+                  <div class="col-span-12 md:col-span-3">
+                    <FormLabel  htmlFor="modal-form-3"> No. of Male </FormLabel>
+                    <FormInput form-input-size="sm"  v-model="formBusiness.noOfMaleEmployee" type="text"
+                    placeholder="If applicable"/>
+                  </div>
+                  <div class="col-span-12 md:col-span-3">
+                    <FormLabel  htmlFor="modal-form-3"> No. of Female </FormLabel>
+                    <FormInput form-input-size="sm"  v-model="formBusiness.noOfFemaleEmployee" type="text"
+                    placeholder="If applicable"/>
+                  </div>
+                  <!-- <div class="col-span-12 md:col-span-8">
+                    <FormLabel  htmlFor="modal-form-1"> No. of Male
                     </FormLabel>
                     <InputGroup>
-                        <InputGroup.Text id="input-group-email"> Male </InputGroup.Text>
-                        <FormInput  :rounded="rounded" v-model="formBusiness.noOfMaleEmployee" 
-                            type="number" placeholder="Farmer's ID" class="col-span-12 md:col-span-6" />
+                        <InputGroup.Text  id="input-group-email"> Male </InputGroup.Text>
+                        <FormInput form-input-size="sm"  :rounded="rounded" v-model="formBusiness.noOfMaleEmployee" 
+                            type="number" placeholder="Farmer's ID" class="col-span-12 md:col-span-6 mb-2 mr-2" />
                         <InputGroup.Text id="input-group-email"> Female </InputGroup.Text>
-                        <FormInput  :rounded="rounded" v-model="formBusiness.noOfFemaleEmployee" 
-                            type="number" placeholder="Farmer's ID" class="col-span-12 md:col-span-6" />
+                        <FormInput form-input-size="sm"  :rounded="rounded" v-model="formBusiness.noOfFemaleEmployee" 
+                            type="number" placeholder="Farmer's ID" class="col-span-12 md:col-span-6 mb-2 mr-2" />
                     </InputGroup>
-                  </div>
+                  </div> -->
                   <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
                     <legend class="text-xs">Business Address</legend>
                     <div class="col-span-12 md:col-span-6">
                         <FormLabel  htmlFor="modal-form-1"> House No./Street Name</FormLabel>
-                        <FormInput  v-model="formBusiness.businessAddress" type="text"
+                        <FormInput form-input-size="sm"  v-model="formBusiness.businessAddress" type="text"
                         placeholder="House/Building No. / Room & Floor No./ Building Name" required/>
                     </div>
                     <div class="col-span-12 md:col-span-3">
                         <FormLabel  htmlFor="modal-form-3"> Longitude </FormLabel>
-                        <FormInput  v-model="formBusiness.businessLongitude" type="text"
+                        <FormInput form-input-size="sm"  v-model="formBusiness.businessLongitude" type="text"
                         placeholder="If applicable"/>
                     </div>
                     <div class="col-span-12 md:col-span-3">
                         <FormLabel  htmlFor="modal-form-3"> Latitude </FormLabel>
-                        <FormInput  v-model="formBusiness.businessLatitude" type="text"
+                        <FormInput form-input-size="sm"  v-model="formBusiness.businessLatitude" type="text"
                         placeholder="If applicable"/>
                     </div>
                     <!-- BEGIN: Search -->
                     <div class="col-span-12 md:col-span-12">
                         <div class="col-span-12 md:col-span-3">
-                        <FormLabel  htmlFor="modal-form-1"> Barangay  </FormLabel>
-                        <FormInput
-                            type="text"
-                            placeholder="Search Barangay..."
-                            @focus="showSearchBrgyBusiness"
-                            @blur="hideSearchBrgyBusiness"
-                            v-model="addressSelectBus.businessAddress"
-                        />
-                    </div>
+                            <FormLabel  htmlFor="modal-form-1"> Barangay  </FormLabel>
+                            <FormInput form-input-size="sm"
+                                type="text"
+                                placeholder="Search Barangay..."
+                                @focus="showSearchBrgyBusiness"
+                                @blur="hideSearchBrgyBusiness"
+                                v-model="addressSelectBus.businessAddress"
+                            />
+                        </div>
                         <TransitionRoot
                         as="template"
                         :show="brgyDropdownBusiness"
@@ -713,24 +744,24 @@ onMounted(async () => {
                     <legend class="text-xs">Plant Address</legend>
                     <div class="col-span-12 md:col-span-6">
                         <FormLabel  htmlFor="modal-form-1"> House No./Street Name</FormLabel>
-                        <FormInput  v-model="formBusiness.plantAddress" type="text"
+                        <FormInput form-input-size="sm"  v-model="formBusiness.plantAddress" type="text"
                         placeholder="House/Building No. / Room & Floor No./ Building Name" required :disabled="disAbled"/>
                     </div>
                     <div class="col-span-12 md:col-span-3">
                         <FormLabel  htmlFor="modal-form-3"> Longitude </FormLabel>
-                        <FormInput  v-model="formBusiness.plantLongitude" type="text"
+                        <FormInput form-input-size="sm"  v-model="formBusiness.plantLongitude" type="text"
                         placeholder="If applicable" :disabled="disAbled"/>
                     </div>
                     <div class="col-span-12 md:col-span-3">
                         <FormLabel  htmlFor="modal-form-3"> Latitude </FormLabel>
-                        <FormInput  v-model="formBusiness.plantLatitude" type="text"
+                        <FormInput form-input-size="sm"  v-model="formBusiness.plantLatitude" type="text"
                         placeholder="If applicable" :disabled="disAbled"/>
                     </div>
                     <!-- BEGIN: Search -->
                     <div class="col-span-12 md:col-span-12">
                         <div class="col-span-12 md:col-span-3">
                             <FormLabel  htmlFor="modal-form-1"> Barangay  </FormLabel>
-                            <FormInput
+                            <FormInput form-input-size="sm"
                                 type="text"
                                 placeholder="Search Barangay..."
                                 @focus="showSearchBrgyPlant"
@@ -772,27 +803,27 @@ onMounted(async () => {
                     <legend class="text-xs">Contact Details</legend>
                     <div class="col-span-12 md:col-span-4">
                         <FormLabel  htmlFor="modal-form-3"> Landline Number </FormLabel>
-                        <FormInput  v-model="formBusiness.landlineNo" type="text"
+                        <FormInput form-input-size="sm"  v-model="formBusiness.landlineNo" type="text"
                         placeholder="If applicable"/>
                     </div>
                     <div class="col-span-12 md:col-span-4">
                         <FormLabel  htmlFor="modal-form-3"> Mobile Number </FormLabel>
-                        <FormInput  v-model="formBusiness.mobileNo" type="text"
+                        <FormInput form-input-size="sm"  v-model="formBusiness.mobileNo" type="text"
                         placeholder="If applicable"/>
                     </div>
                     <div class="col-span-12 md:col-span-4">
                         <FormLabel  htmlFor="modal-form-3"> Fax Number </FormLabel>
-                        <FormInput  v-model="formBusiness.faxNo" type="text"
+                        <FormInput form-input-size="sm"  v-model="formBusiness.faxNo" type="text"
                         placeholder="If applicable"/>
                     </div>
                     <div class="col-span-12 md:col-span-6">
                       <FormLabel  htmlFor="modal-form-3"> Website </FormLabel>
-                      <FormInput  v-model="formBusiness.website" type="text"
+                      <FormInput form-input-size="sm"  v-model="formBusiness.website" type="text"
                       placeholder="If applicable"/>
                     </div>
                     <div class="col-span-12 md:col-span-6">
                         <FormLabel  htmlFor="modal-form-3"> Email Address </FormLabel>
-                        <FormInput  v-model="formBusiness.email" type="email"
+                        <FormInput form-input-size="sm"  v-model="formBusiness.email" type="email"
                         placeholder="If applicable"/>
                     </div>
                   </fieldset>
@@ -803,58 +834,117 @@ onMounted(async () => {
               </form>
             </div>
           </div>
-          <div class="col-span-12 intro-y box lg:col-span-5">
-            <div class="p-5">
-                <form class="validate-form" @submit.prevent="onAddBSocial">
-                  <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 
-                            border border-solid border-gray-300 p-2">
-                    <legend class="text-xs">Social Media Platforms</legend>
-                    <div class="col-span-12 md:col-span-12">
-                      <Table bordered>
-                        <Table.Thead>
-                          <Table.Tr>
-                            <Table.Th class="whitespace-nowrap w-1">#</Table.Th>
-                            <Table.Th class="whitespace-nowrap sm:w-40"> Platform </Table.Th>
-                            <Table.Th class="whitespace-nowrap w-auto sm:w-96"> URL </Table.Th>
-                            <Table.Th class="w-1"></Table.Th>
-                          </Table.Tr>
-                        </Table.Thead>
-                        <Table.Tbody>
-                          <Table.Tr>
-                            <Table.Td>-</Table.Td>
-                            <Table.Td>
-                              <TomSelect
-                                v-model="selectStandardCertification"
-                                :options="{
-                                  placeholder: 'Select item below. If not exist please key it in.',
-                                  maxItems:1,
-                                }"
-                                class="w-full col-span-12 md:col-span-12" required
-                              >
-                                <option value="FB">Facebook</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="Twitter">Twitter</option>
-                                <option :value="formBusiness.socialMedia">{{formBusiness.socialMedia}}</option>
-                              </TomSelect>
-                            </Table.Td>
-                            <Table.Td>
-                              <FormInput  :rounded="rounded" v-model="formBusiness.socialUrl" 
-                              type="text" placeholder="SocMed URL" class="col-span-12 md:col-span-12" required/>
-                            </Table.Td>
-                            <Table.Td>
-                              <Button type="submit" variant="primary" elevated class="w-auto bg-primary">
-                                <Lucide icon="Plus" class="p-0" />
-                              </Button>
-                            </Table.Td>
-                          </Table.Tr>
-                        </Table.Tbody>
-                      </Table>
-                    </div>
-                  </fieldset>
-                </form>
-            </div>
-          </div>
+          <!-- Social Media Section -->
+            <Disclosure.Group variant="boxed" class="col-span-12 intro-y box lg:col-span-5">
+              <Disclosure>
+                  <Disclosure.Button>
+                      Social Media Platform
+                  </Disclosure.Button>
+                  <Disclosure.Panel class="leading-relaxed text-slate-600 dark:text-slate-500">
+                    <form class="validate-form p-2" @submit.prevent="onAddBSocial">
+                        <div class="col-span-12 md:col-span-12">
+                          <Table sm striped>
+                            <Table.Thead>
+                              <Table.Tr>
+                                <Table.Th class="whitespace-nowrap sm:w-40"> Platform </Table.Th>
+                                <Table.Th class="whitespace-nowrap w-auto sm:w-96"> URL </Table.Th>
+                                <Table.Th class="w-1"></Table.Th>
+                              </Table.Tr>
+                            </Table.Thead>
+                            <Table.Tbody>
+                              <Table.Tr v-for="socMed in socialMedList" :key="socMed.id" :value="socMed.id" class="-p-10">
+                                <Table.Td>
+                                    <div class="flex flex-wrap p-0">
+                                      <Button type="button" size="sm" :variant="socMed.platForm" class=" w-24 mb-2 mr-2">
+                                        <Lucide :icon="socMed.platForm" class="w-4 h-4 mr-2" />{{socMed.platForm}}
+                                      </Button>
+                                    </div>
+                                </Table.Td>
+                                <Table.Td>{{socMed.url}}</Table.Td>
+                                <Table.Td>
+                                  <Button size="sm" variant="danger" class="mb-2 mr-1" @click="removeSocial(socMed.id)">
+                                    <Lucide icon="Trash2" class="w-4 h-4" />
+                                  </Button>
+                                </Table.Td>
+                              </Table.Tr>
+                              <Table.Tr>
+                                <Table.Td>
+                                  <TomSelect
+                                    v-model="selectSocialMed"
+                                    :options="{
+                                      placeholder: 'Select item below. If not exist please key it in.',
+                                    }"
+                                    class="w-full col-span-12 md:col-span-12" multiple required
+                                  >
+                                    <option :value="formSocialMedia.platForm">Please Select.....</option>
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="Twitter">Twitter</option>
+                                    <option value="Linkedin">Linkedin</option>
+                                  </TomSelect>
+                                </Table.Td>
+                                <Table.Td>
+                                  <FormInput form-input-size="sm" :rounded="rounded" v-model="formSocialMedia.url" 
+                                  type="text" placeholder="SocMed URL" class="col-span-12 md:col-span-12" required/>
+                                </Table.Td>
+                                <Table.Td>
+                                  <Button type="submit" size="sm" variant="primary" class="mb-2 mr-1">
+                                    <Lucide icon="Plus" class="w-5 h-5" />
+                                  </Button>
+                                </Table.Td>
+                              </Table.Tr>
+                            </Table.Tbody>
+                          </Table>
+                        </div>
+                    </form>
+                  </Disclosure.Panel>
+              </Disclosure>
+              <Disclosure>
+                  <Disclosure.Button>
+                      Ecommerce Platform
+                  </Disclosure.Button>
+                  <Disclosure.Panel class="leading-relaxed text-slate-600 dark:text-slate-500">
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry. Lorem Ipsum has been the industry's
+                      standard dummy text ever since the 1500s, when an unknown
+                      printer took a galley of type and scrambled it to make a
+                      type specimen book. It has survived not only five centuries,
+                      but also the leap into electronic typesetting, remaining
+                      essentially unchanged.
+                  </Disclosure.Panel>
+              </Disclosure>
+              <Disclosure>
+                  <Disclosure.Button>
+                      Business Owner List
+                  </Disclosure.Button>
+                  <Disclosure.Panel class="leading-relaxed text-slate-600 dark:text-slate-500">
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry. Lorem Ipsum has been the industry's
+                      standard dummy text ever since the 1500s, when an unknown
+                      printer took a galley of type and scrambled it to make a
+                      type specimen book. It has survived not only five centuries,
+                      but also the leap into electronic typesetting, remaining
+                      essentially unchanged.
+                  </Disclosure.Panel>
+              </Disclosure>
+              <Disclosure>
+                  <Disclosure.Button>
+                      Other Business Affiliates
+                  </Disclosure.Button>
+                  <Disclosure.Panel class="leading-relaxed text-slate-600 dark:text-slate-500">
+                      Lorem Ipsum is simply dummy text of the printing and
+                      typesetting industry. Lorem Ipsum has been the industry's
+                      standard dummy text ever since the 1500s, when an unknown
+                      printer took a galley of type and scrambled it to make a
+                      type specimen book. It has survived not only five centuries,
+                      but also the leap into electronic typesetting, remaining
+                      essentially unchanged.
+                  </Disclosure.Panel>
+              </Disclosure>
+          </Disclosure.Group>
+        <!-- End of Social Media Section -->
         </div>
+        
       </Tab.Panel>
       <!-- END: Business Information -->
       <Tab.Panel>
@@ -899,12 +989,12 @@ onMounted(async () => {
 
                     <div class="col-span-12 md:col-span-8">
                       <FormLabel htmlFor="modal-form-2">Registered Business Name</FormLabel>
-                      <FormInput  :rounded="rounded" 
+                      <FormInput form-input-size="sm"  :rounded="rounded" 
                       v-model="formBusiness.businessName" type="text" placeholder="" required/>
                     </div>
                     <div class="col-span-12 md:col-span-4">
                       <FormLabel htmlFor="modal-form-3">Year Established</FormLabel>
-                      <FormInput  :rounded="rounded" v-model="formBusiness.yearEstablished" 
+                      <FormInput form-input-size="sm"  :rounded="rounded" v-model="formBusiness.yearEstablished" 
                           type="number" placeholder="" />
                     </div>
                   </fieldset>
