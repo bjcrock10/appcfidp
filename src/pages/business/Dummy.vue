@@ -5,6 +5,10 @@ import Button from "../../base-components/Button";
 import { FormSwitch, FormInput, FormSelect, InputGroup, FormLabel, FormTextarea} from "../../base-components/Form";
 import Progress from "../../base-components/Progress";
 import Lucide from "../../base-components/Lucide";
+import StackedBarChart1 from "../../components/StackedBarChart1";
+import SimpleLineChart from "../../components/SimpleLineChart";
+import SimpleLineChart1 from "../../components/SimpleLineChart1";
+import SimpleLineChart2 from "../../components/SimpleLineChart2";
 import { Menu, Tab } from "../../base-components/Headless";
 import TomSelect from "../../base-components/TomSelect";
 import { Tab as HeadlessTab } from "@headlessui/vue";
@@ -26,7 +30,6 @@ import { createIcons, icons } from "lucide";
 import logoUrl from "../../assets/images/logo.png";
 import Item from '../../base-components/Headless/Menu/Item.vue';
 import { Disclosure } from "../../base-components/Headless";
-import Product from "../../components/Product";
 
 const router = useRouter();
 const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDropdown,
@@ -38,8 +41,7 @@ const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDr
 const {formBusiness, formBusinessOwner, formEcommerce, formSocialMedia, hideSearchBrgyBusiness, hideSearchBrgyPlant, 
         showSearchBrgyBusiness, showSearchBrgyPlant, brgyDropdownBusiness, brgyDropdownPlant, addressSelectBus,
       checkBusinessBrgy, checkPlantBrgy, businessID, businessSubmit, getBusinessInfo, 
-      selectBusinessOwner, selectLineOfBusiness, selectStandardCertification, selectSocialMed, selectEcommerce, 
-      selectBOwner, showSearchBusiness, hideSearchBusiness, businessList, businessDropdown} = useBusiness();
+      selectBusinessOwner, selectLineOfBusiness, selectStandardCertification, selectSocialMed, selectEcommerce, selectBOwner} = useBusiness();
 const {initTabulator, reInitOnResizeWindow, 
 filter, onFilter, 
 onExportCsv, onExportHtml, 
@@ -123,17 +125,6 @@ watch(
           clientList.value = response.data
         }).catch((e: Error)=>{
           console.log(clientList.value)
-        })
-      }
-    }
-)
-watch(
-  () => (formBusiness.businessName), async(name, prevToe) => {
-    if(name.length>4){
-        BusinessDataService.findByName(name).then((response: ResponseData)=>{
-          businessList.value = response.data
-        }).catch((e: Error)=>{
-          console.log(businessList.value)
         })
       }
     }
@@ -277,38 +268,6 @@ const selectClient = (item:any) =>{
   formBusinessOwner.designation = item.designation
   formBusinessOwner.contactNo = item.telNo +"|"+item.mobileNo
   formBusinessOwner.email = item.email
-}
-
-const selectOwner = (item:any)=>{
-  formClient.businessId = item.id
-  formBusiness.businessName = item.businessName
-  formBusiness.yearEstablished = item.yearEstablished
-  selectBusinessOwner.value = ([item.businessOwnership])
-  selectLineOfBusiness.value =  ([item.lineOfBusiness])
-  selectStandardCertification.value =  ([item.standardCertification])
-  formBusiness.capitalization = item.capitalization
-  formBusiness.noOutlets = item.noOutlets
-  formBusiness.noEmployee = item.noEmployee
-  formBusiness.noOfMaleEmployee = item.noOfMaleEmployee
-  formBusiness.noOfFemaleEmployee = item.noOfFemaleEmployee
-  formBusiness.businessAddress = item.businessAddress
-  addressSelectBus.businessAddress = item.businessBrgyAddress
-  formBusiness.businessBrgy = item.businessBrgy
-  formBusiness.businessLongitude = item.businessLongitude
-  formBusiness.businessLatitude = item.businessLatitude
-  formBusiness.plantAddress = item.plantAddress
-  addressSelectBus.plantAddress = item.plantBrgyAddress
-  formBusiness.plantBrgy = item.plantBrgy
-  formBusiness.plantLongitude = item.plantLongitude
-  formBusiness.plantLatitude = item.plantLatitude
-  formBusiness.landlineNo = item.landlineNo
-  formBusiness.mobileNo = item.mobileNo
-  formBusiness.faxNo = item.faxNo
-  formBusiness.website = item.website
-  formBusiness.email = item.email
-  loadSocial(item.id);
-  loadEcommerce(item.id);
-  loadBusinessOwner(item.id);
 }
 </script>
 
@@ -669,38 +628,7 @@ const selectOwner = (item:any)=>{
                   <div class="col-span-12 md:col-span-8">
                       <FormLabel htmlFor="modal-form-2">Registered Business Name</FormLabel>
                       <FormInput form-input-size="sm"  :rounded="rounded" 
-                      v-model="formBusiness.businessName" type="text" placeholder=""
-                      @focus="showSearchBusiness"
-                      @blur="hideSearchBusiness"
-                      required/>
-                    <TransitionRoot
-                      as="template"
-                      :show="businessDropdown"
-                      enter="transition-all ease-linear duration-150"
-                      enterFrom="mt-5 invisible opacity-0 translate-y-1"
-                      enterTo="mt-[3px] visible opacity-100 translate-y-0"
-                      entered="mt-[3px]"
-                      leave="transition-all ease-linear duration-150"
-                      leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
-                      leaveTo="mt-5 invisible opacity-0 translate-y-1"
-                      class="w-full h-40 overflow-scroll"
-                    >
-                      <div class="absolute right-100 z-10 mt-[3px]">
-                        <div class="w-auto p-5 box">
-                          <div class="mb-2 font-medium">Business Name List</div>
-                          <div class="mb-5 hover:blue" v-for="item in businessList" :key="item.id" :value="item.id" v-on:click="selectOwner(item)">
-                            <button href="" class="flex items-center" type="button">
-                              <div
-                                class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 dark:bg-success/10 text-success"
-                              >
-                                <Lucide icon="User" class="w-4 h-4" />
-                              </div>
-                              <div class="ml-3">{{item.businessName}}</div>
-                            </button>
-                          </div>
-                          </div>
-                      </div>
-                    </TransitionRoot>
+                      v-model="formBusiness.businessName" type="text" placeholder="" required/>
                   </div>
                   <div class="col-span-12 md:col-span-4">
                     <FormLabel htmlFor="modal-form-3">Year Established</FormLabel>
@@ -713,10 +641,6 @@ const selectOwner = (item:any)=>{
                       v-model="selectBusinessOwner"
                       :options="{
                         placeholder: 'Select item below. If not exist please key it in.',
-                        persist: false,
-                        createOnBlur: true,
-                        create: true,
-                        maxItems:1
                       }"
                       class="w-full" multiple
                     >
@@ -733,10 +657,6 @@ const selectOwner = (item:any)=>{
                       v-model="selectLineOfBusiness"
                       :options="{
                         placeholder: 'Select item below. If not exist please key it in.',
-                        persist: false,
-                        createOnBlur: true,
-                        create: true,
-                        maxItems:1
                       }"
                       class="w-full" multiple
                     >
@@ -794,6 +714,18 @@ const selectOwner = (item:any)=>{
                     <FormInput form-input-size="sm"  v-model="formBusiness.noOfFemaleEmployee" type="text"
                     placeholder="If applicable"/>
                   </div>
+                  <!-- <div class="col-span-12 md:col-span-8">
+                    <FormLabel  htmlFor="modal-form-1"> No. of Male
+                    </FormLabel>
+                    <InputGroup>
+                        <InputGroup.Text  id="input-group-email"> Male </InputGroup.Text>
+                        <FormInput form-input-size="sm"  :rounded="rounded" v-model="formBusiness.noOfMaleEmployee" 
+                            type="number" placeholder="Farmer's ID" class="col-span-12 md:col-span-6 mb-2 mr-2" />
+                        <InputGroup.Text id="input-group-email"> Female </InputGroup.Text>
+                        <FormInput form-input-size="sm"  :rounded="rounded" v-model="formBusiness.noOfFemaleEmployee" 
+                            type="number" placeholder="Farmer's ID" class="col-span-12 md:col-span-6 mb-2 mr-2" />
+                    </InputGroup>
+                  </div> -->
                   <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
                     <legend class="text-xs">Business Address</legend>
                     <div class="col-span-12 md:col-span-6">
@@ -994,10 +926,6 @@ const selectOwner = (item:any)=>{
                                     v-model="selectSocialMed"
                                     :options="{
                                       placeholder: 'Select item below. If not exist please key it in.',
-                                      persist: false,
-                                      createOnBlur: true,
-                                      create: true,
-                                      maxItems:1
                                     }"
                                     class="w-full col-span-12 md:col-span-12" multiple required
                                   >
@@ -1061,10 +989,6 @@ const selectOwner = (item:any)=>{
                                   v-model="selectEcommerce"
                                   :options="{
                                     placeholder: 'Select item below. If not exist please key it in.',
-                                    persist: false,
-                                    createOnBlur: true,
-                                    create: true,
-                                    maxItems:1
                                   }"
                                   class="w-full col-span-12 md:col-span-12" multiple required
                                 >
@@ -1202,7 +1126,60 @@ const selectOwner = (item:any)=>{
       </Tab.Panel>
       <!-- END: Business Information -->
       <Tab.Panel>
-        <Product :business="formClient.businessId"/>
+        <div class="grid grid-cols-12 gap-6">
+          <div class="col-span-12 intro-y box lg:col-span-12">
+            <div class="p-5">
+                <form class="validate-form" @submit.prevent="onAddBusiness">
+                  <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 
+                            border border-solid border-gray-300 p-2">
+                            <div class="overflow-x-auto">
+                              <Table bordered>
+                                <Table.Thead>
+                                  <Table.Tr>
+                                    <Table.Th class="whitespace-nowrap">#</Table.Th>
+                                    <Table.Th class="whitespace-nowrap"> First Name </Table.Th>
+                                    <Table.Th class="whitespace-nowrap"> Last Name </Table.Th>
+                                    <Table.Th class="whitespace-nowrap"> Username </Table.Th>
+                                  </Table.Tr>
+                                </Table.Thead>
+                                <Table.Tbody>
+                                  <Table.Tr>
+                                    <Table.Td>1</Table.Td>
+                                    <Table.Td>Angelina</Table.Td>
+                                    <Table.Td>Jolie</Table.Td>
+                                    <Table.Td>@angelinajolie</Table.Td>
+                                  </Table.Tr>
+                                  <Table.Tr>
+                                    <Table.Td>2</Table.Td>
+                                    <Table.Td>Brad</Table.Td>
+                                    <Table.Td>Pitt</Table.Td>
+                                    <Table.Td>@bradpitt</Table.Td>
+                                  </Table.Tr>
+                                  <Table.Tr>
+                                    <Table.Td>3</Table.Td>
+                                    <Table.Td>Charlie</Table.Td>
+                                    <Table.Td>Hunnam</Table.Td>
+                                    <Table.Td>@charliehunnam</Table.Td>
+                                  </Table.Tr>
+                                </Table.Tbody>
+                              </Table>
+                            </div>
+
+                    <div class="col-span-12 md:col-span-8">
+                      <FormLabel htmlFor="modal-form-2">Registered Business Name</FormLabel>
+                      <FormInput form-input-size="sm"  :rounded="rounded" 
+                      v-model="formBusiness.businessName" type="text" placeholder="" required/>
+                    </div>
+                    <div class="col-span-12 md:col-span-4">
+                      <FormLabel htmlFor="modal-form-3">Year Established</FormLabel>
+                      <FormInput form-input-size="sm"  :rounded="rounded" v-model="formBusiness.yearEstablished" 
+                          type="number" placeholder="" />
+                    </div>
+                  </fieldset>
+                </form>
+            </div>
+          </div>
+        </div>
       </Tab.Panel>
     </Tab.Panels>
   </Tab.Group>

@@ -32,8 +32,8 @@ class BusinessDataService {
       return http.delete(`/business/`);
     }
   
-    findByLname(lname: String): Promise<any> {
-      return http.get(`/business/?lname=${lname}`);
+    findByName(name: String): Promise<any> {
+      return http.get(`/business/?name=${name}`);
     }
     //Social Media Platform-------------------------------------------
     getAllSocial(): Promise<any> {
@@ -70,7 +70,9 @@ class BusinessDataService {
     createEcommerce(data: any): Promise<any> {
       return http.post("/ecommerce/", data);
     }
-  
+    getEcommerceByBusiness(id: any): Promise<any> {
+      return http.get(`/ecommerce/?bid=${id}`);
+    }
     updateEcommerce(id: any, data: any): Promise<any> {
       return http.put(`/ecommerce/${id}/`, data);
     }
@@ -84,25 +86,28 @@ class BusinessDataService {
     }
     //Business Owner-------------------------------------------
     getAllOwner(): Promise<any> {
-      return http.get('/ecommerce/')
+      return http.get('/businessowner/')
+    }
+    getOwnerByBusiness(id: any): Promise<any> {
+      return http.get(`/businessowner/?bid=${id}`);
     }
     getOwner(id: any): Promise<any> {
-      return http.get(`/ecommerce/?id=${id}`);
+      return http.get(`/businessowner/?id=${id}`);
     }
     createOwner(data: any): Promise<any> {
-      return http.post("/ecommerce/", data);
+      return http.post("/businessowner/", data);
     }
   
     updateOwner(id: any, data: any): Promise<any> {
-      return http.put(`/ecommerce/${id}/`, data);
+      return http.put(`/businessowner/${id}/`, data);
     }
 
     patchOwner(id: any,data: any): Promise<any> {
-      return http.patch(`/ecommerce/${id}/`, data);
+      return http.patch(`/businessowner/${id}/`, data);
     }
   
     deleteOwner(id: any): Promise<any> {
-      return http.delete(`/ecommerce/${id}/`);
+      return http.delete(`/businessowner/${id}/`);
     }
   }
   

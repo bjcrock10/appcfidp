@@ -16,7 +16,7 @@ export function tabulatorFunc(){
       });
       const resp = ref([])
       const loadingIcon = ref(true)
-      const initTabulator = (columnData:Any, dataService:Any, tableRef:HTMLDivElement, byId:Any="0") => {
+      const initTabulator = (columnData:any, dataService:any, tableRef:any, byId:any="0") => {
         tabulator.value = new Tabulator(tableRef.value, {
             data: [],
             progressiveRender: true, //enable progressive rendering
@@ -36,7 +36,6 @@ export function tabulatorFunc(){
             columns: columnData
         });
         if(byId==="0"){
-          alert(tableRef.value + "1")
           if (tableRef.value) {
             dataService.getLimit(500)
             .then((response: ResponseData) => {

@@ -286,7 +286,7 @@ export function useClient(){
 
     const brgySelect = ref();
     const citySelect = ref();
-    const clientList = ref()
+    const clientList = ref();
     const addressSelect = reactive({
       'addressName':''
     })

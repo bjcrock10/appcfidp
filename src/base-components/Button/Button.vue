@@ -34,11 +34,7 @@ type Variant =
   | "facebook"
   | "twitter"
   | "instagram"
-  | "linkedin"
-    "Facebook"
-  | "Twitter"
-  | "Instagram"
-  | "Linkedin";
+  | "linkedin";
 
 type Elevated = boolean;
 type Size = "sm" | "lg";
@@ -112,25 +108,13 @@ const dark = [
 const facebook = [
   "bg-[#3b5998] border-[#3b5998] text-white dark:border-[#3b5998]",
 ];
-const Facebook = [
-  "bg-[#3b5998] border-[#3b5998] text-white dark:border-[#3b5998]",
-];
 const twitter = [
-  "bg-[#4ab3f4] border-[#4ab3f4] text-white dark:border-[#4ab3f4]",
-];
-const Twitter = [
   "bg-[#4ab3f4] border-[#4ab3f4] text-white dark:border-[#4ab3f4]",
 ];
 const instagram = [
   "bg-[#517fa4] border-[#517fa4] text-white dark:border-[#517fa4]",
 ];
-const Instagram = [
-  "bg-[#517fa4] border-[#517fa4] text-white dark:border-[#517fa4]",
-];
 const linkedin = [
-  "bg-[#0077b5] border-[#0077b5] text-white dark:border-[#0077b5]",
-];
-const Linkedin = [
   "bg-[#0077b5] border-[#0077b5] text-white dark:border-[#0077b5]",
 ];
 
@@ -243,10 +227,6 @@ const computedClass = computed(() =>
     variant == "twitter" && twitter,
     variant == "instagram" && instagram,
     variant == "linkedin" && linkedin,
-    variant == "Facebook" && Facebook,
-    variant == "Twitter" && Twitter,
-    variant == "Instagram" && Instagram,
-    variant == "Linkedin" && Linkedin,
     rounded && "rounded-full",
     elevated && "shadow-md",
     typeof attrs.class === "string" && attrs.class,

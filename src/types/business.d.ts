@@ -183,7 +183,8 @@ export function useBusiness(){
     const selectLineOfBusiness = ref([formBusiness.lineOfBusiness]);
     const selectStandardCertification = ref([formBusiness.standardCertification]);
     const selectSocialMed = ref(["1"]);
-
+    const selectEcommerce = ref(["1"]);
+    const selectBOwner = ref(["1"]);
     const columnDataSocial = ref([
         {
             title: "",
@@ -230,6 +231,14 @@ export function useBusiness(){
             download: false,
             },
     ]);
+    const businessDropdown = ref(false);
+    const businessList = ref();
+    const showSearchBusiness = () => {
+        businessDropdown.value = true;
+    };
+    const hideSearchBusiness = () => {
+        businessDropdown.value = false;
+    };
     return {
         formBusiness,
         formSocialMedia,
@@ -253,6 +262,12 @@ export function useBusiness(){
         selectLineOfBusiness,
         selectStandardCertification,
         selectSocialMed,
-        columnDataSocial
+        selectEcommerce,
+        selectBOwner,
+        columnDataSocial,
+        businessDropdown,
+        businessList,
+        showSearchBusiness,
+        hideSearchBusiness
     }
 }
