@@ -59,7 +59,6 @@ export function useMarketProfile(){
             print: true,
             download: true,
             print: false,
-            download: false,
         },
         {
             title: "Product",
