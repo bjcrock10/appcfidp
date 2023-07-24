@@ -59,15 +59,16 @@ export function tabulatorFunc(){
           }
         }
         else{
-           alert(tableRef.value)
           if (tableRef.value) {
             dataService.getByBusiness(byId)
             .then((response: ResponseData) => {
-             
               tabulator.value.setData(response.data)
             })
             .catch((e: Error)=>{
-                console.log(e)
+                console.log(e.message)
+                alert("Failed to load data due to slow internet connection.")
+            }).finally(()=>{
+              loadingIcon.value = false
             })
           }
         }
@@ -109,10 +110,10 @@ export function tabulatorFunc(){
       };
       
       // On reset filter
-      const onResetFilter = () => {
+      const onResetFilter = (defaultField:any = "name") => {
         setFilter({
           ...filter,
-          field: "name",
+          field: defaultField,
           type: "like",
           value: "",
         });

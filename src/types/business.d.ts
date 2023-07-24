@@ -78,6 +78,26 @@ export function useBusiness(){
         'email' : '',
         'recStat' : '0',
     });
+    const formMarketPlan = reactive({
+        'id' : '0',
+        'business' : '0',
+        'marketPlan' : '',
+        'specific' : '',
+        'encodedBy': sessionStorage.getItem('userId'),
+        'encodedByName': sessionStorage.getItem('name'),
+        'encodedDate':'',
+        'recStat':'0',
+    });
+    const formMarketTraining = reactive({
+        'id' : '0',
+        'business' : '0',
+        'training' : '',
+        'targetYear' : '',
+        'encodedBy': sessionStorage.getItem('userId'),
+        'encodedByName': sessionStorage.getItem('name'),
+        'encodedDate':'',
+        'recStat':'0',
+    });
     const brgyDropdownBusiness = ref(false);
     const brgyDropdownPlant = ref(false);
     const showSearchBrgyBusiness = () => {
@@ -185,6 +205,8 @@ export function useBusiness(){
     const selectSocialMed = ref(["1"]);
     const selectEcommerce = ref(["1"]);
     const selectBOwner = ref(["1"]);
+    const selectMarketPlan = ref(["1"]);
+    const selectMarketTraining = ref(["1"]);
     const columnDataSocial = ref([
         {
             title: "",
@@ -268,6 +290,10 @@ export function useBusiness(){
         businessDropdown,
         businessList,
         showSearchBusiness,
-        hideSearchBusiness
+        hideSearchBusiness,
+        formMarketPlan,
+        formMarketTraining,
+        selectMarketPlan,
+        selectMarketTraining
     }
 }

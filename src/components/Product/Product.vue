@@ -9,7 +9,7 @@ import Lucide from "../../base-components/Lucide";
 import { Menu, Dialog } from "../../base-components/Headless";
 import {ref, onMounted, inject, watch, provide } from "vue";
 import ProductDataService from "../../services/ProductDataService";
-import ResponseData from "../../types/response.d";
+import ResponseData from "../../types/response";
 import { FormSwitch, FormInput, FormSelect, InputGroup, FormLabel, FormTextarea} from "../../base-components/Form";
 import TomSelect from "../../base-components/TomSelect";
 import Button from "../../base-components/Button";
@@ -21,6 +21,7 @@ import { NotificationElement } from "../../base-components/Notification";
 import Toastify from "toastify-js";
 import { createIcons, icons } from "lucide";
 import { useRouter } from "vue-router"; 
+import LoadingIcon from "../../base-components/LoadingIcon";
 
 const {formProduct, columnData} = useProduct();
 const {initTabulator, reInitOnResizeWindow, 
@@ -38,11 +39,49 @@ const addModal = ref(false);
 const message = ref("");
 const messageDetail = ref("");
 const sendButtonRef = ref(null);
-const selectProduct = ref(["1"])
-const buttonTitle = ref("")
+const selectProduct = ref(["1"]);
+const selectCertification = ref(["1"]);
+const selectUom = ref(["1"]);
+const buttonTitle = ref("");
 const onSubmit = async () =>{
-    ProductDataService.create(formProduct).then((response: ResponseData))
-}
+    formProduct.productName = selectProduct.value.toString();
+    formProduct.certification = selectCertification.value.toString();
+    formProduct.uom = selectUom.value.toString();
+    if(formProduct.id === "0"){
+      ProductDataService.create(formProduct).then((response: ResponseData)=>{
+        successNotification.value.showToast();
+        addModal.value = false;
+        messageDetail.value = "You successfully added new data...";
+        tabulator.value?.addData(response.data);
+      }).catch((e: Error)=>{
+        console.log(e.message)
+      }).finally(()=>{
+        selectProduct.value = (["1"]);
+        selectCertification.value = (["1"]);
+        selectUom.value = (["1"]);
+        formProduct.brandName = ""
+        formProduct.size = ""
+        formProduct.productionCapacity = ""
+      })
+    }
+    else{
+      ProductDataService.update(formProduct.id,formProduct).then((response: ResponseData)=>{
+        successNotification.value.showToast();
+        addModal.value = false;
+        messageDetail.value = "You successfully updated new data...";
+        dataTable();
+      }).catch((e: Error)=>{
+        console.log(e.message)
+      }).finally(()=>{
+        selectProduct.value = (["1"]);
+        selectCertification.value = (["1"]);
+        selectUom.value = (["1"]);
+        formProduct.brandName = ""
+        formProduct.size = ""
+        formProduct.productionCapacity = ""
+      })
+    }
+};
 const setAddModal = (value: boolean) => {
   addModal.value = value;
 };
@@ -51,10 +90,25 @@ provide("bind[successNotification]", (el: any) => {
   // Binding
   successNotification.value = el;
   });
+const dataTable = () =>{
+  initTabulator(columnData.value, ProductDataService, tableClient,props.business);
+  reInitOnResizeWindow();
+  tabulator.value?.on("rowClick",(e, cell)=>{
+    formProduct.id = cell.getData().id
+    selectProduct.value = ([cell.getData().productName])
+    formProduct.certification = cell.getData().certification
+    selectCertification.value = ([cell.getData().certification])
+    selectUom.value = ([cell.getData().uom])
+    formProduct.productionCapacity = cell.getData().productionCapacity
+    formProduct.size = cell.getData().size
+    formProduct.brandName = cell.getData().brandName
+    addModal.value = true
+    buttonTitle.value = "Update"
+  })
+};
 onMounted(() => {
-    initTabulator(columnData.value, ProductDataService, tableClient);
-    reInitOnResizeWindow();
-    formProduct.business = props.business
+    dataTable();
+    formProduct.business = props.business;
 });
 </script>
 
@@ -68,26 +122,25 @@ onMounted(() => {
         </Button>
         <!-- BEGIN: Notification Content -->
           <Notification refKey="successNotification" :options="{
-            duration: 3000,
-            }" class="flex bg-slate-200">
-            <Lucide icon="CheckCircle" class="block mx-auto" />
-          <div class="ml-4 mr-4">
-            <div class="font-medium">
-              {{message}}
+              duration: 3000,
+              }" class="flex bg-slate-200">
+              <Lucide icon="CheckCircle" class="block mx-auto" />
+            <div class="ml-4 mr-4">
+              <div class="font-medium">
+                {{message}}
+              </div>
+              <div class="text-slate-500 mt-1">
+                {{ messageDetail }}
+              </div>
             </div>
-            <div class="text-slate-500 mt-1">
-              {{ messageDetail }}
-            </div>
-          </div>
           </Notification>
-      <!-- END: Notification Content -->
+        <!-- END: Notification Content -->
         <!-- BEGIN: Modal Content -->
         <Dialog size="xl" :open="addModal" @close="
                         () => {
                           setAddModal(false);
                         }
-                      " :initialFocus="sendButtonRef"
-                      :draggable="true">
+                      " :initialFocus="sendButtonRef">
           <Dialog.Panel>
               <Dialog.Title>
                   <h2 class="mr-auto text-base font-medium">
@@ -107,7 +160,7 @@ onMounted(() => {
                           <div class="col-span-12 md:col-span-6">
                             <FormLabel htmlFor="modal-form-3">Product Name</FormLabel>
                             <TomSelect
-                              v-model="formProduct.productName"
+                              v-model="selectProduct"
                               :options="{
                                 placeholder: 'Select item below. If others please specify.',
                                 persist: false,
@@ -136,8 +189,37 @@ onMounted(() => {
                               <option :value="formProduct.productType">{{formProduct.productType}}</option>
                             </TomSelect>
                           </div>
+                          <div class="col-span-12 md:col-span-6">
+                            <FormLabel htmlFor="modal-form-3">UOM</FormLabel>
+                            <TomSelect
+                              v-model="selectUom"
+                              :options="{
+                                placeholder: 'Select item below. If others please specify.',
+                                persist: false,
+                                createOnBlur: true,
+                                create: true,
+                                maxItems:1
+                              }"
+                              class="w-full" multiple required
+                            >
+                              <option value="Milliliter">Milliliter</option>
+                              <option value="Liter">Liter</option>
+                              <option value="Gallon">Gallon</option>
+                              <option value="Piece/s">Piece/s</option>
+                              <option value="Kilo/s">Kilo/s</option>
+                              <option value="Lot/s">Lot</option>
+                              <option value="Box/es">Box</option>
+                              <option value="Pack/s">Pack/s</option>
+                              <option :value="formProduct.uom">{{formProduct.uom}}</option>
+                            </TomSelect>
+                          </div>
                           <div class="col-span-12 sm:col-span-6">
-                            <FormLabel htmlFor="modal-form-3">Product Capacity</FormLabel>
+                            <FormLabel htmlFor="modal-form-3">Size</FormLabel>
+                            <FormInput v-model="formProduct.size" 
+                              type="number" placeholder="" required/>
+                          </div>
+                          <div class="col-span-12 sm:col-span-6">
+                            <FormLabel htmlFor="modal-form-3">Production Capacity</FormLabel>
                             <FormInput v-model="formProduct.productionCapacity" 
                               type="text" placeholder="" required/>
                           </div>
@@ -149,7 +231,7 @@ onMounted(() => {
                           <div class="col-span-12 md:col-span-6">
                             <FormLabel htmlFor="modal-form-3">Product Certification</FormLabel>
                             <TomSelect
-                              v-model="formProduct.certification"
+                              v-model="selectCertification"
                               :options="{
                                 placeholder: 'Select item below. If others please specify.',
                               }"
@@ -172,31 +254,16 @@ onMounted(() => {
                         Cancel
                     </Button>
                     <Button type="submit" variant="primary" elevated class="w-auto">
-                      <Lucide icon="Save" class="w-4 h-4 mr-2" />Save
+                      <Lucide icon="Save" class="w-4 h-4 mr-2" />{{buttonTitle}}
                     </Button>
                 </Dialog.Footer>
               </form>
           </Dialog.Panel>
         </Dialog>
         <!-- END: Modal Content -->
-        <Menu class="ml-auto sm:ml-0">
-          <Menu.Button :as="Button" class="px-2 font-normal !box">
-            <span class="flex items-center justify-center w-5 h-5">
-              <Lucide icon="Plus" class="w-4 h-4" />
-            </span>
-          </Menu.Button>
-          <Menu.Items class="w-40">
-            <Menu.Item>
-              <Lucide icon="FilePlus" class="w-4 h-4 mr-2" /> New Category
-            </Menu.Item>
-            <Menu.Item>
-              <Lucide icon="UserPlus" class="w-4 h-4 mr-2" /> New Group
-            </Menu.Item>
-          </Menu.Items>
-        </Menu>
       </div>
     <!-- BEGIN: HTML Table Data -->
-    <div class="p-5 mt-5 intro-y box">
+    <div class="p-5 mt-5 intro-y sm:overf">
         <div class="flex flex-col sm:flex-row sm:items-end xl:items-start">
         <form
             id="tabulator-html-filter-form"
@@ -209,7 +276,7 @@ onMounted(() => {
             "
         >
             <div class="items-center sm:flex sm:mr-4 sm:w-auto">
-            <label class="flex-none w-12 mr-2 xl:w-auto xl:flex-initial">
+            <label class="flex flex-col w-12 mr-2 xl:w-auto xl:flex-initial">
                 Field
             </label>
             <FormSelect
@@ -218,12 +285,13 @@ onMounted(() => {
                 class="w-full mt-2 2xl:w-full sm:mt-0 sm:w-auto"
             >
                 <option value="id">No.</option>
-                <option value="name">Name</option>
-                <option value="farmerId">Farmers Id</option>
-                <option value="province">Province</option>
+                <option value="productName">Product</option>
+                <option value="brandName">Brand Name</option>
+                <option value="certification">Certification</option>
+                <option value="size">Size</option>
             </FormSelect>
             </div>
-            <div class="items-center mt-2 sm:flex sm:mr-4 xl:mt-0">
+            <div class="flex items-center mt-2 sm:flex sm:mr-4 xl:mt-0">
             <label class="flex-none w-12 mr-2 xl:w-auto xl:flex-initial">
                 Type
             </label>
@@ -241,7 +309,7 @@ onMounted(() => {
                 <option value="!=">!=</option>
             </FormSelect>
             </div>
-            <div class="items-center mt-2 sm:flex sm:mr-4 xl:mt-0">
+            <div class="flex items-center mt-2 sm:flex sm:mr-4 xl:mt-0">
             <label class="flex-none w-12 mr-2 xl:w-auto xl:flex-initial">
                 Value
             </label>
@@ -253,25 +321,14 @@ onMounted(() => {
                 placeholder="Search..."
             />
             </div>
-            <div class="mt-2 xl:mt-0">
-            <Button
-                id="tabulator-html-filter-go"
-                variant="primary"
-                type="button"
-                class="w-full sm:w-16"
-                @click="onFilter"
-            >
-                Go
-            </Button>
-            <Button
-                id="tabulator-html-filter-reset"
-                variant="secondary"
-                type="button"
-                class="w-full mt-2 sm:w-16 sm:mt-0 sm:ml-1"
-                @click="onResetFilter"
-            >
-                Reset
-            </Button>
+            <div class="flex mt-2 xl:mt-0">
+              <Button variant="primary" class="mb-2 mr-1" id="tabulator-html-filter-go" @click="onFilter">
+                    <Lucide icon="Search" class="w-5 h-5" />
+                </Button>
+                <Button variant="secondary" class="mb-2 mr-1" id="tabulator-html-filter-reset" 
+                    @click="onResetFilter('productName')">
+                    <Lucide icon="RefreshCcw" class="w-5 h-5" />
+                </Button>
             </div>
         </form>
         <div class="flex mt-5 sm:mt-0">
@@ -309,14 +366,14 @@ onMounted(() => {
             </Menu>
         </div>
         </div>
-        <div class="overflow-x-auto scrollbar-hidden">
-        <div id="tabulator" ref="tableClient" class="mt-5"></div>
-        <div v-if="loadingIcon===true"
-            class="flex flex-col items-center justify-end col-span-6 sm:col-span-3 xl:col-span-2"
-        >
-            <LoadingIcon icon="grid" class="w-8 h-8" />
-        <div class="mt-2 text-xs text-center">Loading Data...</div>
-        </div>
+        <div class="overflow-x-auto scrollbar-hidden overflow-scroll">
+          <div id="tabulator" ref="tableClient" class="mt-5"></div>
+          <div v-if="loadingIcon===true"
+              class="flex flex-col items-center justify-end col-span-6 sm:col-span-3 xl:col-span-2"
+          >
+              <LoadingIcon icon="grid" class="w-8 h-8" />
+          <div class="mt-2 text-xs text-center">Loading Data...</div>
+          </div>
         </div>
     </div>
     <!-- END: HTML Table Data -->

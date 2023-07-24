@@ -4,11 +4,13 @@ import ProductDataService from '../services/ProductDataService';
 import ResponseData from "./response";
 export function useProduct(){
     const formProduct = reactive({
+        'id':'0',
         'business':'',
         'productType':'',
         'productName':'',
         'productionCapacity':'',
         'uom':'',
+        'size':'',
         'brandName':'',
         'certification':'',
         'encodedBy': sessionStorage.getItem('userId'),
@@ -29,9 +31,9 @@ export function useProduct(){
   
         // For HTML table
         {
-            title: "No",
-            minWidth: 100,
-            maxWidth: 100,
+            title: "#",
+            minWidth: 50,
+            maxWidth: 50,
             field: "id",
             hozAlign: "center",
             headerHozAlign: "center",
@@ -49,31 +51,32 @@ export function useProduct(){
             vertAlign: "middle",
             print: false,
             download: false,
-        },
-        {
-            title: "Production Capacity",
-            minWidth: 200,
-            field: "productionCapacity",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            print: false,
-            download: false,
-        },
-        {
-            title: "UOM",
-            minWidth: 200,
-            field: "uom",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            print: false,
-            download: false,
+            formatter(cell) {
+                return `<div>
+                    <div class="font-medium whitespace-nowrap">${cell.getData().productName}</div>
+                        <div class="text-slate-500 text-xs whitespace-nowrap"><label>Size: </label>${
+                          cell.getData().size
+                        }</div>
+                        <div class="text-slate-500 text-xs whitespace-nowrap"><label>UOM: </label>${
+                          cell.getData().uom
+                        }</div>
+                    </div>`;
+                },
         },
         {
             title: "Brand Name",
             minWidth: 200,
             field: "brandName",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            print: false,
+            download: false,
+        },
+        {
+            title: "Production Capacity",
+            minWidth: 200,
+            field: "productionCapacity",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
@@ -116,9 +119,9 @@ export function useProduct(){
             download: true,
         },
         {
-            title: "Production Capacity",
+            title: "Size",
             minWidth: 200,
-            field: "productionCapacity",
+            field: "uom",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
@@ -143,6 +146,17 @@ export function useProduct(){
             field: "brandName",
             hozAlign: "center",
             headerHozAlign: "center",
+            visible: false,
+            print: true,
+            download: true,
+        },
+        {
+            title: "Production Capacity",
+            minWidth: 200,
+            field: "productionCapacity",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
             visible: false,
             print: true,
             download: true,

@@ -109,6 +109,56 @@ class BusinessDataService {
     deleteOwner(id: any): Promise<any> {
       return http.delete(`/businessowner/${id}/`);
     }
+    //Market Plan-------------------------------------------
+    getAllMarketPlan(): Promise<any> {
+      return http.get('/marketplan/')
+    }
+    getMarketPlanByBusiness(id: any): Promise<any> {
+      return http.get(`/marketplan/?bid=${id}`);
+    }
+    getMarketPlan(id: any): Promise<any> {
+      return http.get(`/marketplan/?id=${id}`);
+    }
+    createMarketPlan(data: any): Promise<any> {
+      return http.post("/marketplan/", data);
+    }
+  
+    updateMarketPlan(id: any, data: any): Promise<any> {
+      return http.put(`/marketplan/${id}/`, data);
+    }
+
+    patchMarketPlan(id: any,data: any): Promise<any> {
+      return http.patch(`/marketplan/${id}/`, data);
+    }
+  
+    deleteMarketPlan(id: any): Promise<any> {
+      return http.delete(`/marketplan/${id}/`);
+    }
+    //Market Training-------------------------------------------
+    getAllMarketTraining(): Promise<any> {
+      return http.get('/markettraining/')
+    }
+    getMarketTrainingByBusiness(id: any): Promise<any> {
+      return http.get(`/markettraining/?bid=${id}`);
+    }
+    getMarketTraining(id: any): Promise<any> {
+      return http.get(`/markettraining/?id=${id}`);
+    }
+    createMarketTraining(data: any): Promise<any> {
+      return http.post("/markettraining/", data);
+    }
+  
+    updateMarketTraining(id: any, data: any): Promise<any> {
+      return http.put(`/markettraining/${id}/`, data);
+    }
+
+    patchMarketTraining(id: any,data: any): Promise<any> {
+      return http.patch(`/markettraining/${id}/`, data);
+    }
+  
+    deleteMarketTraining(id: any): Promise<any> {
+      return http.delete(`/markettraining/${id}/`);
+    }
   }
   
   export default new BusinessDataService();

@@ -509,7 +509,7 @@ onMounted(async () => {
             variant="secondary"
             type="button"
             class="w-full mt-2 sm:w-16 sm:mt-0 sm:ml-1"
-            @click="onResetFilter"
+            @click="onResetFilter('name')"
           >
             Reset
           </Button>
