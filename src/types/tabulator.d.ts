@@ -16,7 +16,7 @@ export function tabulatorFunc(){
       });
       const resp = ref([])
       const loadingIcon = ref(true)
-      const initTabulator = (columnData:any, dataService:any, tableRef:any, byId:any="0") => {
+      const initTabulator = (columnData:any, dataService:any, tableRef:any, byId:any="0",byBusiness=false) => {
         tabulator.value = new Tabulator(tableRef.value, {
             data: [],
             progressiveRender: true, //enable progressive rendering
@@ -35,6 +35,11 @@ export function tabulatorFunc(){
             placeholder: "No matching records found",
             columns: columnData
         });
+        if(byBusiness===true){
+          if(byId==="0"){
+            byId="-1"
+          }
+        }
         if(byId==="0"){
           if (tableRef.value) {
             dataService.getLimit(500)

@@ -651,7 +651,7 @@ const selectOwner = (item:any)=>{
             </div>
           </div>
           <!-- Social Media Section -->
-            <Disclosure.Group variant="boxed" class="col-span-12 intro-y box lg:col-span-5 -ml-4" v-if="formBusiness.id!=='0'">
+            <Disclosure.Group variant="boxed" class="col-span-12 intro-y box lg:col-span-5 -ml-4">
               <Disclosure>
                   <Disclosure.Button>
                       Social Media Platform
@@ -708,7 +708,7 @@ const selectOwner = (item:any)=>{
                                   type="text" placeholder="SocMed URL" class="col-span-12 md:col-span-12" required/>
                                 </Table.Td>
                                 <Table.Td>
-                                  <Button type="submit" variant="primary" class="mb-2 mr-1">
+                                  <Button type="submit" variant="primary" class="mb-2 mr-1" v-if="formBusiness.id!=='0'">
                                     <Lucide icon="Plus" class="w-5 h-5" />
                                   </Button>
                                 </Table.Td>
@@ -745,7 +745,7 @@ const selectOwner = (item:any)=>{
                               </Table.Td>
                               <Table.Td>{{item['url']}}</Table.Td>
                               <Table.Td>
-                                <Button variant="danger" class="mb-2 mr-1" @click="removeEcommerce(item['id'])">
+                                <Button variant="danger" class="mb-2 mr-1" @click="removeEcommerce(item['id'])" v-if="formBusiness.id!=='0'">
                                   <Lucide icon="Trash2" class="w-4 h-4" />
                                 </Button>
                               </Table.Td>
@@ -773,7 +773,7 @@ const selectOwner = (item:any)=>{
                                 type="text" placeholder="SocMed URL" class="col-span-12 md:col-span-12" required/>
                               </Table.Td>
                               <Table.Td>
-                                <Button type="submit" variant="primary" class="mb-2 mr-1">
+                                <Button type="submit" variant="primary" class="mb-2 mr-1" v-if="formBusiness.id!=='0'">
                                   <Lucide icon="Plus" class="w-5 h-5" />
                                 </Button>
                               </Table.Td>
@@ -808,7 +808,7 @@ const selectOwner = (item:any)=>{
                               <Table.Td>{{item['contactNo']}}</Table.Td>
                               <Table.Td>{{item['email']}}</Table.Td>
                               <Table.Td>
-                                <Button variant="danger" class="mb-2 mr-1" @click="removeBusinessOwner(item['id'])">
+                                <Button variant="danger" class="mb-2 mr-1" @click="removeBusinessOwner(item['id'])" v-if="formBusiness.id!=='0'">
                                   <Lucide icon="Trash2" class="w-4 h-4" />
                                 </Button>
                               </Table.Td>
@@ -926,7 +926,7 @@ const selectOwner = (item:any)=>{
                                   type="text" placeholder="Please specify" class="col-span-12 md:col-span-12" required/>
                                 </Table.Td>
                                 <Table.Td>
-                                  <Button type="submit" variant="primary" class="mb-2 mr-1">
+                                  <Button type="submit" variant="primary" class="mb-2 mr-1" v-if="formBusiness.id!=='0'">
                                     <Lucide icon="Plus" class="w-5 h-5" />
                                   </Button>
                                 </Table.Td>
@@ -993,7 +993,7 @@ const selectOwner = (item:any)=>{
                                   type="number" placeholder="Please specify" class="col-span-12 md:col-span-12" required/>
                                 </Table.Td>
                                 <Table.Td>
-                                  <Button type="submit" variant="primary" class="mb-2 mr-1">
+                                  <Button type="submit" variant="primary" class="mb-2 mr-1" v-if="formBusiness.id!=='0'">
                                     <Lucide icon="Plus" class="w-5 h-5" />
                                   </Button>
                                 </Table.Td>

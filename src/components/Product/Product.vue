@@ -91,7 +91,7 @@ provide("bind[successNotification]", (el: any) => {
   successNotification.value = el;
   });
 const dataTable = () =>{
-  initTabulator(columnData.value, ProductDataService, tableClient,props.business);
+  initTabulator(columnData.value, ProductDataService, tableClient,props.business,true);
   reInitOnResizeWindow();
   tabulator.value?.on("rowClick",(e, cell)=>{
     formProduct.id = cell.getData().id
@@ -117,7 +117,7 @@ onMounted(() => {
         <Button class="mr-2 shadow-md" as="a" href="#" variant="primary" @click="(event: MouseEvent) => {
             event.preventDefault();
             setAddModal(true);
-          }">
+          }" v-if="props.business!=='0'">
           Add New Product
         </Button>
         <!-- BEGIN: Notification Content -->
@@ -253,7 +253,7 @@ onMounted(() => {
                               <Lucide icon="XSquare" class="w-4 h-4 mr-2" />
                         Cancel
                     </Button>
-                    <Button type="submit" variant="primary" elevated class="w-auto">
+                    <Button type="submit" variant="primary" elevated class="w-auto" v-if="props.business!=='0'">
                       <Lucide icon="Save" class="w-4 h-4 mr-2" />{{buttonTitle}}
                     </Button>
                 </Dialog.Footer>

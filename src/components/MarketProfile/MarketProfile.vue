@@ -158,11 +158,11 @@ provide("bind[successNotification]", (el: any) => {
   successNotification.value = el;
   });
 const dataTable = () =>{
-  initTabulator(columnData.value, MarketProfileDataService, tableClient,props.business);
+  initTabulator(columnData.value, MarketProfileDataService, tableClient,props.business,true);
   reInitOnResizeWindow();
   tabulator.value?.on("rowClick",(e, cell)=>{
     formMarketProfile.id = cell.getData().id
-    selectProduct.value = ([cell.getData().product])
+    selectProduct.value = cell.getData().product.toString()
     formMarketProfile.certification = cell.getData().certification
     formMarketProfile.productionCapacity = cell.getData().productionCapacity
     formMarketProfile.size = cell.getData().size
@@ -245,7 +245,7 @@ onMounted(() => {
         <Button class="mr-2 shadow-md" as="a" href="#" variant="primary" @click="(event: MouseEvent) => {
             event.preventDefault();
             setAddModal(true);
-            }">
+            }" v-if="props.business!=='0'">
             Add Market Profile
         </Button>
         <!-- BEGIN: Notification Content -->
@@ -296,7 +296,7 @@ onMounted(() => {
                                 searchField:['productName'],
                                 labelField:'productName',
                                 sortField:'productName',
-                                create:true,
+                                create:false,
                                 options:dataProduct,
                                 }"
                                 class="w-full">
@@ -350,7 +350,7 @@ onMounted(() => {
                         Cancel
                     </Button>
                     <span class="ml-3"></span>
-                    <Button type="submit" variant="primary" elevated class="w-auto">
+                    <Button type="submit" variant="primary" elevated class="w-auto" v-if="props.business!=='0'">
                         <Lucide icon="Save" class="w-4 h-4 mr-2" />{{buttonTitle}}
                     </Button>
                     <span class="ml-3"></span>
@@ -554,7 +554,7 @@ onMounted(() => {
                                 type="text" placeholder="Volume" class="col-span-12 md:col-span-4" required/>
                               </Table.Td>
                               <Table.Td>
-                                <Button type="submit" variant="primary" class="mb-2 mr-1">
+                                <Button type="submit" variant="primary" class="mb-2 mr-1" v-if="props.business!=='0'">
                                   <Lucide icon="Plus" class="w-5 h-5" />
                                 </Button>
                               </Table.Td>

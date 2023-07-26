@@ -29,6 +29,8 @@ import { Disclosure } from "../../base-components/Headless";
 import Product from "../../components/Product";
 import MarketProfile from '../../components/MarketProfile';
 import Business from '../../components/Business'
+import Assistance from '../../components/Assistance';
+
 
 const router = useRouter();
 const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDropdown,
@@ -311,14 +313,14 @@ onMounted(async () => {
                                 <div class="absolute right-100 z-50 mt-[3px]">
                                     <div class="w-auto p-5 box">
                                     <div class="mb-2 font-medium">List of Barangay</div>
-                                    <div class="mb-5 hover:bg-slate-400" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkBa(item)">
+                                    <div class="mb-5 hover:bg-slate-400" v-for="item in brgySelect" :key="item['id']" :value="item['id']" @click="checkBa(item)">
                                         <button href="" class="flex items-center" type="button">
                                         <div
                                             class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 dark:bg-success/10 text-success"
                                         >
                                             <Lucide icon="MapPin" class="w-4 h-4" />
                                         </div>
-                                        <div class="ml-3">{{item.address}}</div>
+                                        <div class="ml-3">{{item['address']}}</div>
                                         </button>
                                     </div>
                                     </div>
@@ -424,11 +426,11 @@ onMounted(async () => {
           </div>
         </div>
       </Tab.Panel>
-      <!-- BEGIN: Business Information -->
+      <!-- END: Business Information -->
       <Tab.Panel>
         <Business :business="formClient.businessId" :clientId="clientID"/>
       </Tab.Panel>
-      <!-- END: Business Information -->
+      <!-- BEGIN: Product Information -->
       <Tab.Panel>
         <div class="grid grid-cols-12 gap-6">
           <div class="col-span-12 intro-y box lg:col-span-6">
@@ -443,6 +445,18 @@ onMounted(async () => {
           </div>
         </div>
       </Tab.Panel>
+      <!-- END: Product Information -->
+      <!-- BEGIN: Assistance Information -->
+      <Tab.Panel>
+        <div class="grid grid-cols-12 gap-6">
+          <div class="col-span-12 intro-y box lg:col-span-12">
+            <div class="p-5">
+                <Assistance :business="formClient.businessId" :clientId="formClient.id"/>
+            </div>
+          </div>
+        </div>
+      </Tab.Panel>
+      <!-- END: Assistance Information -->
     </Tab.Panels>
   </Tab.Group>
 </template>
