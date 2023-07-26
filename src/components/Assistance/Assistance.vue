@@ -222,7 +222,7 @@ onMounted(async () => {
                       </div>
                       <div class="col-span-12 md:col-span-6">
                             <FormLabel  htmlFor="modal-form-1">Assistance Level (EDT)</FormLabel>
-                            <FormSelect form-select-size="sm"  v-model="formAssistance.edtLevel" class="col-span-12 md:col-span-3" @change="dAccreditation">
+                            <FormSelect form-select-size="sm"  v-model="formAssistance.edtLevel" class="col-span-12 md:col-span-3">
                                 <option value="Level 0 – Potential Entrepreneurs">Level 0 – Potential Entrepreneurs-</option>
                                 <option value="Level 1 – Nurturing Startup">Level 1 – Nurturing Startup</option>
                                 <option value="Level 1.1 (Unregistered)">Level 1.1 (Unregistered)</option>
@@ -234,7 +234,7 @@ onMounted(async () => {
                         </div>
                         <div class="col-span-12 md:col-span-6">
                             <FormLabel  htmlFor="modal-form-1">Level of Digitalization</FormLabel>
-                            <FormSelect form-select-size="sm"  v-model="formAssistance.digitalLevel" class="col-span-12 md:col-span-3" @change="dAccreditation">
+                            <FormSelect form-select-size="sm"  v-model="formAssistance.digitalLevel" class="col-span-12 md:col-span-3">
                                 <option value="Level 0 – No use of Digital Tools">Level 0 – No use of Digital Tools</option>
                                 <option value="Level 1 – Basic. MSMEs that use Basic Digital Tools for Business">Level 1 – Basic. MSMEs that use Basic Digital Tools for Business</option>
                                 <option value="Level 2 – Intermediate. MSMEs that have an Online Presence">Level 2 – Intermediate. MSMEs that have an Online Presence</option>
@@ -254,7 +254,7 @@ onMounted(async () => {
                             }"
                             class="w-full" multiple required
                         >
-                            <option v-for="item in assistanceType" :value="item['id']" :key="item['id']" @click="subTypeSelect(item)">{{item['title']}}</option>
+                            <option v-for="item in assistanceType" :value="item['id']" :key="item['id']">{{item['title']}}</option>
                             <option :value="formAssistance.assistanceType">{{formAssistance.assistanceType}}</option>
                         </TomSelect>
                     </div>
