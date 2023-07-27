@@ -64,6 +64,15 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/error-page",
+    name: "error-page",
+    component: ErrorPage,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    component: ErrorPage,
+  },
 ];
 
 const router = createRouter({

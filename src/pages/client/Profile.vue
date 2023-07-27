@@ -366,7 +366,7 @@ onMounted(async () => {
                         <div class="col-span-12 md:col-span-4">
                             <FormLabel  htmlFor="modal-form-1"> Are you NCFRS-Registered? </FormLabel>
                             <InputGroup class="grid grid-cols-12">
-                                <FormSelect form-select-size="sm"  v-model="ncfrs" class="col-span-12 md:col-span-2 text-slate-50" @change="aNcfrs">
+                                <FormSelect form-select-size="sm"  v-model="ncfrs" class="col-span-12 md:col-span-2" @change="aNcfrs">
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                                 <option value="Not Sure">Not Sure</option>
@@ -378,7 +378,7 @@ onMounted(async () => {
                         <div class="col-span-12 md:col-span-4">
                             <FormLabel  htmlFor="modal-form-1"> Tenurial Status </FormLabel>
                             <InputGroup class="grid grid-cols-12">
-                            <FormSelect form-select-size="sm"  v-model="tenurial" class="col-span-12 md:col-span-2 text-slate-50" @change="dTenurial">
+                            <FormSelect form-select-size="sm"  v-model="tenurial" class="col-span-12 md:col-span-2" @change="dTenurial">
                                 <option value="Owner">Owner</option>
                                 <option value="Owner-Tiller">Owner-Tiller</option>
                                 <option value="Grower">Grower</option>
@@ -394,7 +394,7 @@ onMounted(async () => {
                         <div class="col-span-12 md:col-span-8">
                             <FormLabel  htmlFor="modal-form-1"> Are you a member of a farm/coconut organization? </FormLabel>
                             <InputGroup class="grid grid-cols-12">
-                            <FormSelect form-select-size="sm"  v-model="organization" class="col-span-12 md:col-span-2 text-slate-50" @change="dOrganization">
+                            <FormSelect form-select-size="sm"  v-model="organization" class="col-span-12 md:col-span-2" @change="dOrganization">
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </FormSelect>
