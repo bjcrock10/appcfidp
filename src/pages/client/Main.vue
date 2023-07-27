@@ -24,7 +24,7 @@ const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDr
         lnameDropdown, showSearchBrgy, hideSearchBrgy, showSearchLname, hideSearchLname, 
         message, messageDetail, buttonTitle, buttonIcon, setAddModal, select, brgy, sendButtonRef, ncfrs, tenurial,
         accreditation, organization, disNcfrs, disTenurial, disAccreditation, disOrganization, brgySelect, citySelect,
-        clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation} = useClient();
+        clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation, brgyId} = useClient();
 const {initTabulator, reInitOnResizeWindow, 
 filter, onFilter, 
 onExportCsv, onExportHtml, 
@@ -37,15 +37,12 @@ provide("bind[successNotification]", (el: any) => {
   // Binding
   successNotification.value = el;
   });
+
 const onSubmit = () => {
-  LocationDataService.getBrgy(addressSelect.addressName).then((response: ResponseData)=>{
-        formClient.lgu = response.data[0].cityName
-        formClient.barangay = response.data[0].barangay
-        formClient.province = response.data[0].province
-        console.log(response.data)
-        }).catch((e: Error)=>{
-          console.log(citySelect.value)
-  })
+  brgyId.value = addressSelect.addressName.split(", ")
+  formClient.barangay = brgyId.value[0]
+  formClient.lgu = brgyId.value[1]
+  formClient.province = brgyId.value[2]
   formClient.lname.toUpperCase();
   formClient.fname.toUpperCase();
   formClient.mname.toUpperCase();
@@ -71,7 +68,7 @@ watch(addModal,(addModal, oldAdm)=> {
 });
 watch(
   () => (addressSelect.addressName), async(address, prevToe) => {
-    if(address.length>4){
+    if(address.length>2){
         LocationDataService.getBarangayVal(address).then((response: ResponseData)=>{
         brgySelect.value = response.data
         }).catch((e: Error)=>{
@@ -82,7 +79,7 @@ watch(
 )
 watch(
   () => (formClient.lname), async(lname, prevToe) => {
-    if(lname.length>4){
+    if(lname.length>=2){
         ClientDataService.findByLname(lname).then((response: ResponseData)=>{
           clientList.value = response.data
         }).catch((e: Error)=>{

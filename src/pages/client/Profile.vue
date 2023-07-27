@@ -69,7 +69,7 @@ watch(
 );
 
 const onSubmit = () =>{
- updateClientInfo(clientID.value).then();
+ updateClientInfo(clientID.value,formClient).then();
  if(clientSubmit.value===true){
     successNotification.value.showToast();
     messageDetail.value = "You successfully updated client profile..."

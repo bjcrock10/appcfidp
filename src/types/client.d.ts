@@ -287,6 +287,7 @@ export function useClient(){
     const brgySelect = ref();
     const citySelect = ref();
     const clientList = ref();
+    const brgyId = ref();
     const addressSelect = reactive({
       'addressName':''
     })
@@ -338,8 +339,8 @@ export function useClient(){
       }
     };
     const clientSubmit = ref(false)
-    const updateClientInfo = async (id:any) =>{
-      ClientDataService.update(id,formClient).then((response: ResponseData)=>{
+    const updateClientInfo = async (id:any, data: any) =>{
+      ClientDataService.update(id,data).then((response: ResponseData)=>{
         clientSubmit.value = true
       }).catch((e: Error)=>{
         clientSubmit.value = false
@@ -407,6 +408,6 @@ export function useClient(){
         message, messageDetail, buttonTitle, buttonIcon, setAddModal, select, brgy, sendButtonRef, ncfrs, tenurial,
         accreditation, organization, disNcfrs, disTenurial, disAccreditation, disOrganization, brgySelect, citySelect,
         clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation, getClientInfo, 
-        updateClientInfo, clientSubmit, patchClientInfo
+        updateClientInfo, clientSubmit, patchClientInfo, brgyId
     }
 }
