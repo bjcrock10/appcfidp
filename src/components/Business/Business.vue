@@ -359,11 +359,11 @@ const selectOwner = (item:any)=>{
         </Notification>
       <!-- END: Notification Content -->
         <div class="grid grid-cols-12 gap-6">
-          <div class="col-span-12 intro-y box lg:col-span-7 sm:col-span-12 md:col-span-full">
+          <div class="col-span-12 intro-y box lg:col-span-12 sm:col-span-12 md:col-span-full">
             <div class="p-5">
               <form class="validate-form" @submit.prevent="onAddBusiness">
                 <div class="grid grid-cols-12 col-span-12 gap-4 gap-y-3">
-                  <div class="col-span-12 md:col-span-8">
+                  <div class="col-span-12 md:col-span-6">
                       <FormLabel htmlFor="modal-form-2">Registered Business Name</FormLabel>
                       <FormInput form-input-size="sm"  :rounded="rounded" 
                       v-model="formBusiness.businessName" type="text" placeholder=""
@@ -399,12 +399,12 @@ const selectOwner = (item:any)=>{
                       </div>
                     </TransitionRoot>
                   </div>
-                  <div class="col-span-12 md:col-span-4">
+                  <div class="col-span-12 md:col-span-2">
                     <FormLabel htmlFor="modal-form-3">Year Established</FormLabel>
                     <FormInput form-input-size="sm"  :rounded="rounded" v-model="formBusiness.yearEstablished" 
                         type="number" placeholder="" />
                   </div>
-                  <div class="col-span-12 md:col-span-8">
+                  <div class="col-span-12 md:col-span-4">
                     <FormLabel htmlFor="modal-form-3">Business Ownership</FormLabel>
                     <TomSelect
                       v-model="selectBusinessOwner"
@@ -443,7 +443,7 @@ const selectOwner = (item:any)=>{
                       <option :value="formBusiness.lineOfBusiness">{{formBusiness.lineOfBusiness}}</option>
                     </TomSelect>
                   </div>
-                  <div class="col-span-12 md:col-span-8">
+                  <div class="col-span-12 md:col-span-4">
                     <FormLabel htmlFor="modal-form-3">Standard Certification/Accreditation</FormLabel>
                     <TomSelect
                       v-model="selectStandardCertification"
@@ -493,62 +493,62 @@ const selectOwner = (item:any)=>{
                   </div>
                   <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
                     <legend class="text-xs">Business Address</legend>
-                    <div class="col-span-12 md:col-span-6">
+                    <div class="col-span-12 md:col-span-4">
                         <FormLabel  htmlFor="modal-form-1"> House No./Street Name</FormLabel>
                         <FormInput form-input-size="sm"  v-model="formBusiness.businessAddress" type="text"
                         placeholder="House/Building No. / Room & Floor No./ Building Name" required/>
                     </div>
-                    <div class="col-span-12 md:col-span-3">
+                    <!-- BEGIN: Search -->
+                    <div class="col-span-12 md:col-span-4">
+                      <div class="col-span-12 md:col-span-12">
+                          <FormLabel  htmlFor="modal-form-1"> Barangay  </FormLabel>
+                          <FormInput form-input-size="sm"
+                              type="text"
+                              placeholder="Search Barangay..."
+                              @focus="showSearchBrgyBusiness"
+                              @blur="hideSearchBrgyBusiness"
+                              v-model="addressSelectBus.businessAddress"
+                          />
+                      </div>
+                      <TransitionRoot
+                      as="template"
+                      :show="brgyDropdownBusiness"
+                      enter="transition-all ease-linear duration-150"
+                      enterFrom="mt-5 invisible opacity-0 translate-y-1"
+                      enterTo="mt-[3px] visible opacity-100 translate-y-0"
+                      entered="mt-[3px]"
+                      leave="transition-all ease-linear duration-150"
+                      leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
+                      leaveTo="mt-5 invisible opacity-0 translate-y-1"
+                      >
+                      <div class="absolute right-100 z-50 mt-[3px]">
+                          <div class="w-auto p-5 box">
+                          <div class="mb-2 font-medium">List of Barangay</div>
+                          <div class="mb-5 hover:bg-slate-400" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkBusinessBrgy(item)">
+                              <button href="" class="flex items-center" type="button">
+                              <div
+                                  class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 dark:bg-success/10 text-success"
+                              >
+                                  <Lucide icon="MapPin" class="w-4 h-4" />
+                              </div>
+                              <div class="ml-3">{{item.address}}</div>
+                              </button>
+                          </div>
+                          </div>
+                      </div>
+                      </TransitionRoot>
+                  </div>
+                  <!-- END: Search -->
+                    <div class="col-span-12 md:col-span-2">
                         <FormLabel  htmlFor="modal-form-3"> Longitude </FormLabel>
                         <FormInput form-input-size="sm"  v-model="formBusiness.businessLongitude" type="text"
                         placeholder="If applicable"/>
                     </div>
-                    <div class="col-span-12 md:col-span-3">
+                    <div class="col-span-12 md:col-span-2">
                         <FormLabel  htmlFor="modal-form-3"> Latitude </FormLabel>
                         <FormInput form-input-size="sm"  v-model="formBusiness.businessLatitude" type="text"
                         placeholder="If applicable"/>
                     </div>
-                    <!-- BEGIN: Search -->
-                    <div class="col-span-12 md:col-span-12">
-                        <div class="col-span-12 md:col-span-3">
-                            <FormLabel  htmlFor="modal-form-1"> Barangay  </FormLabel>
-                            <FormInput form-input-size="sm"
-                                type="text"
-                                placeholder="Search Barangay..."
-                                @focus="showSearchBrgyBusiness"
-                                @blur="hideSearchBrgyBusiness"
-                                v-model="addressSelectBus.businessAddress"
-                            />
-                        </div>
-                        <TransitionRoot
-                        as="template"
-                        :show="brgyDropdownBusiness"
-                        enter="transition-all ease-linear duration-150"
-                        enterFrom="mt-5 invisible opacity-0 translate-y-1"
-                        enterTo="mt-[3px] visible opacity-100 translate-y-0"
-                        entered="mt-[3px]"
-                        leave="transition-all ease-linear duration-150"
-                        leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
-                        leaveTo="mt-5 invisible opacity-0 translate-y-1"
-                        >
-                        <div class="absolute right-100 z-50 mt-[3px]">
-                            <div class="w-auto p-5 box">
-                            <div class="mb-2 font-medium">List of Barangay</div>
-                            <div class="mb-5 hover:bg-slate-400" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkBusinessBrgy(item)">
-                                <button href="" class="flex items-center" type="button">
-                                <div
-                                    class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 dark:bg-success/10 text-success"
-                                >
-                                    <Lucide icon="MapPin" class="w-4 h-4" />
-                                </div>
-                                <div class="ml-3">{{item.address}}</div>
-                                </button>
-                            </div>
-                            </div>
-                        </div>
-                        </TransitionRoot>
-                    </div>
-                    <!-- END: Search -->
                   </fieldset>
                   <div class="col-span-12 md:col-span-6">
                     <FormSwitch>
@@ -560,62 +560,63 @@ const selectOwner = (item:any)=>{
                   </div>
                   <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
                     <legend class="text-xs">Plant Address</legend>
-                    <div class="col-span-12 md:col-span-6">
+                    <div class="col-span-12 md:col-span-4">
                         <FormLabel  htmlFor="modal-form-1"> House No./Street Name</FormLabel>
                         <FormInput form-input-size="sm"  v-model="formBusiness.plantAddress" type="text"
                         placeholder="House/Building No. / Room & Floor No./ Building Name" required :disabled="disAbled"/>
                     </div>
-                    <div class="col-span-12 md:col-span-3">
+                    <!-- BEGIN: Search -->
+                    <div class="col-span-12 md:col-span-4">
+                      <div class="col-span-12 md:col-span-12">
+                          <FormLabel  htmlFor="modal-form-1"> Barangay  </FormLabel>
+                          <FormInput form-input-size="sm"
+                              type="text"
+                              placeholder="Search Barangay..."
+                              @focus="showSearchBrgyPlant"
+                              @blur="hideSearchBrgyPlant"
+                              v-model="addressSelectBus.plantAddress" :disabled="disAbled"
+                          />
+                      </div>
+                      <TransitionRoot
+                          as="template"
+                          :show="brgyDropdownPlant"
+                          enter="transition-all ease-linear duration-150"
+                          enterFrom="mt-5 invisible opacity-0 translate-y-1"
+                          enterTo="mt-[3px] visible opacity-100 translate-y-0"
+                          entered="mt-[3px]"
+                          leave="transition-all ease-linear duration-150"
+                          leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
+                          leaveTo="mt-5 invisible opacity-0 translate-y-1"
+                          >
+                          <div class="absolute right-100 z-50 mt-[3px]">
+                              <div class="w-auto p-5 box">
+                              <div class="mb-2 font-medium">List of Barangay</div>
+                              <div class="mb-5 hover:bg-slate-400" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkPlantBrgy(item)">
+                                  <button href="" class="flex items-center" type="button">
+                                  <div
+                                      class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 dark:bg-success/10 text-success"
+                                  >
+                                      <Lucide icon="MapPin" class="w-4 h-4" />
+                                  </div>
+                                  <div class="ml-3">{{item.address}}</div>
+                                  </button>
+                              </div>
+                              </div>
+                          </div>
+                        </TransitionRoot>
+                  </div>
+                  <!-- END: Search -->
+                    <div class="col-span-12 md:col-span-2">
                         <FormLabel  htmlFor="modal-form-3"> Longitude </FormLabel>
                         <FormInput form-input-size="sm"  v-model="formBusiness.plantLongitude" type="text"
                         placeholder="If applicable" :disabled="disAbled"/>
                     </div>
-                    <div class="col-span-12 md:col-span-3">
+                    <div class="col-span-12 md:col-span-2">
                         <FormLabel  htmlFor="modal-form-3"> Latitude </FormLabel>
                         <FormInput form-input-size="sm"  v-model="formBusiness.plantLatitude" type="text"
                         placeholder="If applicable" :disabled="disAbled"/>
                     </div>
-                    <!-- BEGIN: Search -->
-                    <div class="col-span-12 md:col-span-12">
-                        <div class="col-span-12 md:col-span-3">
-                            <FormLabel  htmlFor="modal-form-1"> Barangay  </FormLabel>
-                            <FormInput form-input-size="sm"
-                                type="text"
-                                placeholder="Search Barangay..."
-                                @focus="showSearchBrgyPlant"
-                                @blur="hideSearchBrgyPlant"
-                                v-model="addressSelectBus.plantAddress" :disabled="disAbled"
-                            />
-                        </div>
-                        <TransitionRoot
-                            as="template"
-                            :show="brgyDropdownPlant"
-                            enter="transition-all ease-linear duration-150"
-                            enterFrom="mt-5 invisible opacity-0 translate-y-1"
-                            enterTo="mt-[3px] visible opacity-100 translate-y-0"
-                            entered="mt-[3px]"
-                            leave="transition-all ease-linear duration-150"
-                            leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
-                            leaveTo="mt-5 invisible opacity-0 translate-y-1"
-                            >
-                            <div class="absolute right-100 z-50 mt-[3px]">
-                                <div class="w-auto p-5 box">
-                                <div class="mb-2 font-medium">List of Barangay</div>
-                                <div class="mb-5 hover:bg-slate-400" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkPlantBrgy(item)">
-                                    <button href="" class="flex items-center" type="button">
-                                    <div
-                                        class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 dark:bg-success/10 text-success"
-                                    >
-                                        <Lucide icon="MapPin" class="w-4 h-4" />
-                                    </div>
-                                    <div class="ml-3">{{item.address}}</div>
-                                    </button>
-                                </div>
-                                </div>
-                            </div>
-                          </TransitionRoot>
-                    </div>
-                    <!-- END: Search -->
+                    
                   </fieldset>
                   <fieldset class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 border border-solid border-gray-300 p-3">
                     <legend class="text-xs">Contact Details</legend>
@@ -653,7 +654,7 @@ const selectOwner = (item:any)=>{
             </div>
           </div>
           <!-- Social Media Section -->
-            <Disclosure.Group variant="boxed" class="col-span-12 intro-y box lg:col-span-5 -ml-4">
+            <Disclosure.Group variant="boxed" class="col-span-12 intro-y box lg:col-span-12">
               <Disclosure>
                   <Disclosure.Button>
                       Social Media Platform

@@ -106,7 +106,6 @@ provide("bind[successNotification]", (el: any) => {
   });
   
 watch(selectAssistance, (selectProduct, prevAddProjectModal) => {
-   alert(selectProduct)
     AssistanceDataService.getAllSubtypeAssistance(selectProduct).then((response: ResponseData)=>{
         subTypeAssistance.value = response.data
     })

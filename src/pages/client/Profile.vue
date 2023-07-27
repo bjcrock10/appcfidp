@@ -438,13 +438,13 @@ onMounted(async () => {
       </Tab.Panel>
       <!-- BEGIN: Product Information -->
       <Tab.Panel>
-        <div class="grid grid-cols-12 gap-6">
-          <div class="col-span-12 intro-y box lg:col-span-6">
+        <div class="grid grid-cols-12 gap-12">
+          <div class="col-span-12 intro-y box lg:col-span-12">
             <div class="p-5">
                 <Product :business="formClient.businessId"/>
             </div>
           </div>
-          <div class="col-span-12 intro-y box lg:col-span-6">
+          <div class="col-span-12 intro-y box lg:col-span-12">
             <div class="p-5">
                 <MarketProfile :business="formClient.businessId"/>
             </div>
@@ -454,7 +454,7 @@ onMounted(async () => {
       <!-- END: Product Information -->
       <!-- BEGIN: Assistance Information -->
       <Tab.Panel>
-        <div class="grid grid-cols-12 gap-6">
+        <div class="grid grid-cols-12 gap-12">
           <div class="col-span-12 intro-y box lg:col-span-12">
             <div class="p-5">
                 <Assistance :business="formClient.businessId" :clientId="formClient.id"/>
