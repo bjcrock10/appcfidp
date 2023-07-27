@@ -158,7 +158,7 @@ onMounted(async () => {
             class="flex flex-col items-center justify-center mt-4 lg:items-start"
           >
             <div class="flex items-center truncate sm:whitespace-normal">
-              <Lucide icon="Mail" class="w-4 h-4 mr-2" />
+              <Lucide icon="Mail" class="w-4 h-4 mr-2" />E-mail:
               {{ formClient.email }}
             </div>
             <div class="flex items-center mt-3 truncate sm:whitespace-normal">
@@ -175,6 +175,33 @@ onMounted(async () => {
               </div>
           </div>
         </div>
+        <!-- <div
+          class="flex-1 px-5 pt-5 mt-6 border-t lg:mt-0 lg:border-0 border-slate-200/60 dark:border-darkmode-400 lg:pt-0"
+        >
+          <div class="font-medium text-center lg:text-left lg:mt-5">
+            Business Name
+          </div>
+          <div class="flex items-center justify-center mt-2 lg:justify-start">
+            <div class="flex items-center mt-3 truncate sm:whitespace-normal">
+              <Lucide icon="Phone" class="w-4 h-4 mr-2" /> Mobile No.:
+              {{ formClient.mobileNo }}
+            </div>
+            <div class="flex items-center mt-3 truncate sm:whitespace-normal">
+              <Lucide icon="Phone" class="w-4 h-4 mr-2" /> Fax No.:
+              {{ formClient.faxNo }}
+            </div>
+          </div>
+          <div class="flex items-center justify-center lg:justify-start">
+            <div class="flex items-center truncate sm:whitespace-normal">
+              <Lucide icon="Mail" class="w-4 h-4 mr-2" />E-mail:
+              {{ formClient.email }}
+            </div>
+            <div class="flex items-center mt-3 truncate sm:whitespace-normal">
+              <Lucide icon="Phone" class="w-4 h-4 mr-2" /> Tel. No.:
+              {{ formClient.telNo }}
+            </div>
+          </div>
+        </div> -->
       </div>
       <Tab.List
         variant="link-tabs"
@@ -440,12 +467,12 @@ onMounted(async () => {
       <Tab.Panel>
         <div class="grid grid-cols-12 gap-12">
           <div class="col-span-12 intro-y box lg:col-span-12">
-            <div class="p-5">
+            <div class="p-2">
                 <Product :business="formClient.businessId"/>
             </div>
           </div>
-          <div class="col-span-12 intro-y box lg:col-span-12">
-            <div class="p-5">
+          <div class="col-span-12 intro-y box lg:col-span-12 -mt-4">
+            <div class="p-2">
                 <MarketProfile :business="formClient.businessId"/>
             </div>
           </div>
@@ -456,7 +483,7 @@ onMounted(async () => {
       <Tab.Panel>
         <div class="grid grid-cols-12 gap-12">
           <div class="col-span-12 intro-y box lg:col-span-12">
-            <div class="p-5">
+            <div class="p-2">
                 <Assistance :business="formClient.businessId" :clientId="formClient.id"/>
             </div>
           </div>
