@@ -75,6 +75,12 @@ const onSubmit = () =>{
     messageDetail.value = "You successfully updated client profile..."
  }
 };
+const retrieveBusinessId = async () => {
+  ClientDataService.get(formClient.id).then((response: ResponseData)=>{
+    formClient.businessId = response.data[0].businessId
+    formClient.id = response.data[0].id
+  })
+}
 onMounted(async () => {
   getClientInfo(clientID.value);
   if(sessionStorage.getItem('userId') === null){
@@ -185,12 +191,12 @@ onMounted(async () => {
             </Tab.Button>
         </Tab>
         <Tab :fullWidth="false">
-            <Tab.Button class="flex items-center py-4 cursor-pointer">
-            <Lucide icon="Lock" class="w-4 h-4 mr-2" /> Product Information
+            <Tab.Button class="flex items-center py-4 cursor-pointer" @click="retrieveBusinessId()">
+              <Lucide icon="Lock" class="w-4 h-4 mr-2" /> Product Information
             </Tab.Button>
         </Tab>
         <Tab :fullWidth="false">
-            <Tab.Button class="flex items-center py-4 cursor-pointer">
+            <Tab.Button class="flex items-center py-4 cursor-pointer" @click="retrieveBusinessId()">
             <Lucide icon="Settings" class="w-4 h-4 mr-2" /> Assistance
             </Tab.Button>
         </Tab>
