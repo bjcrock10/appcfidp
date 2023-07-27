@@ -225,7 +225,7 @@ const onAddBusiness = async () => {
   }
 }
 const onAddBSocial = async () => {
-  formSocialMedia.business = props.business
+  formSocialMedia.business = formBusiness.id
   formSocialMedia.platForm = selectSocialMed.value.toString()
   BusinessDataService.createSocial(formSocialMedia).then((response: ResponseData)=>{
     loadSocial(formBusiness.id)
