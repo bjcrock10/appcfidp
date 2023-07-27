@@ -206,6 +206,7 @@ const onAddBusiness = async () => {
       }
       successNotification.value.showToast();
       messageDetail.value = "You successfully business profile with a Business ID "+businessID.value
+      formBusiness.id = businessID.value.toString()
     }).catch((e:Error)=>{
       console.log(e.message)
     })
@@ -217,6 +218,7 @@ const onAddBusiness = async () => {
       }
       successNotification.value.showToast();
       messageDetail.value = "You successfully updated business profile with a Business ID "+businessID.value
+      formBusiness.id = businessID.value.toString()
     }).catch((e:Error)=>{
       console.log(e.message)
     })

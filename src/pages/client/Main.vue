@@ -38,6 +38,13 @@ provide("bind[successNotification]", (el: any) => {
   successNotification.value = el;
   });
 
+const lostFocus = () =>{
+  ClientDataService.findByLname(formClient.lname).then((response: ResponseData)=>{
+          clientList.value = response.data
+        }).catch((e: Error)=>{
+          console.log(clientList.value)
+        })
+}
 const onSubmit = () => {
   brgyId.value = addressSelect.addressName.split(", ")
   formClient.barangay = brgyId.value[0]
@@ -77,17 +84,25 @@ watch(
       }
     }
 )
-watch(
-  () => (formClient.lname), async(lname, prevToe) => {
-    if(lname.length>=2){
-        ClientDataService.findByLname(lname).then((response: ResponseData)=>{
-          clientList.value = response.data
-        }).catch((e: Error)=>{
-          console.log(clientList.value)
-        })
-      }
-    }
-)
+// watch(
+//   () => (formClient.lname), async(lname, prevToe) => {
+//     if(lname.length>=2){
+//         ClientDataService.findByLname(lname).then((response: ResponseData)=>{
+//           clientList.value = response.data
+//         }).catch((e: Error)=>{
+//           console.log(clientList.value)
+//         })
+//       }
+//     }
+// )
+const showSearchLnamewithParam = async () => {
+  lnameDropdown.value = true
+  ClientDataService.findByLname(formClient.lname).then((response: ResponseData)=>{
+                clientList.value = response.data
+              }).catch((e: Error)=>{
+                console.log(clientList.value)
+              })
+}
 onMounted(async () => {
   initTabulator(columnData.value, ClientDataService, tableClient);
   reInitOnResizeWindow();
@@ -129,7 +144,7 @@ onMounted(async () => {
           <div class="text-slate-500 mt-1">
             {{ messageDetail }}
           </div>
-        </div>
+        </div>s
         </Notification>
     <!-- END: Notification Content -->
       <!-- BEGIN: Modal Content -->
@@ -143,6 +158,7 @@ onMounted(async () => {
             <Dialog.Title>
                 <h2 class="mr-auto text-base font-medium">
                     Client Profile
+                    alert('bang')
                 </h2>
                 <button type="button" variant="outline-secondary" @click="
                           () => {
@@ -166,8 +182,8 @@ onMounted(async () => {
                             <FormLabel  htmlFor="modal-form-1"> Last Name </FormLabel>
                             <FormInput  :rounded="rounded" 
                               v-model="formClient.lname" type="text" placeholder="" 
-                              @focus="showSearchLname"
-                              @blur="hideSearchLname"
+                              @focus="hideSearchLname"
+                              @blur="showSearchLnamewithParam"
                               required/>
                             <TransitionRoot
                               as="template"
@@ -201,7 +217,8 @@ onMounted(async () => {
                         <div class="col-span-12 sm:col-span-4">
                             <FormLabel htmlFor="modal-form-2"> First Name </FormLabel>
                             <FormInput  :rounded="rounded" 
-                              v-model="formClient.fname" type="text" placeholder="" required/>
+                              v-model="formClient.fname" type="text" placeholder=""
+                              @blur="hideSearchLname" required/>
                         </div>
                         <div class="col-span-12 sm:col-span-3">
                           <FormLabel htmlFor="modal-form-3">Middle Name</FormLabel>
