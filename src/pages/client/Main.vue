@@ -99,12 +99,12 @@ onMounted(async () => {
       router.push({ path:'/login'})
       sessionStorage.clear()
     }
-  if(sessionStorage.getItem("privileges")==="0"){
-    successNotification.value.showToast();
-    message.value = "Redirecting...."
-    messageDetail.value = "You don't have access to this page. Redirecting you the landing page."
-    router.push({path: "/dashboard"});
-  }
+  // if(sessionStorage.getItem("privileges")==="0"){
+  //   successNotification.value.showToast();
+  //   message.value = "Redirecting...."
+  //   messageDetail.value = "You don't have access to this page. Redirecting you the landing page."
+  //   router.push({path: "/dashboard"});
+  // }
 });
 </script>
 <template>
@@ -346,7 +346,7 @@ onMounted(async () => {
                       <div class="col-span-12 sm:col-span-4">
                           <FormLabel  htmlFor="modal-form-1"> Are you NCFRS-Registered? </FormLabel>
                           <InputGroup class="grid grid-cols-12">
-                            <FormSelect  v-model="ncfrs" class="col-span-12 sm:col-span-2 text-slate-50" @change="aNcfrs" required>
+                            <FormSelect  v-model="ncfrs" class="col-span-12 sm:col-span-2" @change="aNcfrs" required>
                               <option value="Yes">Yes</option>
                               <option value="No">No</option>
                               <option value="Not Sure">Not Sure</option>
@@ -358,7 +358,7 @@ onMounted(async () => {
                       <div class="col-span-12 sm:col-span-4">
                         <FormLabel  htmlFor="modal-form-1"> Tenurial Status </FormLabel>
                         <InputGroup class="grid grid-cols-12">
-                          <FormSelect  v-model="tenurial" class="col-span-12 sm:col-span-2 text-slate-50" @change="dTenurial" required>
+                          <FormSelect  v-model="tenurial" class="col-span-12 sm:col-span-2" @change="dTenurial" required>
                             <option value="Owner">Owner</option>
                             <option value="Owner-Tiller">Owner-Tiller</option>
                             <option value="Grower">Grower</option>
@@ -374,7 +374,7 @@ onMounted(async () => {
                       <div class="col-span-12 sm:col-span-8">
                         <FormLabel  htmlFor="modal-form-1"> Are you a member of a farm/coconut organization? </FormLabel>
                         <InputGroup class="grid grid-cols-12">
-                          <FormSelect  v-model="organization" class="col-span-12 sm:col-span-2 text-slate-50" @change="dOrganization" required>
+                          <FormSelect  v-model="organization" class="col-span-12 sm:col-span-2" @change="dOrganization" required>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                           </FormSelect>
