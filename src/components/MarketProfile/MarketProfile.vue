@@ -477,12 +477,12 @@ onMounted(() => {
             </div>
         </div>
     </div>
-    <Disclosure.Group variant="boxed" class="col-span-12 intro-y box lg:col-span-5 -ml-4">
+    <Disclosure.Group variant="boxed" class="col-span-12 intro-y box lg:col-span-5">
         <Disclosure>
             <Disclosure.Button>
                 Raw Material Sources
             </Disclosure.Button>
-            <Disclosure.Panel class="leading-relaxed text-slate-600 dark:text-slate-500 overflow-x-auto scrollbar-hidden overflow-scroll">
+            <Disclosure.Panel class="leading-relaxed text-slate-600 dark:text-slate-500 sm:overflow-x-auto sm:scrollbar-hidden sm:overflow-scroll">
                 <form class="validate-form p-2" @submit.prevent="onAddSources">
                     <div class="col-span-12 md:col-span-12">
                       <Table sm striped>

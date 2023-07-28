@@ -158,7 +158,6 @@ onMounted(async () => {
             <Dialog.Title>
                 <h2 class="mr-auto text-base font-medium">
                     Client Profile
-                    alert('bang')
                 </h2>
                 <button type="button" variant="outline-secondary" @click="
                           () => {
