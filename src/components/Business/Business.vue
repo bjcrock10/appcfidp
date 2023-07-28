@@ -309,6 +309,11 @@ const selectClient = (item:any) =>{
   formBusinessOwner.email = item.email
 }
 
+const redirectSocial = (url: any) =>{
+  if(url.length>5){
+    window.location.href = url
+  }
+}
 const selectOwner = (item:any)=>{
   formBusiness.id = item.id
   formBusiness.businessName = item.businessName
@@ -663,8 +668,8 @@ const selectOwner = (item:any)=>{
                           <Table sm striped>
                             <Table.Thead>
                               <Table.Tr>
-                                <Table.Th class="whitespace-nowrap w-auto sm:w-99 min-w-min"> Platform </Table.Th>
-                                <Table.Th class="whitespace-nowrap w-auto sm:w-96 min-w-min"> URL </Table.Th>
+                                <Table.Th class="whitespace-nowrap w-auto"> Platform </Table.Th>
+                                <Table.Th class="whitespace-nowrap w-auto"> URL </Table.Th>
                                 <Table.Th class="w-1"></Table.Th>
                               </Table.Tr>
                             </Table.Thead>
@@ -672,7 +677,7 @@ const selectOwner = (item:any)=>{
                               <Table.Tr v-for="item in socialMedList" :key="item['id']" :value="item['id']" class="-p-10">
                                 <Table.Td>
                                     <div class="flex flex-wrap p-0">
-                                      <Button :variant="item['platForm']" class="w-32 mb-2 mr-2">
+                                      <Button :variant="item['platForm']" class="w-32 mb-2 mr-2" @click="redirectSocial(item['url'])">
                                         <Lucide :icon="capitalized(item['platForm'])" class="w-4 h-4 mr-2" />{{capitalized(item['platForm'])}}
                                       </Button>
                                     </div>
@@ -695,7 +700,7 @@ const selectOwner = (item:any)=>{
                                       create: true,
                                       maxItems:1
                                     }"
-                                    class="w-full col-span-12 md:col-span-12" multiple required
+                                    class="w-full col-span-12 md:col-span-4" multiple required
                                   >
                                     <option :value="formSocialMedia.platForm">Please Select.....</option>
                                     <option value="facebook">Facebook</option>
@@ -887,8 +892,8 @@ const selectOwner = (item:any)=>{
                           <Table sm striped>
                             <Table.Thead>
                               <Table.Tr>
-                                <Table.Th class="whitespace-nowrap w-auto sm:w-99 min-w-min"> Interventions that DTI can provide to help you improve your Marketing Plan </Table.Th>
-                                <Table.Th class="whitespace-nowrap w-auto sm:w-96 min-w-min"> Specify </Table.Th>
+                                <Table.Th class="whitespace-nowrap w-auto"> Interventions that DTI can provide to help you improve your Marketing Plan </Table.Th>
+                                <Table.Th class="whitespace-nowrap w-auto"> Specify </Table.Th>
                                 <Table.Th class="w-1"></Table.Th>
                               </Table.Tr>
                             </Table.Thead>
@@ -915,7 +920,7 @@ const selectOwner = (item:any)=>{
                                       create: true,
                                       maxItems:1
                                     }"
-                                    class="w-full col-span-12 md:col-span-12" multiple required
+                                    class="w-full col-span-12 md:col-span-6" multiple required
                                   >
                                     <option value="Marketing Assistance">Marketing Assistance</option>
                                     <option value="Market Promotion">Market Promotion</option>
@@ -924,7 +929,7 @@ const selectOwner = (item:any)=>{
                                 </Table.Td>
                                 <Table.Td>
                                   <FormInput form-input-size="sm" :rounded="rounded" v-model="formMarketPlan.specific" 
-                                  type="text" placeholder="Please specify" class="col-span-12 md:col-span-12" required/>
+                                  type="text" placeholder="Please specify" class="col-span-12 md:col-span-6" required/>
                                 </Table.Td>
                                 <Table.Td>
                                   <Button type="submit" variant="primary" class="mb-2 mr-1" v-if="formBusiness.id!=='0'">
@@ -942,8 +947,8 @@ const selectOwner = (item:any)=>{
                           <Table sm striped>
                             <Table.Thead>
                               <Table.Tr>
-                                <Table.Th class="whitespace-nowrap w-auto sm:w-99 min-w-min"> What Trainings would you like to join? </Table.Th>
-                                <Table.Th class="whitespace-nowrap w-auto sm:w-96 min-w-min"> Target Year </Table.Th>
+                                <Table.Th class="whitespace-nowrap w-auto"> What Trainings would you like to join? </Table.Th>
+                                <Table.Th class="whitespace-nowrap w-auto"> Target Year </Table.Th>
                                 <Table.Th class="w-1"></Table.Th>
                               </Table.Tr>
                             </Table.Thead>

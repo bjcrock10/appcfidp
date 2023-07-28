@@ -194,12 +194,12 @@ onMounted(async () => {
                               leave="transition-all ease-linear duration-150"
                               leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
                               leaveTo="mt-5 invisible opacity-0 translate-y-1"
-                              class="w-full h-40 overflow-scroll"
+                              class=" w-96 h-40"
                             >
-                              <div class="absolute right-100 z-10 mt-[3px]  hover:bg-slate-400">
+                              <div class="absolute right-100 z-10 mt-[3px]">
                                 <div class="w-auto p-5 box">
                                   <div class="mb-2 font-medium">Client Name List</div>
-                                    <button  v-for="item in clientList" :key="item.id" :value="item.id" class="mb-5 flex items-center" type="button" @click="router.push({path:`/client/${item.id}`,params:item.id})">
+                                    <button  v-for="item in clientList" :key="item.id" :value="item.id" class="w-full mb-5 flex items-center hover:bg-slate-400" type="button" @click="router.push({path:`/client/${item.id}`,params:item.id})">
                                       <div
                                         class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 dark:bg-success/10 text-success"
                                       >
