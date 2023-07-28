@@ -527,8 +527,7 @@ const selectOwner = (item:any)=>{
                       <div class="absolute right-100 z-50 mt-[3px]">
                           <div class="w-auto p-5 box">
                           <div class="mb-2 font-medium">List of Barangay</div>
-                          <div class="mb-5 hover:bg-slate-400" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkBusinessBrgy(item)">
-                              <button href="" class="flex items-center" type="button">
+                              <button href="" class="w-full mb-5 flex items-center hover:bg-slate-400" type="button" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkBusinessBrgy(item)">
                               <div
                                   class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 dark:bg-success/10 text-success"
                               >
@@ -536,7 +535,6 @@ const selectOwner = (item:any)=>{
                               </div>
                               <div class="ml-3">{{item.address}}</div>
                               </button>
-                          </div>
                           </div>
                       </div>
                       </TransitionRoot>
@@ -594,16 +592,14 @@ const selectOwner = (item:any)=>{
                           <div class="absolute right-100 z-50 mt-[3px]">
                               <div class="w-auto p-5 box">
                               <div class="mb-2 font-medium">List of Barangay</div>
-                              <div class="mb-5 hover:bg-slate-400" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkPlantBrgy(item)">
-                                  <button href="" class="flex items-center" type="button">
+                                <button href="" class="w-full mb-5 flex items-center hover:bg-slate-400" type="button" v-for="item in brgySelect" :key="item.id" :value="item.id" @click="checkPlantBrgy(item)">
                                   <div
                                       class="flex items-center justify-center w-8 h-8 rounded-full bg-success/20 dark:bg-success/10 text-success"
                                   >
                                       <Lucide icon="MapPin" class="w-4 h-4" />
                                   </div>
                                   <div class="ml-3">{{item.address}}</div>
-                                  </button>
-                              </div>
+                                </button>
                               </div>
                           </div>
                         </TransitionRoot>
