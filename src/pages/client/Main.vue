@@ -194,7 +194,7 @@ onMounted(async () => {
                               leave="transition-all ease-linear duration-150"
                               leaveFrom="mt-[3px] visible opacity-100 translate-y-0"
                               leaveTo="mt-5 invisible opacity-0 translate-y-1"
-                              class=" w-96 h-40"
+                              class="w-96 h-40"
                             >
                               <div class="absolute right-100 z-10 mt-[3px]">
                                 <div class="w-auto p-5 box">
