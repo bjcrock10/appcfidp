@@ -76,7 +76,8 @@ const onSubmit = async () =>{
         successNotification.value.showToast();
         addModal.value = false;
         messageDetail.value = "You successfully added new data...";
-        tabulator.value?.addData(response.data);
+        // tabulator.value?.addData(response.data);
+        dataTable();
       }).catch((e: Error)=>{
         console.log(e.message)
       }).finally(()=>{
