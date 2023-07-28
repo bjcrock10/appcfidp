@@ -413,7 +413,6 @@ const selectOwner = (item:any)=>{
                         persist: false,
                         createOnBlur: true,
                         create: true,
-                        maxItems:1
                       }"
                       class="w-full" multiple
                     >
@@ -429,11 +428,10 @@ const selectOwner = (item:any)=>{
                     <TomSelect
                       v-model="selectLineOfBusiness"
                       :options="{
-                        placeholder: 'Select item below. If not exist please key it in.',
+                        placeholder: 'Select item below. If others please specify...',
                         persist: false,
                         createOnBlur: true,
                         create: true,
-                        maxItems:1
                       }"
                       class="w-full" multiple
                     >
@@ -448,7 +446,7 @@ const selectOwner = (item:any)=>{
                     <TomSelect
                       v-model="selectStandardCertification"
                       :options="{
-                        placeholder: 'Select item below. If not exist please key it in.',
+                        placeholder: 'Select item below. If others please specify...',
                       }"
                       class="w-full" multiple
                     >
