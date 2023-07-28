@@ -659,7 +659,7 @@ const selectOwner = (item:any)=>{
                   <Disclosure.Button>
                       Social Media Platform
                   </Disclosure.Button>
-                  <Disclosure.Panel class="leading-relaxed text-slate-600 dark:text-slate-500 sm:overflow-x-auto sm:scrollbar-hidden sm:overflow-scroll">
+                  <Disclosure.Panel class="leading-relaxed text-slate-600 dark:text-slate-500">
                     <form class="validate-form p-2" @submit.prevent="onAddBSocial">
                         <div class="col-span-12 md:col-span-12">
                           <Table sm striped>
@@ -726,7 +726,7 @@ const selectOwner = (item:any)=>{
                   <Disclosure.Button>
                       Ecommerce Platform
                   </Disclosure.Button>
-                  <Disclosure.Panel class="leading-relaxed text-slate-600 dark:text-slate-500 sm:overflow-x-auto sm:scrollbar-hidden sm:overflow-scroll">
+                  <Disclosure.Panel class="leading-relaxed text-slate-600 dark:text-slate-500">
                     <form class="validate-form p-2" @submit.prevent="onAddEcommerce">
                       <div class="col-span-12 md:col-span-12">
                         <Table sm striped>
