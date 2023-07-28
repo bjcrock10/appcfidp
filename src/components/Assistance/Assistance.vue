@@ -67,7 +67,6 @@ const resetFields = () =>{
     formAssistance.dateProvidedTo = ""
 }
 const onSubmit = async () =>{
-    formAssistance.assistanceType = selectAssistance.value.toString();
     formAssistance.subTypeAssistance = selectSubType.value.toString();
     formAssistance.msmeProgram = selectMsmeProgram.value.toString();
     formAssistance.referTo = selectReferTo.value.toString();
@@ -107,6 +106,9 @@ provide("bind[successNotification]", (el: any) => {
   });
   
 watch(selectAssistance, (assistanceID, prevAddProjectModal) => {
+    AssistanceDataService.get(assistanceID).then((response: ResponseData)=>{
+      formAssistance.assistanceType = response.data[0].title
+    })
     AssistanceDataService.getAllSubtypeAssistance(assistanceID).then((response: ResponseData)=>{
         subTypeAssistance.value = response.data
     })
@@ -137,9 +139,6 @@ const dataTable = () =>{
     buttonTitle.value = "Update"
   })
 };
-const assignAssistance = (item: any) => {
-  alert(item.title)
-}
 onMounted(async () => {
     dataTable();
     formAssistance.business = props.business;
@@ -153,6 +152,9 @@ onMounted(async () => {
         assistanceType.value = response.data
     }).catch((e: Error)=>{
         console.log(e.message)
+    })
+    AssistanceDataService.getAllSubtypeAssistance(1).then((response: ResponseData)=>{
+        subTypeAssistance.value = response.data
     })
 });
 </script>
@@ -257,7 +259,7 @@ onMounted(async () => {
                             }"
                             class="w-full" multiple required
                         >
-                            <option v-for="item in assistanceType" :value="item['id']" :key="item['id']" v-on:click="assignAssistance(item)">{{item['title']}}</option>
+                            <option v-for="item in assistanceType" :value="item['id']" :key="item['id']">{{item['title']}}</option>
                             <option :value="formAssistance.assistanceType">{{formAssistance.assistanceType}}</option>
                         </TomSelect>
                     </div>
