@@ -196,11 +196,10 @@ onMounted(async () => {
                               leaveTo="mt-5 invisible opacity-0 translate-y-1"
                               class="w-full h-40 overflow-scroll"
                             >
-                              <div class="absolute right-100 z-10 mt-[3px]">
+                              <div class="absolute right-100 z-10 mt-[3px]  hover:bg-slate-400">
                                 <div class="w-auto p-5 box">
                                   <div class="mb-2 font-medium">Client Name List</div>
-                                  <div class="mb-5 hover:blue" v-for="item in clientList" :key="item.id" :value="item.id" @click="router.push({path:`/client/${item.id}`,params:item.id})">
-                                    <button href="" class="flex items-center" type="button">
+                                    <button  v-for="item in clientList" :key="item.id" :value="item.id" class="mb-5 flex items-center" type="button" @click="router.push({path:`/client/${item.id}`,params:item.id})">
                                       <div
                                         class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 dark:bg-success/10 text-success"
                                       >
@@ -208,7 +207,6 @@ onMounted(async () => {
                                       </div>
                                       <div class="ml-3">{{item.lname + ", " + item.fname + " " + item.mname}}</div>
                                     </button>
-                                  </div>
                                  </div>
                               </div>
                             </TransitionRoot>

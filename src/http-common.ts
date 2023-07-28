@@ -7,7 +7,7 @@ const apiClient: AxiosInstance = axios.create({
     },
     // baseURL:'http://localhost:8000/',
     baseURL:'https://cfidp.cebudigital.com/api',
-    timeout: 10000,
+    timeout: 100000,
 });
 
 export default apiClient;

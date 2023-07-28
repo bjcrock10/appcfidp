@@ -106,8 +106,8 @@ provide("bind[successNotification]", (el: any) => {
   successNotification.value = el;
   });
   
-watch(selectAssistance, (selectProduct, prevAddProjectModal) => {
-    AssistanceDataService.getAllSubtypeAssistance(selectProduct).then((response: ResponseData)=>{
+watch(selectAssistance, (assistanceID, prevAddProjectModal) => {
+    AssistanceDataService.getAllSubtypeAssistance(assistanceID).then((response: ResponseData)=>{
         subTypeAssistance.value = response.data
     })
 })
@@ -137,6 +137,9 @@ const dataTable = () =>{
     buttonTitle.value = "Update"
   })
 };
+const assignAssistance = (item: any) => {
+  alert(item.title)
+}
 onMounted(async () => {
     dataTable();
     formAssistance.business = props.business;
@@ -254,7 +257,7 @@ onMounted(async () => {
                             }"
                             class="w-full" multiple required
                         >
-                            <option v-for="item in assistanceType" :value="item['id']" :key="item['id']">{{item['title']}}</option>
+                            <option v-for="item in assistanceType" :value="item['id']" :key="item['id']" v-on:click="assignAssistance(item)">{{item['title']}}</option>
                             <option :value="formAssistance.assistanceType">{{formAssistance.assistanceType}}</option>
                         </TomSelect>
                     </div>
