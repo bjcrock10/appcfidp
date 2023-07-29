@@ -572,8 +572,8 @@ onMounted(async () => {
   <!-- END: HTML Table Data -->
 </template>
 
-<style scoped>
+<!-- <style scoped>
   input{
     text-transform: uppercase;
   }
-</style>
+</style> -->
