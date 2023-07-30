@@ -67,6 +67,7 @@ const resetFields = () =>{
     formAssistance.dateProvidedTo = ""
 }
 const onSubmit = async () =>{
+    formAssistance.assistanceType = selectAssistance.value.toString();
     formAssistance.subTypeAssistance = selectSubType.value.toString();
     formAssistance.msmeProgram = selectMsmeProgram.value.toString();
     formAssistance.referTo = selectReferTo.value.toString();
@@ -105,10 +106,14 @@ provide("bind[successNotification]", (el: any) => {
   successNotification.value = el;
   });
   
-watch(selectAssistance, (assistanceID, prevAddProjectModal) => {
-    AssistanceDataService.get(assistanceID).then((response: ResponseData)=>{
-      formAssistance.assistanceType = response.data[0].title
-    })
+watch(selectAssistance, (assistanceTitle, prevAddProjectModal) => {
+  let assistanceID = "0"
+  assistanceType.value.forEach(element => {
+      if(element['title']===assistanceTitle){
+         assistanceID = element['id']
+         return;
+      }
+    });
     AssistanceDataService.getAllSubtypeAssistance(assistanceID).then((response: ResponseData)=>{
         subTypeAssistance.value = response.data
     })
@@ -152,9 +157,6 @@ onMounted(async () => {
         assistanceType.value = response.data
     }).catch((e: Error)=>{
         console.log(e.message)
-    })
-    AssistanceDataService.getAllSubtypeAssistance(1).then((response: ResponseData)=>{
-        subTypeAssistance.value = response.data
     })
 });
 </script>
@@ -252,14 +254,10 @@ onMounted(async () => {
                             v-model="selectAssistance"
                             :options="{
                             placeholder: 'Select item below. If others please specify.',
-                            persist: false,
-                            createOnBlur: true,
-                            create: true,
-                            maxItems:1
                             }"
-                            class="w-full" multiple required
+                            class="w-full" required
                         >
-                            <option v-for="item in assistanceType" :value="item['id']" :key="item['id']">{{item['title']}}</option>
+                            <option v-for="item in assistanceType" :value="item['title']" :key="item['id']">{{item['title']}}</option>
                             <option :value="formAssistance.assistanceType">{{formAssistance.assistanceType}}</option>
                         </TomSelect>
                     </div>

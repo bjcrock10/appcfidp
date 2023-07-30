@@ -47,6 +47,9 @@ class AssistanceDataService {
     getAllTypeOfAssistance(): Promise<any> {
         return http.get("/typeofassistance/");
     }
+    getTypeOfAssistance(id: any): Promise<any>{
+      return http.get(`/typeofassistance/?id=${id}`);
+    }
     getAllSubtypeAssistance(id: any): Promise<any> {
         return http.get(`/subtypassistance/?id=${id}`);
     }
