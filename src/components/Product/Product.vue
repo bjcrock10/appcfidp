@@ -13,7 +13,6 @@ import ResponseData from "../../types/response";
 import { FormSwitch, FormInput, FormSelect, InputGroup, FormLabel, FormTextarea} from "../../base-components/Form";
 import TomSelect from "../../base-components/TomSelect";
 import Button from "../../base-components/Button";
-import { TransitionRoot } from "@headlessui/vue";
 import { useProduct } from "../../types/product.d";
 import { tabulatorFunc } from "../../types/tabulator.d";
 import Notification from "../../base-components/Notification";

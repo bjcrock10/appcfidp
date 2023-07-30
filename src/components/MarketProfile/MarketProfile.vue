@@ -162,7 +162,7 @@ const dataTable = () =>{
   reInitOnResizeWindow();
   tabulator.value?.on("rowClick",(e, cell)=>{
     formMarketProfile.id = cell.getData().id
-    selectProduct.value = cell.getData().product.toString()
+    selectProduct.value = cell.getData().productName.toString()
     formMarketProfile.certification = cell.getData().certification
     formMarketProfile.productionCapacity = cell.getData().productionCapacity
     formMarketProfile.size = cell.getData().size
@@ -189,17 +189,22 @@ const dataTable = () =>{
 const dataProduct = ref([]);
 const brgySelect = ref([]);
 watch(selectProduct, (selectProduct, prevAddProjectModal) => {
-    ProductDataService.get(selectProduct).then((response: ResponseData)=>{
-        formMarketProfile.productName = response.data[0].productName
-        formMarketProfile.product = response.data[0].id
-        formMarketProfile.productType = response.data[0].productType
-        formMarketProfile.productionCapacity = response.data[0].productionCapacity
-        formMarketProfile.uom = response.data[0].uom
-        formMarketProfile.size= response.data[0].size
-        formMarketProfile.business = response.data[0].business
-        formMarketProfile.brandName = response.data[0].brandName
-        formMarketProfile.certification = response.data[0].certification
-    })
+    dataProduct.value.forEach(element => {
+        if(element['productName'] === selectProduct)
+        {
+            formMarketProfile.productName = element['productName']
+            formMarketProfile.product = element['id']
+            formMarketProfile.productType =element['productType']
+            formMarketProfile.productionCapacity = element['productionCapacity']
+            formMarketProfile.uom = element['uom']
+            formMarketProfile.size= element['size']
+            formMarketProfile.business = element['business']
+            formMarketProfile.brandName = element['brandName']
+            formMarketProfile.certification = element['certification']
+            return;
+        }
+        
+    });
 })
 watch(
   () => (formMarketProfile.marketType),(select, prevToe) => {
@@ -236,7 +241,7 @@ onMounted(() => {
     formMarketProfile.business = props.business;
     loadProducts(props.business);
     loadMaterialSources(props.business);
-    selectProduct.value = (["Sample"])
+    selectProduct.value = (["0"])
 });
 </script>
 
@@ -289,17 +294,16 @@ onMounted(() => {
                             <FormLabel htmlFor="modal-form-3">Product Name</FormLabel>
                             <TomSelect
                                 v-model="selectProduct"
-                                :options="{
-                                placeholder: 'Select item below.',
-                                maxItems: 1,
-                                valueField:'id',
-                                searchField:['productName'],
-                                labelField:'productName',
-                                sortField:'productName',
-                                create:false,
-                                options:dataProduct,
+                                    :options="{
+                                    placeholder: 'Select item below.',
+                                    persist: false,
+                                    createOnBlur: true,
+                                    create: true,
+                                    maxItems:1
                                 }"
                                 class="w-full">
+                                <option v-for="item in dataProduct" :value="item['productName']" :key="item['id']">{{item['productName']}}</option>
+                                <option :value="formMarketProfile.productName">{{formMarketProfile.productName}}</option>
                             </TomSelect>
                             </div>
                             <div class="col-span-12 sm:col-span-6">
