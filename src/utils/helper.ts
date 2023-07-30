@@ -27,6 +27,14 @@ const capitalizeFirstLetter = (string: string) => {
   }
 };
 
+const capitalizeAll = (string: string) => {
+  if(string){
+    return string.toUpperCase()
+  } else{
+    return "";
+  }
+}
+
 const onlyNumber = (string: string) => {
   if (string) {
     return string.replace(/\D/g, "");
@@ -203,6 +211,7 @@ export {
   cutText,
   formatDate,
   capitalizeFirstLetter,
+  capitalizeAll,
   onlyNumber,
   formatCurrency,
   timeAgo,

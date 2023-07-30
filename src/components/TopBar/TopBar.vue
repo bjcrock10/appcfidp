@@ -64,7 +64,7 @@ onMounted(() => {
       </Breadcrumb>
       <!-- END: Breadcrumb -->
       <!-- BEGIN: Search -->
-      <div class="relative mr-3 intro-x sm:mr-6">
+      <div class="relative mr-3 intro-x sm:mr-6 hidden">
         <div class="hidden search sm:block">
           <FormInput
             type="text"
