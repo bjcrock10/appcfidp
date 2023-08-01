@@ -35,6 +35,10 @@ class BusinessDataService {
     findByName(name: String): Promise<any> {
       return http.get(`/business/?name=${name}`);
     }
+    
+    count(): Promise<any>{
+      return http.get(`/business/?count=1`)
+    }
     //Social Media Platform-------------------------------------------
     getAllSocial(): Promise<any> {
       return http.get('/socialmedia/')
@@ -60,6 +64,12 @@ class BusinessDataService {
     deleteSocial(id: any): Promise<any> {
       return http.delete(`/socialmedia/${id}/`);
     }
+    countSocial(): Promise<any>{
+      return http.get(`/socialmedia/?count=1`)
+    }
+    countSocialFiltered(title: any): Promise<any> {
+      return http.get(`socialmedia/?cfiltered=${title}`)
+    }
     //Ecommerce Platform-------------------------------------------
     getAllEcommerce(): Promise<any> {
       return http.get('/ecommerce/')
@@ -83,6 +93,9 @@ class BusinessDataService {
   
     deleteEcommerce(id: any): Promise<any> {
       return http.delete(`/ecommerce/${id}/`);
+    }
+    countEcommerce(): Promise<any>{
+      return http.get(`/ecommerce/?count=1`)
     }
     //Business Owner-------------------------------------------
     getAllOwner(): Promise<any> {

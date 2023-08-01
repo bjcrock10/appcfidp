@@ -6,7 +6,8 @@ const apiClient: AxiosInstance = axios.create({
         password: 'qwerty'
     },
     // baseURL:'http://localhost:8000/',
-    baseURL:'https://cfidp.cebudigital.com/api',
+    // baseURL:'https://cfidp.cebudigital.com/api',
+    baseURL:'https://cfidp.pythonanywhere.com/',
     timeout: 100000,
 });
 

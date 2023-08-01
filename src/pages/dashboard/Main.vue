@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import _ from "lodash";
-import { ref, provide } from "vue";
+import { ref, provide, onMounted } from "vue";
 import fakerData from "../../utils/faker";
 import Button from "../../base-components/Button";
 import Pagination from "../../base-components/Pagination";
@@ -16,7 +16,12 @@ import SimpleLineChart1 from "../../components/SimpleLineChart1";
 import LeafletMap from "../../components/LeafletMap";
 import { Menu } from "../../base-components/Headless";
 import Table from "../../base-components/Table";
-
+import ClientDataService from '../../services/ClientDataService';
+import BuisinessDataService from "../../services/BuisinessDataService";
+import ProductDataService from "../../services/ProductDataService";
+import AssistanceDataService from "../../services/AssistanceDataService";
+import ResponseData from "../../types/response";
+import BusinessInfoOnly from '../../components/Business/BusinessInfoOnly.vue';
 const salesReportFilter = ref<string>("");
 const importantNotesRef = ref<TinySliderElement>();
 
@@ -30,6 +35,29 @@ const prevImportantNotes = () => {
 const nextImportantNotes = () => {
   importantNotesRef.value?.tns.goTo("next");
 };
+const noOfClient = ref(0);
+const noOfBusiness = ref(0);
+const noOfAssistance = ref(0);
+const countClient = async () => {
+  ClientDataService.getAll().then((response: ResponseData)=>{
+    noOfClient.value = response.data.length
+  })
+}
+const countBusiness = async () => {
+  BuisinessDataService.getAll().then((response: ResponseData)=>{
+    noOfBusiness.value = response.data.length
+  })
+}
+const countAssistance = async () => {
+  AssistanceDataService.getAll().then((response: ResponseData)=>{
+    noOfAssistance.value = response.data.length
+  })
+}
+onMounted(()=>{
+  countClient();
+  countBusiness();
+  countAssistance();
+})
 </script>
 
 <template>
@@ -69,8 +97,8 @@ const nextImportantNotes = () => {
                       </Tippy>
                     </div>
                   </div>
-                  <div class="mt-6 text-3xl font-medium leading-8">4.710</div>
-                  <div class="mt-1 text-base text-slate-500">Item Sales</div>
+                  <div class="mt-6 text-3xl font-medium leading-8">{{noOfClient}}</div>
+                  <div class="mt-1 text-base text-slate-500">Client Profile</div>
                 </div>
               </div>
             </div>
@@ -98,8 +126,8 @@ const nextImportantNotes = () => {
                       </Tippy>
                     </div>
                   </div>
-                  <div class="mt-6 text-3xl font-medium leading-8">3.721</div>
-                  <div class="mt-1 text-base text-slate-500">New Orders</div>
+                  <div class="mt-6 text-3xl font-medium leading-8">{{noOfBusiness}}</div>
+                  <div class="mt-1 text-base text-slate-500">Business</div>
                 </div>
               </div>
             </div>
@@ -127,9 +155,9 @@ const nextImportantNotes = () => {
                       </Tippy>
                     </div>
                   </div>
-                  <div class="mt-6 text-3xl font-medium leading-8">2.149</div>
+                  <div class="mt-6 text-3xl font-medium leading-8">{{noOfAssistance}}</div>
                   <div class="mt-1 text-base text-slate-500">
-                    Total Products
+                    Total Assistance
                   </div>
                 </div>
               </div>
