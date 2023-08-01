@@ -38,13 +38,6 @@ provide("bind[successNotification]", (el: any) => {
   successNotification.value = el;
   });
 
-const lostFocus = () =>{
-  ClientDataService.findByLname(formClient.lname).then((response: ResponseData)=>{
-          clientList.value = response.data
-        }).catch((e: Error)=>{
-          console.log(clientList.value)
-        })
-}
 const onSubmit = () => {
   brgyId.value = addressSelect.addressName.split(", ")
   formClient.barangay = brgyId.value[0]
@@ -97,11 +90,12 @@ watch(
 // )
 const showSearchLnamewithParam = async () => {
   lnameDropdown.value = true
-  ClientDataService.findByLname(formClient.lname).then((response: ResponseData)=>{
-                clientList.value = response.data
-              }).catch((e: Error)=>{
-                console.log(clientList.value)
-              })
+  ClientDataService.findByLname(formClient.lname)
+    .then((response: ResponseData)=>{
+        clientList.value = response.data
+      }).catch((e: Error)=>{
+        console.log(clientList.value)
+      })
 }
 onMounted(async () => {
   initTabulator(columnData.value, ClientDataService, tableClient);
@@ -114,12 +108,6 @@ onMounted(async () => {
       router.push({ path:'/login'})
       sessionStorage.clear()
     }
-  // if(sessionStorage.getItem("privileges")==="0"){
-  //   successNotification.value.showToast();
-  //   message.value = "Redirecting...."
-  //   messageDetail.value = "You don't have access to this page. Redirecting you the landing page."
-  //   router.push({path: "/dashboard"});
-  // }
 });
 </script>
 <template>
