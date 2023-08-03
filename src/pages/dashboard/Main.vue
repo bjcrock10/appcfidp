@@ -21,7 +21,6 @@ import BuisinessDataService from "../../services/BuisinessDataService";
 import ProductDataService from "../../services/ProductDataService";
 import AssistanceDataService from "../../services/AssistanceDataService";
 import ResponseData from "../../types/response";
-import BusinessInfoOnly from '../../components/Business/BusinessInfoOnly.vue';
 const salesReportFilter = ref<string>("");
 const importantNotesRef = ref<TinySliderElement>();
 
@@ -42,6 +41,7 @@ const countClient = async () => {
   ClientDataService.getAll().then((response: ResponseData)=>{
     noOfClient.value = response.data.length
   })
+  alert(noOfClient.value)
 }
 const countBusiness = async () => {
   BuisinessDataService.getAll().then((response: ResponseData)=>{
@@ -54,7 +54,7 @@ const countAssistance = async () => {
   })
 }
 onMounted(()=>{
-  countClient();
+  // countClient();
   countBusiness();
   countAssistance();
 })
