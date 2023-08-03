@@ -190,9 +190,8 @@ const dataProduct = ref([]);
 const brgySelect = ref([]);
 watch(selectProduct, (selectProduct, prevAddProjectModal) => {
     dataProduct.value.forEach(element => {
-        if(element['productName'] === selectProduct)
+        if(element['id'] === selectProduct)
         {
-            alert(element['productName'])
             formMarketProfile.productName = element['productName']
             formMarketProfile.product = element['id']
             formMarketProfile.productType =element['productType']
