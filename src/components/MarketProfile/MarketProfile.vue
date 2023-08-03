@@ -192,6 +192,7 @@ watch(selectProduct, (selectProduct, prevAddProjectModal) => {
     dataProduct.value.forEach(element => {
         if(element['productName'] === selectProduct)
         {
+            alert(element['productName'])
             formMarketProfile.productName = element['productName']
             formMarketProfile.product = element['id']
             formMarketProfile.productType =element['productType']
