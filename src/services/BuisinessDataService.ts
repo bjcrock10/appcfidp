@@ -97,6 +97,9 @@ class BusinessDataService {
     countEcommerce(): Promise<any>{
       return http.get(`/ecommerce/?count=1`)
     }
+    countEcommerceFiltered(title: any): Promise<any> {
+      return http.get(`ecommerce/?cfiltered=${title}`)
+    }
     //Business Owner-------------------------------------------
     getAllOwner(): Promise<any> {
       return http.get('/businessowner/')
@@ -172,6 +175,7 @@ class BusinessDataService {
     deleteMarketTraining(id: any): Promise<any> {
       return http.delete(`/markettraining/${id}/`);
     }
+    
   }
   
   export default new BusinessDataService();
