@@ -3,6 +3,8 @@ import { stringToHTML } from "../utils/helper";
 import MarketProfileDataService from '../services/MarketProfileDataService';
 import ResponseData from "./response";
 export function useMarketProfile(){
+    const date = new Date();
+    const current_date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+ date.getDate();
     const formMarketProfile = reactive({
         'id':'0',
         'business':'',
@@ -21,7 +23,7 @@ export function useMarketProfile(){
         'exportStarted':'',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
-        'encodedDate':'',
+        'encodedDate':current_date,
         'recStat':'1',
     });
     const formMaterialSource = reactive({
@@ -32,7 +34,7 @@ export function useMarketProfile(){
         'exportStarted':'',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
-        'encodedDate':'',
+        'encodedDate':current_date,
         'recStat':'1',
     });
     const columnData = ref([

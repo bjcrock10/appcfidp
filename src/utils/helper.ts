@@ -52,8 +52,8 @@ const formatCurrency = (number: number) => {
     let separator;
 
     if (thousand) {
-      separator = rest ? "." : "";
-      currency += separator + thousand.join(".");
+      separator = rest ? ", " : "";
+      currency += separator + thousand.join(", ");
     }
 
     return currency;

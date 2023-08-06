@@ -3,6 +3,8 @@ import { stringToHTML } from "../utils/helper";
 import AssistanceDataService from '../services/AssistanceDataService';
 import ResponseData from "./response";
 export function useAssistance(){
+    const date = new Date();
+    const current_date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+ date.getDate();
     const formAssistance = reactive({
         'id':'0',
         'business':'',
@@ -27,7 +29,7 @@ export function useAssistance(){
         'dateProvidedTo':'',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
-        'encodedDate':'',
+        'encodedDate':current_date,
         'recStat':'1',
     });
     const columnData = ref([

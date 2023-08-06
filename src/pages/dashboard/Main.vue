@@ -2,6 +2,7 @@
 import _ from "lodash";
 import { ref, provide, onMounted } from "vue";
 import fakerData from "../../utils/faker";
+import { formatCurrency } from "../../utils/helper";
 import Button from "../../base-components/Button";
 import Pagination from "../../base-components/Pagination";
 import { FormInput, FormSelect } from "../../base-components/Form";
@@ -37,26 +38,32 @@ const nextImportantNotes = () => {
 const noOfClient = ref(0);
 const noOfBusiness = ref(0);
 const noOfAssistance = ref(0);
+const noOfProduct = ref(0);
 const countClient = async () => {
-  ClientDataService.getAll().then((response: ResponseData)=>{
-    noOfClient.value = response.data.length
+  ClientDataService.count().then((response: ResponseData)=>{
+    noOfClient.value = formatCurrency(response.data[0].lname).toString();
   })
-  alert(noOfClient.value)
 }
 const countBusiness = async () => {
-  BuisinessDataService.getAll().then((response: ResponseData)=>{
-    noOfBusiness.value = response.data.length
+  BuisinessDataService.count().then((response: ResponseData)=>{
+    noOfBusiness.value = response.data[0].businessName
   })
 }
 const countAssistance = async () => {
-  AssistanceDataService.getAll().then((response: ResponseData)=>{
-    noOfAssistance.value = response.data.length
+  AssistanceDataService.count().then((response: ResponseData)=>{
+    noOfAssistance.value = response.data[0].title
+  })
+}
+const countProduct = async () => {
+  ProductDataService.count().then((response: ResponseData)=>{
+    noOfProduct.value = response.data[0].productName
   })
 }
 onMounted(()=>{
-  // countClient();
+  countClient();
   countBusiness();
   countAssistance();
+  countProduct();
 })
 </script>
 
@@ -83,10 +90,10 @@ onMounted(()=>{
                 <div class="p-5 box">
                   <div class="flex">
                     <Lucide
-                      icon="ShoppingCart"
+                      icon="User"
                       class="w-[28px] h-[28px] text-primary"
                     />
-                    <div class="ml-auto">
+                    <!-- <div class="ml-auto">
                       <Tippy
                         as="div"
                         class="cursor-pointer bg-success py-[3px] flex rounded-full text-white text-xs pl-2 pr-1 items-center font-medium"
@@ -95,7 +102,7 @@ onMounted(()=>{
                         33%
                         <Lucide icon="ChevronUp" class="w-4 h-4 ml-0.5" />
                       </Tippy>
-                    </div>
+                    </div> -->
                   </div>
                   <div class="mt-6 text-3xl font-medium leading-8">{{noOfClient}}</div>
                   <div class="mt-1 text-base text-slate-500">Client Profile</div>
@@ -115,7 +122,7 @@ onMounted(()=>{
                       icon="CreditCard"
                       class="w-[28px] h-[28px] text-pending"
                     />
-                    <div class="ml-auto">
+                    <!-- <div class="ml-auto">
                       <Tippy
                         as="div"
                         class="cursor-pointer bg-danger py-[3px] flex rounded-full text-white text-xs pl-2 pr-1 items-center font-medium"
@@ -124,7 +131,7 @@ onMounted(()=>{
                         2%
                         <Lucide icon="ChevronDown" class="w-4 h-4 ml-0.5" />
                       </Tippy>
-                    </div>
+                    </div> -->
                   </div>
                   <div class="mt-6 text-3xl font-medium leading-8">{{noOfBusiness}}</div>
                   <div class="mt-1 text-base text-slate-500">Business</div>
@@ -144,7 +151,7 @@ onMounted(()=>{
                       icon="Monitor"
                       class="w-[28px] h-[28px] text-warning"
                     />
-                    <div class="ml-auto">
+                    <!-- <div class="ml-auto">
                       <Tippy
                         as="div"
                         class="cursor-pointer bg-success py-[3px] flex rounded-full text-white text-xs pl-2 pr-1 items-center font-medium"
@@ -153,7 +160,7 @@ onMounted(()=>{
                         12%
                         <Lucide icon="ChevronUp" class="w-4 h-4 ml-0.5" />
                       </Tippy>
-                    </div>
+                    </div> -->
                   </div>
                   <div class="mt-6 text-3xl font-medium leading-8">{{noOfAssistance}}</div>
                   <div class="mt-1 text-base text-slate-500">
@@ -172,10 +179,10 @@ onMounted(()=>{
                 <div class="p-5 box">
                   <div class="flex">
                     <Lucide
-                      icon="User"
+                      icon="ShoppingCart"
                       class="w-[28px] h-[28px] text-success"
                     />
-                    <div class="ml-auto">
+                    <!-- <div class="ml-auto">
                       <Tippy
                         as="div"
                         class="cursor-pointer bg-success py-[3px] flex rounded-full text-white text-xs pl-2 pr-1 items-center font-medium"
@@ -184,11 +191,11 @@ onMounted(()=>{
                         22%
                         <Lucide icon="ChevronUp" class="w-4 h-4 ml-0.5" />
                       </Tippy>
-                    </div>
+                    </div> -->
                   </div>
-                  <div class="mt-6 text-3xl font-medium leading-8">152.040</div>
+                  <div class="mt-6 text-3xl font-medium leading-8">{{noOfProduct}}</div>
                   <div class="mt-1 text-base text-slate-500">
-                    Unique Visitor
+                    Product
                   </div>
                 </div>
               </div>

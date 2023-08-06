@@ -46,6 +46,7 @@ const onSubmit = () => {
   formClient.lname.toUpperCase();
   formClient.fname.toUpperCase();
   formClient.mname.toUpperCase();
+  formClient.fullName = formClient.lname + ", " + formClient.fname + " " + formClient.mname;
   formClient.address.toUpperCase();
   formClient.barangay.toUpperCase();
   ClientDataService.create(formClient).then((response: ResponseData)=>{
@@ -77,25 +78,26 @@ watch(
       }
     }
 )
-// watch(
-//   () => (formClient.lname), async(lname, prevToe) => {
-//     if(lname.length>=2){
-//         ClientDataService.findByLname(lname).then((response: ResponseData)=>{
-//           clientList.value = response.data
-//         }).catch((e: Error)=>{
-//           console.log(clientList.value)
-//         })
-//       }
-//     }
-// )
+watch(
+  () => (formClient.fname), async(lname, prevToe) => {
+    if(lname.length>=2){
+        lname = formClient.lname + ", " + lname
+        ClientDataService.findByLname(lname).then((response: ResponseData)=>{
+          clientList.value = response.data
+        }).catch((e: Error)=>{
+          console.log(clientList.value)
+        })
+      }
+    }
+)
 const showSearchLnamewithParam = async () => {
   lnameDropdown.value = true
-  ClientDataService.findByLname(formClient.lname)
-    .then((response: ResponseData)=>{
-        clientList.value = response.data
-      }).catch((e: Error)=>{
-        console.log(clientList.value)
-      })
+  // ClientDataService.findByLname(formClient.lname+", "+formClient.fname+" "+formClient.mname)
+  //   .then((response: ResponseData)=>{
+  //       clientList.value = response.data
+  //     }).catch((e: Error)=>{
+  //       console.log(clientList.value)
+  //     })
 }
 onMounted(async () => {
   initTabulator(columnData.value, ClientDataService, tableClient);
@@ -169,8 +171,6 @@ onMounted(async () => {
                             <FormLabel  htmlFor="modal-form-1"> Last Name </FormLabel>
                             <FormInput  :rounded="rounded" 
                               v-model="formClient.lname" type="text" placeholder="" 
-                              @focus="hideSearchLname"
-                              @blur="showSearchLnamewithParam"
                               required/>
                             <TransitionRoot
                               as="template"
@@ -203,12 +203,14 @@ onMounted(async () => {
                             <FormLabel htmlFor="modal-form-2"> First Name </FormLabel>
                             <FormInput  :rounded="rounded" 
                               v-model="formClient.fname" type="text" placeholder=""
+                              @focus="showSearchLnamewithParam"
                               @blur="hideSearchLname" required/>
                         </div>
                         <div class="col-span-12 sm:col-span-3">
                           <FormLabel htmlFor="modal-form-3">Middle Name</FormLabel>
                           <FormInput  :rounded="rounded" v-model="formClient.mname" 
-                            type="text" placeholder="M.I" />
+                            type="text" placeholder="M.I" 
+                            @blur="hideSearchLname"/>
                         </div>
                         <div class="col-span-12 sm:col-span-1">
                           <FormLabel htmlFor="modal-form-3"> Suffix </FormLabel>

@@ -199,13 +199,15 @@ export function useClient(){
         download: true
       },
   ])
-
+  const date = new Date();
+  const current_date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+ date.getDate();
     const formClient = reactive({
         'id' : '0',
         'farmerId' : '0',
         'fname': '',
         'lname': '',
         'mname': '',
+        'fullName': '',
         'suffix': '',
         'province': '',
         'lgu':'',
@@ -243,7 +245,7 @@ export function useClient(){
         'city':'0',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
-        'encodedDate':'',
+        'encodedDate':current_date,
         'recStat':'1',
     });
     const addModal = ref(false);

@@ -37,6 +37,10 @@ class ProductDataService {
     findByName(name: String): Promise<any> {
       return http.get(`/product/?name=${name}`);
     }
+
+    count(): Promise<any> {
+      return http.get(`/product/?count=1`)
+    }
   }
   
   export default new ProductDataService();

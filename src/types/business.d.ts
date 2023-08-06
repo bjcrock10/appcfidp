@@ -3,6 +3,8 @@ import { stringToHTML } from "../utils/helper";
 import BusinessDataService from '../services/BuisinessDataService';
 import ResponseData from "./response";
 export function useBusiness(){
+    const date = new Date();
+    const current_date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+ date.getDate();
     const formBusiness = reactive({
         'id' : '0',
         'clientId' : '0',
@@ -49,7 +51,7 @@ export function useBusiness(){
         'volumeUom':'0',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
-        'encodedDate':'',
+        'encodedDate':current_date,
         'recStat':'0',
     });
     const formSocialMedia = reactive({
@@ -85,7 +87,7 @@ export function useBusiness(){
         'specific' : '',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
-        'encodedDate':'',
+        'encodedDate':current_date,
         'recStat':'0',
     });
     const formMarketTraining = reactive({
@@ -95,7 +97,7 @@ export function useBusiness(){
         'targetYear' : '',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
-        'encodedDate':'',
+        'encodedDate':current_date,
         'recStat':'0',
     });
     const brgyDropdownBusiness = ref(false);

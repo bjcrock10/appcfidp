@@ -3,6 +3,8 @@ import { stringToHTML } from "../utils/helper";
 import ProductDataService from '../services/ProductDataService';
 import ResponseData from "./response";
 export function useProduct(){
+    const date = new Date();
+    const current_date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+ date.getDate();
     const formProduct = reactive({
         'id':'0',
         'business':'',
@@ -15,7 +17,7 @@ export function useProduct(){
         'certification':'',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
-        'encodedDate':'',
+        'encodedDate':current_date,
         'recStat':'1',
     });
     const columnData = ref([

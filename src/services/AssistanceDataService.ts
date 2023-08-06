@@ -40,6 +40,9 @@ class AssistanceDataService {
     findByName(name: String): Promise<any> {
       return http.get(`/ticket/?name=${name}`);
     }
+    count(): Promise<any>{
+      return http.get(`/ticket/?count=1`)
+    }
     //------------------------------------------------
     getAllMsmeProgram(): Promise<any> {
         return http.get("/msmeprogram/");
