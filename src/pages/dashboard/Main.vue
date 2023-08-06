@@ -35,13 +35,13 @@ const prevImportantNotes = () => {
 const nextImportantNotes = () => {
   importantNotesRef.value?.tns.goTo("next");
 };
-const noOfClient = ref(0);
+const noOfClient = ref<any>(0);
 const noOfBusiness = ref(0);
 const noOfAssistance = ref(0);
 const noOfProduct = ref(0);
 const countClient = async () => {
   ClientDataService.count().then((response: ResponseData)=>{
-    noOfClient.value = formatCurrency(response.data[0].lname).toString();
+    noOfClient.value = formatCurrency(response.data[0].lname);
   })
 }
 const countBusiness = async () => {
