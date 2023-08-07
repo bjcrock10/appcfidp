@@ -1,10 +1,15 @@
 {
     "cSpell.words": [
+        "afterchartdraw",
+        "aftergriddraw",
         "Barangay",
+        "beforegriddraw",
+        "beforetoolbarcreated",
         "Bgry",
         "brgy",
         "Buisiness",
         "businessowner",
+        "celldoubleclick",
         "ecommerce",
         "litepicker",
         "Lnamewith",
@@ -19,6 +24,7 @@
         "tenurial",
         "Toastify",
         "vuelidate",
+        "webdatarocks",
         "zipcode"
     ]
 }

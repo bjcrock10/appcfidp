@@ -1,0 +1,25 @@
+{
+  "name": "webdatarocks",
+  "version": "1.4.6",
+  "description": "Free web pivot table tool. Created by industry experts for everyone.",
+  "main": "webdatarocks.js",
+  "typings": "webdatarocks.d.ts",
+  "keywords": [
+    "pivot",
+    "pivot table",
+    "pivot grid",
+    "analytics",
+    "reporting",
+    "mysql",
+    "csv",
+    "json",
+    "BI",
+    "business intelligence"
+  ],
+  "author": "BJCRock10",
+  "bugs": {
+    "url": "https://localhost:3000"
+  },
+  "homepage": "https://localhost:3000",
+  "license": "https://localhost:3000"
+}

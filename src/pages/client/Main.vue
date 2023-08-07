@@ -167,10 +167,17 @@ onMounted(async () => {
                           <FormLabel htmlFor="modal-form-3"> Prefix </FormLabel>
                           <FormInput  :rounded="rounded" v-model="formClient.prefix" type="text" placeholder="Ms./Mr./Mrs." />
                         </div>
+                        <div class="col-span-12 sm:col-span-4">
+                          <FormLabel htmlFor="modal-form-2"> Last Name </FormLabel>
+                          <FormInput  :rounded="rounded" 
+                            v-model="formClient.lname" type="text" placeholder=""
+                             required/>
+                        </div>
                         <div class="col-span-12 sm:col-span-3">
-                            <FormLabel  htmlFor="modal-form-1"> Last Name </FormLabel>
+                            <FormLabel  htmlFor="modal-form-1"> First Name </FormLabel>
                             <FormInput  :rounded="rounded" 
-                              v-model="formClient.lname" type="text" placeholder="" 
+                              v-model="formClient.fname" type="text" placeholder="" @focus="showSearchLnamewithParam"
+                              @blur="hideSearchLname"
                               required/>
                             <TransitionRoot
                               as="template"
@@ -198,13 +205,6 @@ onMounted(async () => {
                                  </div>
                               </div>
                             </TransitionRoot>
-                        </div>
-                        <div class="col-span-12 sm:col-span-4">
-                            <FormLabel htmlFor="modal-form-2"> First Name </FormLabel>
-                            <FormInput  :rounded="rounded" 
-                              v-model="formClient.fname" type="text" placeholder=""
-                              @focus="showSearchLnamewithParam"
-                              @blur="hideSearchLname" required/>
                         </div>
                         <div class="col-span-12 sm:col-span-3">
                           <FormLabel htmlFor="modal-form-3">Middle Name</FormLabel>
