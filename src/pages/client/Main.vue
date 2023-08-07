@@ -274,7 +274,7 @@ onMounted(async () => {
                           <!-- BEGIN: Search -->
                           <div class="col-span-12 sm:col-span-12">
                             <div class="col-span-12 sm:col-span-3">
-                              <FormLabel  htmlFor="modal-form-1"> Barangay  </FormLabel>
+                              <FormLabel  htmlFor="modal-form-1"> Barangay / Municipality or City / Region  </FormLabel>
                               <FormInput
                                 type="text"
                                 placeholder="Search Barangay..."
