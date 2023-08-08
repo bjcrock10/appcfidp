@@ -75,12 +75,17 @@ const routes = [
   },
 ];
 
+// const router = createRouter({
+//   history: createWebHistory(),
+//   routes,
+//   scrollBehavior(to, from, savedPosition) {
+//     return savedPosition || { left: 0, top: 0 };
+//   },
+// });
+
 const router = createRouter({
   history: createWebHistory(),
-  routes,
-  scrollBehavior(to, from, savedPosition) {
-    return savedPosition || { left: 0, top: 0 };
-  },
-});
+  routes: [{ path: '/:pathMatch(.*)', component: ErrorPage }],
+})
 
 export default router;

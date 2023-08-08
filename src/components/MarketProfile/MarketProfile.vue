@@ -188,7 +188,7 @@ const dataTable = () =>{
 };
 const dataProduct = ref([]);
 const brgySelect = ref([]);
-watch(selectProduct, (selectProduct, prevAddProjectModal) => {
+watch(selectProduct.value, (selectProduct, prevAddProjectModal) => {
     dataProduct.value.forEach(element => {
         if(element['productName'] === selectProduct)
         {
@@ -292,19 +292,9 @@ onMounted(() => {
                     <div class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 p-2">
                             <div class="col-span-12 md:col-span-6">
                             <FormLabel htmlFor="modal-form-3">Product Name</FormLabel>
-                            <TomSelect
-                                v-model="selectProduct"
-                                    :options="{
-                                    placeholder: 'Select item below.',
-                                    persist: false,
-                                    createOnBlur: true,
-                                    create: true,
-                                    maxItems:1
-                                }"
-                                class="w-full">
+                            <FormSelect  v-model="formMarketProfile.productName" required>
                                 <option v-for="item in dataProduct" :value="item['productName']" :key="item['id']">{{item['productName']}}</option>
-                                <option :value="formMarketProfile.productName">{{formMarketProfile.productName}}</option>
-                            </TomSelect>
+                            </FormSelect>
                             </div>
                             <div class="col-span-12 sm:col-span-6">
                             <FormLabel  htmlFor="modal-form-1"> Type of Market </FormLabel>
