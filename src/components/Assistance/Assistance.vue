@@ -219,7 +219,7 @@ onMounted(async () => {
                           class="w-full" multiple
                         >
                           <option v-for="item in msmeProgram" :value="item['title']" :key="item['id']">{{item['title']}}</option>
-                          <option :value="formAssistance.msmeProgram">{{formAssistance.msmeProgram}}</option>
+                          <!-- <option :value="formAssistance.msmeProgram">{{formAssistance.msmeProgram}}</option> -->
                         </TomSelect>
                       </div>
                       <div class="col-span-12 sm:col-span-6">
