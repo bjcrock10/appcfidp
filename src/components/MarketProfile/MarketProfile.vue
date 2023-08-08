@@ -226,18 +226,6 @@ watch(
     });
 }
 )
-const assignProductInfo = (item: any) =>{
-    formMarketProfile.productName = item['productName']
-    formMarketProfile.product = item['id']
-    formMarketProfile.productType =item['productType']
-    formMarketProfile.productionCapacity = item['productionCapacity']
-    formMarketProfile.uom = item['uom']
-    formMarketProfile.size= item['size']
-    formMarketProfile.business = item['business']
-    formMarketProfile.brandName = item['brandName']
-    formMarketProfile.certification = item['certification']
-    alert(item['productName'])
-}
 watch(
   () => (formMarketProfile.marketType),(select, prevToe) => {
     if(select === "Domestic"){
