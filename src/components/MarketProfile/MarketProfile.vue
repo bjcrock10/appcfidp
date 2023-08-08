@@ -206,6 +206,18 @@ watch(selectProduct.value, (selectProduct, prevAddProjectModal) => {
         
     });
 })
+const assignProductInfo = (item: any) =>{
+    formMarketProfile.productName = item['productName']
+    formMarketProfile.product = item['id']
+    formMarketProfile.productType =item['productType']
+    formMarketProfile.productionCapacity = item['productionCapacity']
+    formMarketProfile.uom = item['uom']
+    formMarketProfile.size= item['size']
+    formMarketProfile.business = item['business']
+    formMarketProfile.brandName = item['brandName']
+    formMarketProfile.certification = item['certification']
+    alert(item['productName'])
+}
 watch(
   () => (formMarketProfile.marketType),(select, prevToe) => {
     if(select === "Domestic"){
@@ -293,8 +305,21 @@ onMounted(() => {
                             <div class="col-span-12 md:col-span-6">
                             <FormLabel htmlFor="modal-form-3">Product Name</FormLabel>
                             <FormSelect  v-model="formMarketProfile.productName" required>
-                                <option v-for="item in dataProduct" :value="item['productName']" :key="item['id']">{{item['productName']}}</option>
+                                <option v-for="item in dataProduct" :value="item['productName']" :key="item['id']" @click="assignProductInfo(item)">{{item['productName']}}</option>
                             </FormSelect>
+                            <!-- <TomSelect
+                                v-model="selectProduct"
+                                    :options="{
+                                    placeholder: 'Select item below.',
+                                    persist: false,
+                                    createOnBlur: true,
+                                    create: true,
+                                    maxItems:1
+                                }"
+                                class="w-full">
+                                <option v-for="item in dataProduct" :value="item['productName']" :key="item['id']">{{item['productName']}}</option>
+                                <option :value="formMarketProfile.productName">{{formMarketProfile.productName}}</option>
+                            </TomSelect> -->
                             </div>
                             <div class="col-span-12 sm:col-span-6">
                             <FormLabel  htmlFor="modal-form-1"> Type of Market </FormLabel>
