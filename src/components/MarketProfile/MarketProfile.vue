@@ -305,7 +305,7 @@ onMounted(() => {
                             <div class="col-span-12 md:col-span-6">
                             <FormLabel htmlFor="modal-form-3">Product Name</FormLabel>
                             <FormSelect  v-model="formMarketProfile.productName" required>
-                                <option v-for="item in dataProduct" :value="item['productName']" :key="item['id']" @click="assignProductInfo(item)">{{item['productName']}}</option>
+                                <option v-for="item in dataProduct" :value="item['productName']" :key="item['id']" v-on:change="assignProductInfo(item)">{{item['productName']}}</option>
                             </FormSelect>
                             <!-- <TomSelect
                                 v-model="selectProduct"
