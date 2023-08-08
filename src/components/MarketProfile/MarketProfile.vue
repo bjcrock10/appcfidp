@@ -206,6 +206,26 @@ watch(selectProduct.value, (selectProduct, prevAddProjectModal) => {
         
     });
 })
+watch(
+  () => (formMarketProfile.productName),(select, prevToe) => {
+    dataProduct.value.forEach(element => {
+        if(element['productName'] === select)
+        {
+            formMarketProfile.productName = element['productName']
+            formMarketProfile.product = element['id']
+            formMarketProfile.productType =element['productType']
+            formMarketProfile.productionCapacity = element['productionCapacity']
+            formMarketProfile.uom = element['uom']
+            formMarketProfile.size= element['size']
+            formMarketProfile.business = element['business']
+            formMarketProfile.brandName = element['brandName']
+            formMarketProfile.certification = element['certification']
+            return;
+        }
+        
+    });
+}
+)
 const assignProductInfo = (item: any) =>{
     formMarketProfile.productName = item['productName']
     formMarketProfile.product = item['id']
@@ -305,7 +325,7 @@ onMounted(() => {
                             <div class="col-span-12 md:col-span-6">
                             <FormLabel htmlFor="modal-form-3">Product Name</FormLabel>
                             <FormSelect  v-model="formMarketProfile.productName" required>
-                                <option v-for="item in dataProduct" :value="item['productName']" :key="item['id']" v-on:change="assignProductInfo(item)">{{item['productName']}}</option>
+                                <option v-for="item in dataProduct" :value="item['productName']" :key="item['id']">{{item['productName']}}</option>
                             </FormSelect>
                             <!-- <TomSelect
                                 v-model="selectProduct"
