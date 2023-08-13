@@ -116,7 +116,7 @@ onMounted(() => {
         <Button class="mr-2 shadow-md" as="a" href="#" variant="primary" @click="(event: MouseEvent) => {
             event.preventDefault();
             setAddModal(true);
-          }" v-if="props.business!=='0'">
+          }" v-if="formProduct.business!=='0'">
           Add New Product
         </Button>
         <!-- BEGIN: Notification Content -->
@@ -218,7 +218,7 @@ onMounted(() => {
                               type="number" placeholder="" required/>
                           </div>
                           <div class="col-span-12 sm:col-span-6">
-                            <FormLabel htmlFor="modal-form-3">Production Capacity</FormLabel>
+                            <FormLabel htmlFor="modal-form-3">Production Capacity per Month</FormLabel>
                             <FormInput v-model="formProduct.productionCapacity" 
                               type="text" placeholder="" required/>
                           </div>

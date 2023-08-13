@@ -1,6 +1,7 @@
 import { ref, reactive} from "vue"
 import { stringToHTML } from "../utils/helper";
 import BusinessDataService from '../services/BuisinessDataService';
+import OrganizationDataService from "../services/Organization";
 import ResponseData from "./response";
 export function useBusiness(){
     const date = new Date();
@@ -49,6 +50,7 @@ export function useBusiness(){
         'rawMatsSources': '',
         'estimatedVolume': '',
         'volumeUom':'0',
+        'organization':'',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
         'encodedDate':current_date,
@@ -133,6 +135,20 @@ export function useBusiness(){
     const businessID = ref(0)
     const businessSubmit = ref(false)
     const createBusinessInfo =async (data:any) => {
+        formOrganization.title = data.organization.toUpperCase();
+        OrganizationDataService.findByTitle(data.organization).then((response: ResponseData)=>{
+            if(response.data.length===0){
+                OrganizationDataService.create(formOrganization).then((response: ResponseData)=>{
+                data.id = response.data.id
+            }).catch((e: Error)=>{
+                console.log(e.message)
+            })
+            }
+            else{
+                data.organization = response.data[0].id
+            }
+        })
+        data.organization = data.organization.toUpperCase();
         BusinessDataService.create(data).then((response: ResponseData)=>{
             businessID.value = response.data.id
             businessSubmit.value = true
@@ -143,6 +159,19 @@ export function useBusiness(){
           })
     }
     const updateBusinessInfo = async (id:any, data:any) => {
+        formOrganization.title = data.organization.toUpperCase()
+        OrganizationDataService.findByTitle(data.organization).then((response: ResponseData)=>{
+            if(response.data.length===0){
+                OrganizationDataService.create(formOrganization).then((response: ResponseData)=>{
+                data.id = response.data.id
+            }).catch((e: Error)=>{
+                console.log(e.message)
+            })
+            }
+            else{
+                data.organization = response.data[0].id
+            }
+        })
         BusinessDataService.update(id, data).then((response: ResponseData)=>{
             businessID.value = response.data.id
             businessSubmit.value = true
@@ -190,71 +219,31 @@ export function useBusiness(){
             formBusiness.faxNo = response.data[0].faxNo
             formBusiness.email = response.data[0].email
             formBusiness.website = response.data[0].website
+            formBusiness.organization = response.data[0].organization
             addressSelectBus.businessAddress = response.data[0].businessBrgyAddress
             addressSelectBus.plantAddress = response.data[0].plantBrgyAddress
             businessID.value = response.data[0].id
             selectBusinessOwner.value = ([formBusiness.businessOwnership]);
             selectLineOfBusiness.value = ([formBusiness.lineOfBusiness]);
             selectStandardCertification.value = ([formBusiness.standardCertification]);
+            selectOrganization.value = ([formBusiness.organization]);
         }).catch((e: Error)=>{
             console.log(e.message)
             businessID.value = 0
+        })
+        OrganizationDataService.getAll().then((response: ResponseData)=>{
+            orgList.value = response.data
         })
     }
     const selectBusinessOwner = ref([formBusiness.businessOwnership]);
     const selectLineOfBusiness = ref([formBusiness.lineOfBusiness]);
     const selectStandardCertification = ref([formBusiness.standardCertification]);
-    const selectSocialMed = ref(["1"]);
-    const selectEcommerce = ref(["1"]);
-    const selectBOwner = ref(["1"]);
-    const selectMarketPlan = ref(["1"]);
-    const selectMarketTraining = ref(["1"]);
-    const columnDataSocial = ref([
-        {
-            title: "",
-            formatter: "responsiveCollapse",
-            width: 40,
-            minWidth: 30,
-            hozAlign: "center",
-            resizable: false,
-            headerSort: false,
-            },
-      
-            // For HTML table
-            {
-              title: "Platform",
-              minWidth: 100,
-              maxWidth: 100,
-              field: "platForm",
-              hozAlign: "center",
-              headerHozAlign: "center",
-              vertAlign: "middle",
-              print: false,
-              download: false
-            },
-            {
-              title: "URL",
-              minWidth: 100,
-              maxWidth: 150,
-              field: "url",
-              hozAlign: "center",
-              headerHozAlign: "center",
-              vertAlign: "middle",
-              print: false,
-              download: false,
-            },
-            {
-            title: "",
-            minWidth: 200,
-            responsive: 0,
-            field: "action",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            print: false,
-            download: false,
-            },
-    ]);
+    const selectSocialMed = ref(["0"]);
+    const selectEcommerce = ref(["0"]);
+    const selectBOwner = ref(["0"]);
+    const selectMarketPlan = ref(["0"]);
+    const selectMarketTraining = ref(["0"]);
+    
     const businessDropdown = ref(false);
     const businessList = ref();
     const showSearchBusiness = () => {
@@ -263,6 +252,12 @@ export function useBusiness(){
     const hideSearchBusiness = () => {
         businessDropdown.value = false;
     };
+    const formOrganization = reactive({
+        title : '',
+        recStat : '0'
+    });
+    const selectOrganization = ref([formBusiness.organization]);
+    const orgList = ref([]);
     return {
         formBusiness,
         formSocialMedia,
@@ -288,7 +283,6 @@ export function useBusiness(){
         selectSocialMed,
         selectEcommerce,
         selectBOwner,
-        columnDataSocial,
         businessDropdown,
         businessList,
         showSearchBusiness,
@@ -296,6 +290,6 @@ export function useBusiness(){
         formMarketPlan,
         formMarketTraining,
         selectMarketPlan,
-        selectMarketTraining
+        selectMarketTraining, selectOrganization, formOrganization, orgList
     }
 }

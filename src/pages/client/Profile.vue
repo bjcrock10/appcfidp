@@ -12,6 +12,7 @@ import Table from "../../base-components/Table";
 import LocationDataService from "../../services/LocationDataService";
 import BusinessDataService from "../../services/BuisinessDataService";
 import ClientDataService  from "../../services/ClientDataService"
+import OrganizationDataService from "../../services/Organization";
 import ResponseData from "../../types/response.d";
 import { TransitionRoot } from "@headlessui/vue";
 import { useClient } from "../../types/client.d";
@@ -38,11 +39,12 @@ const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDr
         message, messageDetail, buttonTitle, buttonIcon, setAddModal, select, brgy, sendButtonRef, ncfrs, tenurial,
         accreditation, organization, disNcfrs, disTenurial, disAccreditation, disOrganization, brgySelect, citySelect,
         clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation, getClientInfo, 
-        updateClientInfo, clientSubmit, patchClientInfo} = useClient();
+        updateClientInfo, clientSubmit, patchClientInfo, formOrganization, orgList, selectOrganization} = useClient();
 
 const clientID = ref(router.currentRoute.value.params.id);
 const tableClient = ref<HTMLDivElement>();
 const successNotification = ref();
+
 provide("bind[successNotification]", (el: any) => {
   // Binding
   successNotification.value = el;
@@ -67,8 +69,11 @@ watch(
       }
     }
 );
-
+const orgId = ref(0)
 const onSubmit = () =>{
+ formClient.ipGroup = selectOrganization.value.toString()
+ formClient.fullName = formClient.lname.toUpperCase() + ", " + formClient.fname.toUpperCase() + " " + formClient.mname.toUpperCase();
+ formOrganization.title = selectOrganization.value.toString()
  updateClientInfo(clientID.value,formClient).then();
  if(clientSubmit.value===true){
     successNotification.value.showToast();
@@ -426,14 +431,20 @@ onMounted(async () => {
                         </div>
                         <div class="col-span-12 md:col-span-8">
                             <FormLabel  htmlFor="modal-form-1"> Are you a member of a farm/coconut organization? </FormLabel>
-                            <InputGroup class="grid grid-cols-12">
-                            <FormSelect form-select-size="sm"  v-model="organization" class="col-span-12 md:col-span-2" @change="dOrganization">
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </FormSelect>
-                            <FormInput form-input-size="sm"  :rounded="rounded" v-model="formClient.ipGroup" 
-                                type="text" placeholder="Name of organization" class="col-span-12 md:col-span-10" :disabled="disOrganization" required/>
-                            </InputGroup>
+                            <TomSelect
+                                  v-model="selectOrganization"
+                                  :options="{
+                                    placeholder: 'Select item below. If not exist please specify...',
+                                    persist: false,
+                                    createOnBlur: true,
+                                    create: true,
+                                    maxItems:1,
+                                  }"
+                                  class="w-full" multiple
+                                >
+                                <option v-for="item in orgList" :value="item['title']" :key="item['id']">{{item['title']}}</option>
+                                <option value="No">Not a member of any organization</option>
+                            </TomSelect>
                         </div>
                         <div class="col-span-12 md:col-span-4">
                             <FormLabel  htmlFor="modal-form-1"> Is your organization accredited/registered? </FormLabel>

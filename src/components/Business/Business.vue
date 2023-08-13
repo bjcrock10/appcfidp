@@ -10,6 +10,7 @@ import { Tab as HeadlessTab } from "@headlessui/vue";
 import Table from "../../base-components/Table";
 import LocationDataService from "../../services/LocationDataService";
 import BusinessDataService from "../../services/BuisinessDataService";
+import OrganizationDataService from "../../services/Organization"
 import ResponseData from "../../types/response.d";
 import { TransitionRoot } from "@headlessui/vue";
 import { useClient } from "../../types/client.d";
@@ -31,7 +32,7 @@ const {formBusiness, formBusinessOwner, formEcommerce, formSocialMedia,formMarke
         showSearchBrgyBusiness, showSearchBrgyPlant, brgyDropdownBusiness, brgyDropdownPlant, addressSelectBus,
       checkBusinessBrgy, checkPlantBrgy, businessID, businessSubmit, getBusinessInfo, 
       selectBusinessOwner, selectLineOfBusiness, selectStandardCertification, selectSocialMed, selectEcommerce, 
-      selectBOwner, selectMarketPlan, selectMarketTraining, showSearchBusiness, hideSearchBusiness, businessList, businessDropdown} = useBusiness();
+      selectBOwner, selectMarketPlan, selectMarketTraining, showSearchBusiness, hideSearchBusiness, businessList, businessDropdown, formOrganization, orgList, selectOrganization} = useBusiness();
 const tableClient = ref<HTMLDivElement>();
 const successNotification = ref();
 provide("bind[successNotification]", (el: any) => {
@@ -195,9 +196,10 @@ const onAddBusiness = async () => {
   formBusiness.businessOwnership = selectBusinessOwner.value.toString();
   formBusiness.lineOfBusiness = selectLineOfBusiness.value.toString();
   formBusiness.standardCertification = selectStandardCertification.value.toString();
-  formBusiness.plantBrgyAddress = addressSelectBus.plantAddress
-  formBusiness.businessBrgyAddress = addressSelectBus.businessAddress
-  formBusiness.clientId = props.clientId
+  formBusiness.plantBrgyAddress = addressSelectBus.plantAddress;
+  formBusiness.businessBrgyAddress = addressSelectBus.businessAddress;
+  formBusiness.organization = selectOrganization.value.toString();
+  formBusiness.clientId = props.clientId;
   if(formBusiness.id==="0"){
     BusinessDataService.create(formBusiness).then((response: ResponseData)=>{
       businessID.value = response.data.id
@@ -223,6 +225,16 @@ const onAddBusiness = async () => {
       console.log(e.message)
     })
   }
+  formOrganization.title = formBusiness.organization.toUpperCase();
+  OrganizationDataService.findByTitle(formBusiness.organization).then((response: ResponseData)=>{
+    if(response.data.length===0){
+      OrganizationDataService.create(formOrganization).then((response: ResponseData)=>{
+          
+      }).catch((e: Error)=>{
+          console.log(e.message)
+      })
+    }
+  })
 }
 const onAddBSocial = async () => {
   formSocialMedia.business = formBusiness.id
@@ -321,6 +333,7 @@ const selectOwner = (item:any)=>{
   selectBusinessOwner.value = ([item.businessOwnership])
   selectLineOfBusiness.value =  ([item.lineOfBusiness])
   selectStandardCertification.value =  ([item.standardCertification])
+  selectOrganization.value = ([item.organization])
   formBusiness.capitalization = item.capitalization
   formBusiness.noOutlets = item.noOutlets
   formBusiness.noEmployee = item.noEmployee
@@ -368,7 +381,7 @@ const selectOwner = (item:any)=>{
             <div class="p-5">
               <form class="validate-form" @submit.prevent="onAddBusiness">
                 <div class="grid grid-cols-12 col-span-12 gap-4 gap-y-3">
-                  <div class="col-span-12 md:col-span-6">
+                  <div class="col-span-12 md:col-span-8">
                       <FormLabel htmlFor="modal-form-2">Registered Business Name</FormLabel>
                       <FormInput form-input-size="sm"  :rounded="rounded" 
                       v-model="formBusiness.businessName" type="text" placeholder=""
@@ -391,7 +404,7 @@ const selectOwner = (item:any)=>{
                         <div class="w-auto p-5 box">
                           <div class="mb-2 font-medium">Business Name List</div>
                           <div class="mb-5 hover:blue" v-for="item in businessList" :key="item.id" :value="item.id" v-on:click="selectOwner(item)">
-                            <button href="" class="flex items-center" type="button">
+                            <button href="" class="w-full mb-5 flex items-center hover:bg-slate-400" type="button">
                               <div
                                 class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 dark:bg-success/10 text-success"
                               >
@@ -404,11 +417,28 @@ const selectOwner = (item:any)=>{
                       </div>
                     </TransitionRoot>
                   </div>
-                  <div class="col-span-12 md:col-span-2">
+                  <div class="col-span-12 md:col-span-4">
                     <FormLabel htmlFor="modal-form-3">Year Established</FormLabel>
                     <FormInput form-input-size="sm"  :rounded="rounded" v-model="formBusiness.yearEstablished" 
                         type="number" placeholder="" />
                   </div>
+                  <div class="col-span-12 md:col-span-8">
+                    <FormLabel  htmlFor="modal-form-1"> Are you a member of a farm/coconut organization? </FormLabel>
+                    <TomSelect
+                          v-model="selectOrganization"
+                          :options="{
+                            placeholder: 'Select item below. If not exist please specify...',
+                            persist: false,
+                            createOnBlur: true,
+                            create: true,
+                          }"
+                          class="w-full" multiple
+                        >
+                        <option v-for="item in orgList" :value="item['title']" :key="item['id']">{{item['title']}}</option>
+                        <option :value="formBusiness.organization">{{formBusiness.organization}}</option>
+                        <option value="No">Not a member of any organization</option>
+                    </TomSelect>
+                </div>
                   <div class="col-span-12 md:col-span-4">
                     <FormLabel htmlFor="modal-form-3">Business Ownership</FormLabel>
                     <TomSelect

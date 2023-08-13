@@ -41,7 +41,8 @@ export function useProduct(){
             headerHozAlign: "center",
             vertAlign: "middle",
             print: false,
-            download: false
+            download: false,
+            visible: false,
         },
         {
             title: "Product",

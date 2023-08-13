@@ -10,6 +10,7 @@ import Register from "../pages/account/Register.vue";
 import ErrorPage from "../pages/ErrorPage.vue";
 import Clients from "../pages/client/Main.vue";
 import ClientProfile from "../pages/client/Profile.vue";
+import Report from "../pages/report/Main.vue"
 
 const routes = [
   {
@@ -34,8 +35,13 @@ const routes = [
       {
         path: "/client/:id",
         name: "",
-        component: ClientProfile
+        component: ClientProfile,
       },
+      {
+      path: "/clients",
+      name: "side-menu-reports",
+      component: Report,
+    }
     ],
   },
   {
@@ -47,22 +53,6 @@ const routes = [
     path: "/register",
     name: "register",
     component: Register,
-  },
-  {
-    path: "/simple-menu",
-    component: SimpleMenu,
-    children: [
-      {
-        path: "page-1",
-        name: "simple-menu-page-1",
-        component: Dashboard,
-      },
-      {
-        path: "page-2",
-        name: "simple-menu-page-2",
-        component: Users,
-      },
-    ],
   },
   {
     path: "/error-page",

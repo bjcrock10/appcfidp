@@ -8,6 +8,7 @@ import Tippy from "../../base-components/Tippy";
 import TomSelect from "../../base-components/TomSelect";
 import ClientDataService from '../../services/ClientDataService';
 import LocationDataService from "../../services/LocationDataService";
+import OrganizationDataService from "../../services/Organization";
 import ResponseData from "../../types/response.d";
 import { TransitionRoot } from "@headlessui/vue";
 import { useClient } from "../../types/client.d";
@@ -19,20 +20,21 @@ import { createIcons, icons } from "lucide";
 import { useRouter } from "vue-router";
 import LoadingIcon from "../../base-components/LoadingIcon";
 
+
 const router = useRouter();
 const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDropdown,
         lnameDropdown, showSearchBrgy, hideSearchBrgy, showSearchLname, hideSearchLname, 
         message, messageDetail, buttonTitle, buttonIcon, setAddModal, select, brgy, sendButtonRef, ncfrs, tenurial,
         accreditation, organization, disNcfrs, disTenurial, disAccreditation, disOrganization, brgySelect, citySelect,
-        clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation, brgyId} = useClient();
+        clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation, brgyId, formOrganization, orgList, selectOrganization} = useClient();
 const {initTabulator, reInitOnResizeWindow, 
 filter, onFilter, 
 onExportCsv, onExportHtml, 
 onExportJson, onExportXlsx, 
 onPrint, onResetFilter, tabulator, loadingIcon} = tabulatorFunc();
-
 const tableClient = ref<HTMLDivElement>();
 const successNotification = ref();
+
 provide("bind[successNotification]", (el: any) => {
   // Binding
   successNotification.value = el;
@@ -46,9 +48,28 @@ const onSubmit = () => {
   formClient.lname.toUpperCase();
   formClient.fname.toUpperCase();
   formClient.mname.toUpperCase();
-  formClient.fullName = formClient.lname + ", " + formClient.fname + " " + formClient.mname;
+  formClient.fullName = formClient.lname.toUpperCase() + ", " + formClient.fname.toUpperCase() + " " + formClient.mname.toUpperCase();
   formClient.address.toUpperCase();
   formClient.barangay.toUpperCase();
+  formClient.ipGroup = selectOrganization.value.toString().toUpperCase()
+  formOrganization.title = selectOrganization.value.toString().toUpperCase()
+  OrganizationDataService.create(formOrganization).then((response: ResponseData)=>{
+        formClient.organization = response.data.id
+  }).catch((e: Error)=>{
+    console.log(e.message)
+  })
+  OrganizationDataService.findByTitle(formClient.ipGroup).then((response: ResponseData)=>{
+    if(response.data.length<0){
+      OrganizationDataService.create(formOrganization).then((response: ResponseData)=>{
+            formClient.organization = response.data.id
+      }).catch((e: Error)=>{
+        console.log(e.message)
+      })
+    }
+    else{
+      formClient.organization = response.data[0].id
+    }
+ })
   ClientDataService.create(formClient).then((response: ResponseData)=>{
       successNotification.value.showToast();
       addModal.value = false
@@ -102,6 +123,9 @@ const showSearchLnamewithParam = async () => {
 onMounted(async () => {
   initTabulator(columnData.value, ClientDataService, tableClient);
   reInitOnResizeWindow();
+  OrganizationDataService.getAll().then((response: ResponseData)=>{
+    orgList.value = response.data
+  })
   tabulator.value?.on("rowClick",(e, cell)=>{
     const id = cell.getData().id
     router.push({path:`/client/${id}`, params:{id}})
@@ -165,7 +189,11 @@ onMounted(async () => {
                         <legend class="text-sm font-bold">Personal Information</legend>
                         <div class="col-span-12 sm:col-span-1">
                           <FormLabel htmlFor="modal-form-3"> Prefix </FormLabel>
-                          <FormInput  :rounded="rounded" v-model="formClient.prefix" type="text" placeholder="Ms./Mr./Mrs." />
+                          <FormSelect  v-model="formClient.prefix" class="col-span-12 sm:col-span-2" @change="aNcfrs" required>
+                            <option value="Mr.">Mr.</option>
+                            <option value="Ms.">Ms.</option>
+                            <option value="Mrs.">Mrs.</option>
+                          </FormSelect>
                         </div>
                         <div class="col-span-12 sm:col-span-4">
                           <FormLabel htmlFor="modal-form-2"> Last Name </FormLabel>
@@ -375,14 +403,28 @@ onMounted(async () => {
                       </div>
                       <div class="col-span-12 sm:col-span-8">
                         <FormLabel  htmlFor="modal-form-1"> Are you a member of a farm/coconut organization? </FormLabel>
-                        <InputGroup class="grid grid-cols-12">
+                        <TomSelect
+                          v-model="selectOrganization"
+                          :options="{
+                            placeholder: 'Select item below. If not exist please specify...',
+                            persist: false,
+                            createOnBlur: true,
+                            create: true,
+                            maxItems:1,
+                          }"
+                          class="w-full" multiple
+                        >
+                          <option v-for="item in orgList" :value="item['title']" :key="item['id']">{{item['title']}}</option>
+                          <option value="No">Not a member of any organization</option>
+                        </TomSelect>
+                        <!-- <InputGroup class="grid grid-cols-12">
                           <FormSelect  v-model="organization" class="col-span-12 sm:col-span-2" @change="dOrganization" required>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                           </FormSelect>
                           <FormInput  :rounded="rounded" v-model="formClient.ipGroup" 
                               type="text" placeholder="Name of organization" class="col-span-12 sm:col-span-10" :disabled="disOrganization" required/>
-                        </InputGroup>
+                        </InputGroup> -->
                       </div>
                       <div class="col-span-12 sm:col-span-4">
                         <FormLabel  htmlFor="modal-form-1"> Is your organization accredited/registered? </FormLabel>

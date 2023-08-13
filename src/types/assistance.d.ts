@@ -46,7 +46,6 @@ export function useAssistance(){
         {
             title: "Assistance Level(EDT)",
             minWidth: 200,
-            maxWidth: 200,
             field: "edtLevel",
             hozAlign: "center",
             headerHozAlign: "center",

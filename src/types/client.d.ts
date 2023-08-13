@@ -1,6 +1,7 @@
 import { ref, reactive} from "vue"
 import { stringToHTML } from "../utils/helper";
 import ClientDataService from '../services/ClientDataService';
+import OrganizationDataService from "../services/Organization";
 import ResponseData from "./response";
 export function useClient(){
     interface Response {
@@ -243,6 +244,7 @@ export function useClient(){
         'prefix': '',
         'designation': '',
         'city':'0',
+        'organization':'',
         'encodedBy': sessionStorage.getItem('userId'),
         'encodedByName': sessionStorage.getItem('name'),
         'encodedDate':current_date,
@@ -342,6 +344,19 @@ export function useClient(){
     };
     const clientSubmit = ref(false)
     const updateClientInfo = async (id:any, data: any) =>{
+      formOrganization.title = data.ipGroup.toUpperCase()
+      OrganizationDataService.findByTitle(data.ipGroup).then((response: ResponseData)=>{
+        if(response.data.length===0){
+          OrganizationDataService.create(formOrganization).then((response: ResponseData)=>{
+           data.id = response.data.id
+          }).catch((e: Error)=>{
+            console.log(e.message)
+          })
+        }
+        else{
+          data.organization = response.data[0].id
+        }
+      })
       ClientDataService.update(id,data).then((response: ResponseData)=>{
         clientSubmit.value = true
       }).catch((e: Error)=>{
@@ -381,7 +396,8 @@ export function useClient(){
         formClient.faxNo = response.data[0].faxNo.toUpperCase()
         formClient.pwdSpecify = response.data[0].pwdSpecify.toUpperCase()
         formClient.farmerId = response.data[0].farmerId.toUpperCase()
-        formClient.ipGroup = response.data[0].ipGroup.toUpperCase()
+        formClient.ipGroup = response.data[0].ipGroup
+        selectOrganization.value = [response.data[0].ipGroup]
         formClient.designation = response.data[0].designation.toUpperCase()
         formClient.tenurialStatus = response.data[0].tenurialStatus.toUpperCase()
         formClient.accreditation = response.data[0].accreditation.toUpperCase()
@@ -397,7 +413,16 @@ export function useClient(){
       }).catch((e: Error)=>{
           console.log(e.message)
       })
+      OrganizationDataService.getAll().then((response: ResponseData)=>{
+        orgList.value = response.data
+      })
     }
+    const formOrganization = reactive({
+      title : '',
+      recStat : '0'
+    });
+    const selectOrganization = ref(["0"]);
+    const orgList = ref([]);
     return {
         columnData,
         formClient,
@@ -410,6 +435,6 @@ export function useClient(){
         message, messageDetail, buttonTitle, buttonIcon, setAddModal, select, brgy, sendButtonRef, ncfrs, tenurial,
         accreditation, organization, disNcfrs, disTenurial, disAccreditation, disOrganization, brgySelect, citySelect,
         clientList, addressSelect, checkBa, aNcfrs, dTenurial, dOrganization, dAccreditation, getClientInfo, 
-        updateClientInfo, clientSubmit, patchClientInfo, brgyId
+        updateClientInfo, clientSubmit, patchClientInfo, brgyId, formOrganization, selectOrganization, orgList
     }
 }

@@ -41,19 +41,19 @@ const addModal = ref(false);
 const message = ref("");
 const messageDetail = ref("");
 const sendButtonRef = ref(null);
-const selectAssistance = ref(["1"]);
-const selectSubType = ref(["1"]);
-const selectMsmeProgram = ref(["1"]);
+const selectAssistance = ref([""]);
+const selectSubType = ref([""]);
+const selectMsmeProgram = ref(["0"]);
 const selectReferTo = ref(["1"]);
 const buttonTitle = ref("Save");
 const msmeProgram = ref([])
 const assistanceType = ref([])
 const subTypeAssistance = ref([])
 const resetFields = () =>{
-    selectAssistance.value = (["1"]);
-    selectSubType.value = (["1"]);
-    selectMsmeProgram.value = (["1"]);
-    selectReferTo.value = (["1"]);
+    selectAssistance.value = (["0"]);
+    selectSubType.value = (["0"]);
+    selectMsmeProgram.value = (["0"]);
+    selectReferTo.value = (["0"]);
     formAssistance.title = ""
     formAssistance.jobsGen = ""
     formAssistance.amountLoan = ""
@@ -107,23 +107,27 @@ provide("bind[successNotification]", (el: any) => {
   });
   
 watch(selectAssistance, (assistanceTitle, prevAddProjectModal) => {
+  loadAssistanceSubType(assistanceTitle);
+})
+const loadAssistanceSubType = (assistanceTitle: any) => {
   let assistanceID = "0"
   assistanceType.value.forEach(element => {
-      if(element['title']===assistanceTitle){
-         assistanceID = element['id']
-         return;
-      }
-    });
-    AssistanceDataService.getAllSubtypeAssistance(assistanceID).then((response: ResponseData)=>{
-        subTypeAssistance.value = response.data
-    })
-})
+    if(element['title']===assistanceTitle){
+        assistanceID = element['id']
+        return;
+    }
+  });
+  AssistanceDataService.getAllSubtypeAssistance(assistanceID).then((response: ResponseData)=>{
+      subTypeAssistance.value = response.data
+  })
+}
 const dataTable = () =>{
   initTabulator(columnData.value, AssistanceDataService, tableClient,props.business,true);
   reInitOnResizeWindow();
   tabulator.value?.on("rowClick",(e, cell)=>{
     formAssistance.id = cell.getData().id
     selectAssistance.value = ([cell.getData().assistanceType])
+    loadAssistanceSubType(cell.getData().assistanceType)
     selectMsmeProgram.value = cell.getData().msmeProgram
     selectSubType.value = ([cell.getData().subTypeAssistance])
     selectReferTo.value = ([cell.getData().referTo])
@@ -206,7 +210,7 @@ onMounted(async () => {
               <form class="validate-form" @submit.prevent="onSubmit">
                 <Dialog.Description class="text-xs w-full h-full">
                   <div class="grid grid-cols-12 col-span-12 gap-4 gap-y-3 p-2">
-                    <p class="col-span-12 sm:col-span-12 w-full p-2 bg-sky-500 text-center text-slate-50 text-lg">
+                    <p class="col-span-12 sm:col-span-12 w-full p-2 bg-primary text-center text-slate-50 text-lg">
                         <h2>Client Assistance Monitoring</h2>
                     </p>
                     <div class="col-span-12 md:col-span-6">
@@ -287,7 +291,7 @@ onMounted(async () => {
                         <FormLabel htmlFor="modal-form-3">Remarks</FormLabel>
                         <ClassicEditor v-model="formAssistance.assistanceRemarks" />
                     </div>
-                    <p class="col-span-12 sm:col-span-12 w-full p-2 bg-sky-500 text-center text-slate-50 text-lg">
+                    <p class="col-span-12 sm:col-span-12 w-full p-2 bg-primary text-center text-slate-50 text-lg">
                         <h2>Bottomline</h2>
                     </p>
                     <div class="col-span-12 sm:col-span-6">
@@ -335,7 +339,7 @@ onMounted(async () => {
                             <option :value="formAssistance.referTo">{{formAssistance.referTo}}</option>
                         </TomSelect>
                     </div>
-                    <p class="col-span-12 sm:col-span-12 w-full p-2 bg-sky-500 text-center text-slate-50 text-lg">
+                    <p class="col-span-12 sm:col-span-12 w-full p-2 bg-primary text-center text-slate-50 text-lg">
                         <h2>Date Provided</h2>
                     </p>
                     

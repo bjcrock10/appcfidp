@@ -64,7 +64,6 @@ const onSubmit = async () =>{
         successNotification.value.showToast();
         addModal.value = false;
         messageDetail.value = "You successfully added new data...";
-        tabulator.value?.addData(response.data);
       }).catch((e: Error)=>{
         console.log(e.message)
       }).finally(()=>{
@@ -82,7 +81,7 @@ const onSubmit = async () =>{
         successNotification.value.showToast();
         addModal.value = false;
         messageDetail.value = "You successfully updated new data...";
-        dataTable();
+        
       }).catch((e: Error)=>{
         console.log(e.message)
       }).finally(()=>{
@@ -95,6 +94,7 @@ const onSubmit = async () =>{
         selectCountry.value = (["1"]);
       })
     }
+    dataTable();
 };
 const loadMaterialSources = (id: any) => {
     MarketProfileDataService.getByBusinessSourcing(id).then((response: ResponseData)=>{
@@ -162,7 +162,7 @@ const dataTable = () =>{
   reInitOnResizeWindow();
   tabulator.value?.on("rowClick",(e, cell)=>{
     formMarketProfile.id = cell.getData().id
-    selectProduct.value = cell.getData().productName.toString()
+    formMarketProfile.productName = cell.getData().productName.toString()
     formMarketProfile.certification = cell.getData().certification
     formMarketProfile.productionCapacity = cell.getData().productionCapacity
     formMarketProfile.size = cell.getData().size
@@ -270,7 +270,9 @@ onMounted(() => {
         <Button class="mr-2 shadow-md" as="a" href="#" variant="primary" @click="(event: MouseEvent) => {
             event.preventDefault();
             setAddModal(true);
-            }" v-if="props.business!=='0'">
+            loadProducts(formMarketProfile.business);
+            loadMaterialSources(formMarketProfile.business);
+            }" v-if="formMarketProfile.business!=='0'">
             Add Market Profile
         </Button>
         <!-- BEGIN: Notification Content -->
@@ -377,7 +379,7 @@ onMounted(() => {
                         Cancel
                     </Button>
                     <span class="ml-3"></span>
-                    <Button type="submit" variant="primary" elevated class="w-auto" v-if="props.business!=='0'">
+                    <Button type="submit" variant="primary" elevated class="w-auto" v-if="formMarketProfile.business!=='0'">
                         <Lucide icon="Save" class="w-4 h-4 mr-2" />{{buttonTitle}}
                     </Button>
                     <span class="ml-3"></span>
@@ -517,6 +519,8 @@ onMounted(() => {
                           <Table.Tr>
                             <Table.Th class="whitespace-nowrap w-auto sm:w-96 min-w-min"> LOCATION: (Brgy/ City / Province / Region) </Table.Th>
                             <Table.Th class="whitespace-nowrap w-auto sm:w-96 min-w-min"> Volume </Table.Th>
+                            <Table.Th class="whitespace-nowrap w-auto sm:w-96 min-w-min"> Raw Mats </Table.Th>
+                            <Table.Th class="whitespace-nowrap w-auto sm:w-96 min-w-min"> Contact Person </Table.Th>
                             <Table.Th class="w-1"></Table.Th>
                           </Table.Tr>
                         </Table.Thead>
@@ -524,6 +528,8 @@ onMounted(() => {
                           <Table.Tr v-for="item in sourcesList" :key="item['id']" :value="item['id']" class="-p-10">
                             <Table.Td>{{item['location']}} </Table.Td>
                             <Table.Td>{{item['volume']}}</Table.Td>
+                            <Table.Td>{{item['rawMaterial']}}</Table.Td>
+                            <Table.Td>{{item['contactPerson']}}</Table.Td>
                             <Table.Td>
                               <Button type="button" variant="danger" class="mb-2 mr-1" @click="removeSources(item['id'])">
                                 <Lucide icon="Trash2" class="w-4 h-4" />
@@ -581,7 +587,15 @@ onMounted(() => {
                                 type="text" placeholder="Volume" class="col-span-12 md:col-span-4" required/>
                               </Table.Td>
                               <Table.Td>
-                                <Button type="submit" variant="primary" class="mb-2 mr-1" v-if="props.business!=='0'">
+                                <FormInput form-input-size="sm" :rounded="rounded" v-model="formMaterialSource.rawMaterial" 
+                                type="text" placeholder="Raw Materials" class="col-span-12 md:col-span-4" required/>
+                              </Table.Td>
+                              <Table.Td>
+                                <FormInput form-input-size="sm" :rounded="rounded" v-model="formMaterialSource.contactPerson" 
+                                type="text" placeholder="Contact Person" class="col-span-12 md:col-span-4" required/>
+                              </Table.Td>
+                              <Table.Td>
+                                <Button type="submit" variant="primary" class="mb-2 mr-1" v-if="formMarketProfile.business!=='0'">
                                   <Lucide icon="Plus" class="w-5 h-5" />
                                 </Button>
                               </Table.Td>

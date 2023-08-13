@@ -26,6 +26,11 @@ export const useSimpleMenuStore = defineStore("simpleMenu", {
         pageName: "side-menu-clients",
         title: "Client",
       },
+      { 
+        icon: "Activity",
+        pageName: "side-menu-reports",
+        title: "Report",
+      },
       {
         icon: "Github",
         pageName: "side-menu-page-2",

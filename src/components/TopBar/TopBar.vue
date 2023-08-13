@@ -47,7 +47,7 @@ onMounted(() => {
         class="hidden -intro-x md:flex"
       >
         <img
-          alt="Icewall Tailwind HTML Admin Template"
+          alt="CFIDP Template"
           class="w-6"
           :src="logoUrl"
         />
