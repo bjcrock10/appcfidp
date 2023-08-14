@@ -2,7 +2,7 @@
     <div>Pivot</div>
 </template>
 
-<script>
+<script lang="ts">
 import WebDataRocks from "webdatarocks";
 export default {
   name: "Pivot",
@@ -26,6 +26,8 @@ export default {
     filteropen: Function,
     fullscreen: Function,
     global: Object,
+    jsonData: Object,
+    slicer: Object,
     height: [String, Number],
     loadingdata: Function,
     loadinglocalization: Function,
@@ -53,13 +55,47 @@ export default {
   mounted: function() {
     this.webdatarocks = new WebDataRocks({
       ...this.$props,
-      container: this.$el
+      report: {
+          dataSource: {
+            dataSourceType: 'JSON',
+            data: this.$props.jsonData,
+            maxRequestSize: 5242880 // Increase maxRequestSize to 5 MB
+          },
+          slice: this.$props.slicer,
+          formats: [{
+            "name": "",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "decimalPlaces": 2,
+            "currencySymbol": "",
+            "currencySymbolAlign": "left",
+            "nullValue": "0",
+            "textAlign": "right",
+            "isPercent": false
+        }],
+        options: {
+          grid: {
+            showTotals: "off"
+          }
+        }
+	    },
+      container: this.$el,
+      beforetoolbarcreated: customizeToolbar,
     });
   },
   beforeUpdate() {
     return false;
   }
 };
+function customizeToolbar(toolbar: any) {
+        var tabs = toolbar.getTabs(); // get all tabs from the toolbar
+        toolbar.getTabs = function () {
+            delete tabs[0];
+            delete tabs[1]; // delete the first tab
+             // There will be two new tabs at the beginning of the Toolbar 
+            return tabs;
+        }
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
