@@ -55,7 +55,7 @@ import { assign } from 'lodash';
       
     </div>
     <div class="col-span-12 sm:col-span-4">
-      <Button size="small" icon="Monitor" class="mr-2 shadow-md" as="a" href="#" variant="primary" @click="(event: MouseEvent) => {
+      <Button icon="Monitor" class="mr-2 shadow-md" as="a" href="#" variant="primary" @click="(event: MouseEvent) => {
         event.preventDefault();
         forceRerender();
       }">
