@@ -42,10 +42,6 @@ const routes = [
         name: "side-menu-reports",
         component: Report,
       },
-      {
-        path: "/:pathMatch(.*)*",
-        component: ErrorPage,
-      },
     ],
   },
   {
