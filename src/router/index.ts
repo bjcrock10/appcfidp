@@ -38,10 +38,14 @@ const routes = [
         component: ClientProfile,
       },
       {
-      path: "/clients",
-      name: "side-menu-reports",
-      component: Report,
-    }
+        path: "/clients",
+        name: "side-menu-reports",
+        component: Report,
+      },
+      {
+        path: "/:pathMatch(.*)*",
+        component: ErrorPage,
+      },
     ],
   },
   {
