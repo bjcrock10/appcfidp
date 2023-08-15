@@ -15,7 +15,7 @@ import { assign } from 'lodash';
   const componentKey = ref(0)
   const tomData = ref("")
   const slicerData = ref({})
-  const forceRerender = async () => {
+  const forceRerender = () => {
     componentKey.value += 1;
   }
   const assignQuery = () => {

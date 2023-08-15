@@ -79,22 +79,22 @@ export default {
         }
 	    },
       container: this.$el,
-      // beforetoolbarcreated: customizeToolbar,
+      beforetoolbarcreated: customizeToolbar,
     });
   },
   beforeUpdate() {
     return false;
   }
 };
-// function customizeToolbar(toolbar: any) {
-//         var tabs = toolbar.getTabs(); // get all tabs from the toolbar
-//         toolbar.getTabs = function () {
-//             delete tabs[0];
-//             delete tabs[1]; // delete the first tab
-//              // There will be two new tabs at the beginning of the Toolbar 
-//             return tabs;
-//         }
-//     }
+function customizeToolbar(toolbar) {
+        var tabs = toolbar.getTabs(); // get all tabs from the toolbar
+        toolbar.getTabs = function () {
+            delete tabs[0];
+            delete tabs[1]; // delete the first tab
+             // There will be two new tabs at the beginning of the Toolbar 
+            return tabs;
+        }
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
