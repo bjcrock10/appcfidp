@@ -28,19 +28,22 @@ import { assign } from 'lodash';
     else if(tomData.value.toString()==="2"){
       ReportDataService.getAllBusinessAssistance().then((response: ResponseData)=>{
         businessData.value = response.data
-        slicerData.value = slicerBusinessAssistance
       })
+      slicerData.value = slicerBusinessAssistance
     }
     else if(tomData.value.toString()==="3"){
       ReportDataService.getAllClientAssistance().then((response: ResponseData)=>{
         businessData.value = response.data
-        slicerData.value = slicerClientAssistance
       })
+      slicerData.value = slicerClientAssistance
     }
     forceRerender();
   }
   onMounted(async()=>{
-    forceRerender();
+    ReportDataService.getAllBusinessReport().then((response: ResponseData)=>{
+        businessData.value = response.data
+      })
+      slicerData.value = slicer
   })
 </script>
 
