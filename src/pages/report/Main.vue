@@ -16,7 +16,10 @@ import { assign } from 'lodash';
   const tomData = ref("")
   const slicerData = ref({})
   const forceRerender = () => {
-    componentKey.value += 1;
+    setTimeout(()=>{
+      componentKey.value += 1;
+
+    },500)
   }
   const assignQuery = () => {
     if(tomData.value.toString()==="1"){
