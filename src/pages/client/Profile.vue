@@ -32,7 +32,10 @@ import MarketProfile from '../../components/MarketProfile';
 import Business from '../../components/Business'
 import Assistance from '../../components/Assistance';
 
-
+const componentKey = ref(0)
+const forceRerender = () => {
+      componentKey.value += 1;
+}
 const router = useRouter();
 const {formClient, errorMessage, isError, columnData, addModal, rounded,  brgyDropdown,
         lnameDropdown, showSearchBrgy, hideSearchBrgy, showSearchLname, hideSearchLname, 
@@ -479,7 +482,7 @@ onMounted(async () => {
         <div class="grid grid-cols-12 gap-12">
           <div class="col-span-12 intro-y box lg:col-span-12">
             <div class="p-2">
-                <Product :business="formClient.businessId"/>
+                <Product :business="formClient.businessId" :key="componentKey" @click="forceRender()"/>
             </div>
           </div>
           <div class="col-span-12 intro-y box lg:col-span-12 -mt-4">
@@ -495,7 +498,7 @@ onMounted(async () => {
         <div class="grid grid-cols-12 gap-12">
           <div class="col-span-12 intro-y box lg:col-span-12">
             <div class="p-2">
-                <Assistance :business="formClient.businessId" :clientId="formClient.id"/>
+                <Assistance :business="formClient.businessId" :clientId="formClient.id" :key="componentKey" @click="forceRender()"/>
             </div>
           </div>
         </div>
